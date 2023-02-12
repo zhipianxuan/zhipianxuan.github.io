@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="一、题目1、题目118:杨辉三角（1）给定一个非负整数 numRows，生成「杨辉三角」的前 numRows 行。 在「杨辉三角」中，每个数是它左上方和右上方的数的和。  示例 1: 输入: numRows = 5输出: [[1],[1,1],[1,2,1],[1,3,3,1],[1,4,6,4,1]]示例 2: 输入: numRows = 1输出: [[1]] 提示: 1 &amp;lt;= numRo">
+<meta name="description" content="一、题目1. 给定一个整型矩阵，按照转圈方式打印。例如 1   2   3   4 5   6   7   8 9 10 11 12 13 14 15 16 打印结果：1,2,3,4,8,12,16,15,14,13,9,5,6,7,11,10 要求： 额外空间复杂度为O(1) 思路：  时间复杂度：O(mn) 空间复杂度：O（1） 设置左上角坐标 (lu1,lu2), 右下角坐标 (rd1,rd">
 <meta name="keywords" content="数组">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数组">
 <meta property="og:url" content="http://yoursite.com/数组/index.html">
 <meta property="og:site_name" content="Lee_yl&#39;s blog">
-<meta property="og:description" content="一、题目1、题目118:杨辉三角（1）给定一个非负整数 numRows，生成「杨辉三角」的前 numRows 行。 在「杨辉三角」中，每个数是它左上方和右上方的数的和。  示例 1: 输入: numRows = 5输出: [[1],[1,1],[1,2,1],[1,3,3,1],[1,4,6,4,1]]示例 2: 输入: numRows = 1输出: [[1]] 提示: 1 &amp;lt;= numRo">
+<meta property="og:description" content="一、题目1. 给定一个整型矩阵，按照转圈方式打印。例如 1   2   3   4 5   6   7   8 9 10 11 12 13 14 15 16 打印结果：1,2,3,4,8,12,16,15,14,13,9,5,6,7,11,10 要求： 额外空间复杂度为O(1) 思路：  时间复杂度：O(mn) 空间复杂度：O（1） 设置左上角坐标 (lu1,lu2), 右下角坐标 (rd1,rd">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://pic.leetcode-cn.com/1626927345-DZmfxB-PascalTriangleAnimated2.gif">
-<meta property="og:updated_time" content="2022-10-01T03:21:15.020Z">
+<meta property="og:updated_time" content="2023-01-03T00:18:58.413Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数组">
-<meta name="twitter:description" content="一、题目1、题目118:杨辉三角（1）给定一个非负整数 numRows，生成「杨辉三角」的前 numRows 行。 在「杨辉三角」中，每个数是它左上方和右上方的数的和。  示例 1: 输入: numRows = 5输出: [[1],[1,1],[1,2,1],[1,3,3,1],[1,4,6,4,1]]示例 2: 输入: numRows = 1输出: [[1]] 提示: 1 &amp;lt;= numRo">
+<meta name="twitter:description" content="一、题目1. 给定一个整型矩阵，按照转圈方式打印。例如 1   2   3   4 5   6   7   8 9 10 11 12 13 14 15 16 打印结果：1,2,3,4,8,12,16,15,14,13,9,5,6,7,11,10 要求： 额外空间复杂度为O(1) 思路：  时间复杂度：O(mn) 空间复杂度：O（1） 设置左上角坐标 (lu1,lu2), 右下角坐标 (rd1,rd">
 <meta name="twitter:image" content="https://pic.leetcode-cn.com/1626927345-DZmfxB-PascalTriangleAnimated2.gif">
 
 
@@ -335,7 +335,33 @@
       
 
       
-        <h1 id="一、题目"><a href="#一、题目" class="headerlink" title="一、题目"></a>一、题目</h1><h2 id="1、题目118-杨辉三角（1）"><a href="#1、题目118-杨辉三角（1）" class="headerlink" title="1、题目118:杨辉三角（1）"></a>1、题目118:杨辉三角（1）</h2><p>给定一个非负整数 <em>numRows，</em>生成「杨辉三角」的前 <em>numRows</em> 行。</p>
+        <h1 id="一、题目"><a href="#一、题目" class="headerlink" title="一、题目"></a>一、题目</h1><h2 id="1-给定一个整型矩阵，按照转圈方式打印。"><a href="#1-给定一个整型矩阵，按照转圈方式打印。" class="headerlink" title="1. 给定一个整型矩阵，按照转圈方式打印。"></a>1. 给定一个整型矩阵，按照转圈方式打印。</h2><p>例如</p>
+<p>1   2   3   4</p>
+<p>5   6   7   8</p>
+<p>9 10 11 12</p>
+<p>13 14 15 16</p>
+<p>打印结果：1,2,3,4,8,12,16,15,14,13,9,5,6,7,11,10</p>
+<p>要求：</p>
+<p>额外空间复杂度为O(1)</p>
+<p><strong>思路：</strong></p>
+<blockquote>
+<p>时间复杂度：O(mn)</p>
+<p>空间复杂度：O（1）</p>
+<p>设置左上角坐标 (lu1,lu2), 右下角坐标 (rd1,rd2), 4个变量。</p>
+<p>停止条件：直到左上角坐标在右下角坐标的右下方。</p>
+<p>(第一次：lu1=0,lu2=0—rd1=3,rd2=3)，  </p>
+<p>———左上角坐标都+1, 右下角坐标都 -1.</p>
+<p>（第二次：lu1 = 1, lu2 = 1, rd1 = 2, rd2 = 2）</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方法一：</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">eachPrint</span><span class="params">(lu1, lu2, rd1, rd2, matrix, res)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    :param lu1: 左上角横坐标</span></span><br><span class="line"><span class="string">    :param lu2: 左上角纵坐标</span></span><br><span class="line"><span class="string">    :param rd1: 右下角横坐标</span></span><br><span class="line"><span class="string">    :param rd2: 右下角纵坐标</span></span><br><span class="line"><span class="string">    :param matrix: 矩阵</span></span><br><span class="line"><span class="string">    :return: 返回每次打印结果</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment"># 边界条件：</span></span><br><span class="line">    <span class="keyword">if</span> lu1 == rd1:</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(lu2, rd2 + <span class="number">1</span>):</span><br><span class="line">            res.append(matrix[lu1][i])</span><br><span class="line">    <span class="keyword">elif</span> lu2 == rd2:</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(lu1, rd1 + <span class="number">1</span>):</span><br><span class="line">            res.append(matrix[i][lu2])</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        curl1 , curl2 = lu1, lu2</span><br><span class="line">        <span class="keyword">while</span> curl2 != rd2:</span><br><span class="line">            res.append(matrix[lu1][curl2])</span><br><span class="line">            curl2 += <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> curl1 != rd1:</span><br><span class="line">            res.append(matrix[curl1][rd2])</span><br><span class="line">            curl1 += <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> curl2 != lu2:</span><br><span class="line">            res.append(matrix[rd1][curl2])</span><br><span class="line">            curl2 -= <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> curl1 != lu1:</span><br><span class="line">            res.append(matrix[curl1][lu2])</span><br><span class="line">            curl1 -= <span class="number">1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">printAll</span><span class="params">(matrix)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> len(matrix) &lt;= <span class="number">0</span> <span class="keyword">or</span> len(matrix[<span class="number">0</span>]) &lt;= <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    lu1, lu2, rd1, rd2 = <span class="number">0</span>, <span class="number">0</span>, len(matrix) - <span class="number">1</span>, len(matrix[<span class="number">0</span>]) - <span class="number">1</span></span><br><span class="line">    res = []</span><br><span class="line">    <span class="keyword">while</span> lu1 &lt;= rd1 <span class="keyword">and</span> lu2 &lt;= rd2:</span><br><span class="line">        eachPrint(lu1, lu2, rd1, rd2, matrix, res)</span><br><span class="line">        lu1 += <span class="number">1</span></span><br><span class="line">        lu2 += <span class="number">1</span></span><br><span class="line">        rd1 -= <span class="number">1</span></span><br><span class="line">        rd2 -= <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line">matrix = [[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>],[<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>],[<span class="number">9</span>,<span class="number">10</span>,<span class="number">11</span>,<span class="number">12</span>],[<span class="number">13</span>,<span class="number">14</span>,<span class="number">15</span>,<span class="number">16</span>]]</span><br><span class="line">print(printAll(matrix))</span><br></pre></td></tr></table></figure>
+<p><strong>思路二：</strong></p>
+<blockquote>
+<p>时间复杂度：O(mn)</p>
+<p>空间复杂度：O(1)</p>
+<p>将已经走过的地方置0，在拐弯时取模判断下是否已经走过，走过则转变方向。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方法二：</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">printMatrix2</span><span class="params">(matrix)</span>:</span></span><br><span class="line">    r, i, j , di, dj = [], <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> matrix != []:</span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> range(len(matrix) * len(matrix[<span class="number">0</span>])):</span><br><span class="line">            r.append(matrix[i][j])</span><br><span class="line">            matrix[i][j] = <span class="number">0</span></span><br><span class="line">            <span class="keyword">if</span> matrix[(i + di) % len(matrix)][(j + dj) % len(matrix[<span class="number">0</span>])] == <span class="number">0</span>:</span><br><span class="line">                di, dj = dj, -di</span><br><span class="line">            i += di</span><br><span class="line">            j += dj</span><br><span class="line">    <span class="keyword">return</span> r</span><br></pre></td></tr></table></figure>
+<h2 id="1、题目118-杨辉三角（1）"><a href="#1、题目118-杨辉三角（1）" class="headerlink" title="1、题目118:杨辉三角（1）"></a>1、题目118:杨辉三角（1）</h2><p>给定一个非负整数 <em>numRows，</em>生成「杨辉三角」的前 <em>numRows</em> 行。</p>
 <p>在「杨辉三角」中，每个数是它左上方和右上方的数的和。</p>
 <p><img src="https://pic.leetcode-cn.com/1626927345-DZmfxB-PascalTriangleAnimated2.gif" alt="img"></p>
 <p><strong>示例 1:</strong></p>
@@ -385,8 +411,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/字符/" rel="next" title="字符">
-                <i class="fa fa-chevron-left"></i> 字符
+              <a href="/线性代数的几何意义理解/" rel="next" title="线性代数几何意义理解">
+                <i class="fa fa-chevron-left"></i> 线性代数几何意义理解
               </a>
             
           </div>
@@ -470,7 +496,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -481,7 +507,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -492,7 +518,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
@@ -525,7 +551,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、题目"><span class="nav-number">1.</span> <span class="nav-text">一、题目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、题目118-杨辉三角（1）"><span class="nav-number">1.1.</span> <span class="nav-text">1、题目118:杨辉三角（1）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-题目189-旋转数组"><span class="nav-number">1.2.</span> <span class="nav-text">2.题目189:  旋转数组</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、题目"><span class="nav-number">1.</span> <span class="nav-text">一、题目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-给定一个整型矩阵，按照转圈方式打印。"><span class="nav-number">1.1.</span> <span class="nav-text">1. 给定一个整型矩阵，按照转圈方式打印。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1、题目118-杨辉三角（1）"><span class="nav-number">1.2.</span> <span class="nav-text">1、题目118:杨辉三角（1）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-题目189-旋转数组"><span class="nav-number">1.3.</span> <span class="nav-text">2.题目189:  旋转数组</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -545,7 +571,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
