@@ -229,6 +229,199 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Spark简介/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Spark简介/" itemprop="url">Spark简介</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-12T00:00:00+08:00">
+                2023-02-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/" itemprop="url" rel="index">
+                    <span itemprop="name">大数据</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本文仅做学习总结，如有侵权立删</p>
+<h1 id="Spark简介"><a href="#Spark简介" class="headerlink" title="Spark简介"></a>Spark简介</h1><h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1. 概念"></a>1. 概念</h2><blockquote>
+<p><strong>Spark：</strong>基于内存的迭代式计算引擎。</p>
+<p><strong>RDD：</strong>Resillient Distributed Dataset（弹性分布式数据集），是分布式内存的一个抽象概念。</p>
+<p><strong>DAG：</strong>Directed Acyclic Graph（有向无环图），反映RDD之间的依赖关系。</p>
+<p><img src="https://img-blog.csdnimg.cn/99c95c8e6e724185b86fa7e0ba42f7fc.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAUmVsaWFu5ZOI5ZOI,size_20,color_FFFFFF,t_70,g_se,x_16" alt="img"></p>
+<p><strong>Executor</strong>：是运行在工作节点（WorkerNode）的一个进程，负责运行Task</p>
+<p><strong>应用（Application）</strong>：用户编写的Spark应用程序</p>
+<p><strong>任务（ Task ）</strong>：运行在Executor上的工作单元</p>
+<p><strong>作业（ Job ）</strong>：一个作业包含多个RDD及作用于相应RDD上的各种操作</p>
+<p><strong>阶段（ Stage ）</strong>：是作业的基本调度单位，一个作业会分为多组任务，每组任务被称为阶段，或者也被称为任务集合，代表了一组关联的、相互之间没有Shuffle依赖关系的任务组成的任务集, 下图为DAG划分Stage过程：</p>
+<p><img src="https://img-blog.csdnimg.cn/70e593dbb2c54f53a01f239947f7e451.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAUmVsaWFu5ZOI5ZOI,size_20,color_FFFFFF,t_70,g_se,x_16" alt="img"></p>
+</blockquote>
+<p>1个Job —&gt;多个stage</p>
+<p>1 job -&gt;多个 RDD + RDD的操作</p>
+<h2 id="2-架构设计"><a href="#2-架构设计" class="headerlink" title="2. 架构设计"></a>2. 架构设计</h2><blockquote>
+<p>Cluster Manager（集群资源管理器）：如Mesos、YARN。</p>
+<p>Worker Node（运行Job任务的工作节点）：</p>
+<p>Driver（每个Application的任务控制节点）：</p>
+<p>Executor（执行进程）：在Worker上负责具体任务的执行进程</p>
+<p>在Spark中，一个Application有一个任务控制节点（Driver）和若干个作业（Job）构成，一个Job由多个阶段（Stage）构成，一个阶段由多个任务（Task）组成。</p>
+<p><img src="https://img-blog.csdnimg.cn/dd9f4c224c3e42f0b29065d04c24eeb5.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAUmVsaWFu5ZOI5ZOI,size_20,color_FFFFFF,t_70,g_se,x_16" alt="img"></p>
+<p>1 Application = 1 Driver + 多 Job </p>
+<p>1 Job = 多个Stage</p>
+<p>1 Stage = 多个Task</p>
+<p>当执行一个Application时，Driver会向Yarn申请资源，启动Exeutor（Worker），并向Executor发送代码和文件，执行任务，任务结束后执行结果会返回给任务控制节点，或者写到HDFS/Hive等。</p>
+</blockquote>
+<h2 id="3-运行流程"><a href="#3-运行流程" class="headerlink" title="3. 运行流程"></a>3. 运行流程</h2><blockquote>
+<ol>
+<li><p>一个Spark提交时，Driver创建一个SparkContext，由SparkContext负责和Yarn的通信、资源的申请、任务的分配和监控等。</p>
+<p>SparkContext会向Yarn注册并申请运行Executor的资源。</p>
+</li>
+<li><p>Yarn为Executor分配资源，启动Executor进程，Executor发送心跳到Yarn上</p>
+</li>
+<li><p>SparkContext根据RDD的依赖关系构建DAG图，DAG调度解析后将图分解成多个Stage，并计算出之间的依赖关系，将这些Job集提交给Task调度器处理。Executor向SparkContext申请Task，Task调度器将Task分发给Executor运行，同时，SparkContext将Application代码发放给Executor。</p>
+</li>
+<li><p>任务在Executor上运行，结果反馈给Job调度器，再反馈给DAG调度器，运行完毕后写入数据并释放所有资源。</p>
+</li>
+</ol>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/1115a2d3fe534bd8b172961157a56eb2.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAemt5Q29kZXI=,size_19,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/数组/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1809,7 +2002,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1820,7 +2013,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
