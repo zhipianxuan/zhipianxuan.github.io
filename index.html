@@ -229,6 +229,183 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/DBMTL模型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/DBMTL模型/" itemprop="url">DBMTL模型</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-13T00:00:00+08:00">
+                2023-02-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/推荐算法/" itemprop="url" rel="index">
+                    <span itemprop="name">推荐算法</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/推荐算法/多任务/" itemprop="url" rel="index">
+                    <span itemprop="name">多任务</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本篇博客仅作为学习,如有侵权必删。</p>
+<p><a href="https://blog.csdn.net/weixin_48534929/article/details/123404348" target="_blank" rel="noopener">https://blog.csdn.net/weixin_48534929/article/details/123404348</a></p>
+<h1 id="DBMTL模型"><a href="#DBMTL模型" class="headerlink" title="DBMTL模型"></a>DBMTL模型</h1><h2 id="1-简单总结："><a href="#1-简单总结：" class="headerlink" title="1. 简单总结："></a>1. 简单总结：</h2><p>阿里19年提出的一个多任务模型，该模型显示地建模目标间的贝叶斯网络因果关系。</p>
+<h2 id="2-背景："><a href="#2-背景：" class="headerlink" title="2. 背景："></a>2. 背景：</h2><p>目前单任务（如CTR）不能满足工业界推荐算法的需求，还需关注后续的转化链路，如：是否评论、收藏、加购、购买、观看时长等。</p>
+<p>常见的多目标转化模型结构：</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/6144c18e030076bb470d4d4b687ed838.png" alt="img"></p>
+<blockquote>
+<ol>
+<li>底层共享参数</li>
+<li>各塔学习自己的目标</li>
+<li>此类网络的概率模型：</li>
+</ol>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/5ee80ce45cd5f5f33b205dd12b4a9957.png" alt="img"></p>
+<p>其中l,m为目标，x为样本特征，H是模型。（各目标独立假设）</p>
+<h2 id="3-DBMTL介绍"><a href="#3-DBMTL介绍" class="headerlink" title="3. DBMTL介绍"></a>3. DBMTL介绍</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/b99772c2c8167dad5aedc8fde0b1bd51.png" alt="img"></p>
+<p>DBMTL与传统MTL结构（认为各目标独立）最主要差别在于构建了目标节点之间的贝叶斯网络，显式建模了目标间可能存在的因果关系。</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/e467002f699eff7ba6fdec858c75de9d.png" alt="img"></p>
+<p>DBMTL模型结构：</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/be18be0f3a50f9a241df70373edcb384.png" alt="img"></p>
+<p>贝叶斯层对应的损失函数是：</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/dd83ac348fa84540cc59eb5178b9e1fb.png" alt="img"></p>
+<p>不同目标加权后：</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/2a8032175d55c8ef5a97d331cf8abf37.png" alt="img"></p>
+<p>在网络的贝叶斯层中，函数f1, f2, f3 被实现为全连接的MLP，以学习目标间的隐含因果关系。他们把函数输入变量的embedding级联作为输入，并输入一个表示函数输出变量的embedding。每一个目标的embedding最后再经过一层MLP以输出最终目标的概率。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/Spark简介/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2002,7 +2179,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2013,7 +2190,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
