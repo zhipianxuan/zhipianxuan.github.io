@@ -353,22 +353,22 @@
 <p> 熵：信息不确定性度量（信息量与不确定性相关）。事件发生的概率越小则携带的信息越大。</p>
 </blockquote>
 <p>​    一个离散随机变量X的可能取值为X=x1,x2,…,xn，而对应的概率为pi=p(X=xi),则随机变量的熵定义为： </p>
-<p><img src="E:\GitHub_learn\blog\source\imgs\熵.jpg" style="zoom:100%"></p>
+<p><img src="..\imgs\熵.jpg" style="zoom:100%"></p>
 <p>​    每个<em>xi</em>表示一种特征。 <em>H</em>(<em>X</em>)在每个<em>p</em>(<em>xi</em>) = 1/<em>N</em>是最大，<em>N</em>为信息的个数。在概率为1/<em>N</em>时信息是最不确定的。</p>
 <p>​    规定当p(xi)=0时，p(xi)log⁡(p(xi)=0</p>
 <p>【小思考：为何公式是这样子的？其实只需熵和概率P成反比，1/P , 但是有个量纲缺点：地震发生的概率很小（P = 1/百万)，则信息量为一百万。抛硬币概率1/2，则信息量为2。两者量纲差太大，取log之后，使得低范围的值稍微放大，高范围的值稍微放小。】</p>
 <h1 id="3-联合熵H-p-q"><a href="#3-联合熵H-p-q" class="headerlink" title="3. 联合熵H(p,q)"></a>3. 联合熵H(p,q)</h1><p>两个随机变量的p与q的联合分布形成的熵称为联合熵，记为<em>H</em>(p, q)。 </p>
-<p><img src="E:\GitHub_learn\blog\source\imgs\交叉熵.jpg" style="zoom:100%"></p>
+<p><img src="..\imgs\交叉熵.jpg" style="zoom:100%"></p>
 <h1 id="4-条件熵H-q-p"><a href="#4-条件熵H-q-p" class="headerlink" title="4. 条件熵H(q|p)"></a>4. 条件熵H(q|p)</h1><p><em>X</em>给定的条件下，<em>Y</em>的信息熵，即<em>H</em> (<em>Y</em> |X )。公式为：</p>
-<p><img src="E:\GitHub_learn\blog\source\imgs\条件熵.jpg" style="zoom:100%"></p>
+<p><img src="..\imgs\条件熵.jpg" style="zoom:100%"></p>
 <p><strong>推导过程：</strong></p>
-<p><img src="E:\GitHub_learn\blog\source\imgs\条件熵推导过程.jpg" style="zoom:100%"></p>
+<p><img src="..\imgs\条件熵推导过程.jpg" style="zoom:100%"></p>
 <h1 id="5-KL散度（相对熵）："><a href="#5-KL散度（相对熵）：" class="headerlink" title="5. KL散度（相对熵）："></a>5. KL散度（相对熵）：</h1><blockquote>
 <p> 交叉熵：两个概率分布之间的一个比较，如果两个分布越匹配，交叉熵就越低；如果两个概率分布完全比配，那么交叉熵就为 0。</p>
 </blockquote>
 <p>如果是两个随机变量P,Q，且其概率分布分别为p(x),q(x),则p相对q的相对熵为：</p>
-<p><img src="E:\GitHub_learn\blog\source\imgs\KL散度.jpg" style="zoom:100%"></p>
-<h1 id="6-几种熵之间的关系："><a href="#6-几种熵之间的关系：" class="headerlink" title="6. 几种熵之间的关系："></a>6. 几种熵之间的关系：</h1><p><img src="E:\GitHub_learn\blog\source\imgs\熵之间的关系.jpg" style="zoom:100%"></p>
+<p><img src="..\imgs\KL散度.jpg" style="zoom:100%"></p>
+<h1 id="6-几种熵之间的关系："><a href="#6-几种熵之间的关系：" class="headerlink" title="6. 几种熵之间的关系："></a>6. 几种熵之间的关系：</h1><p><img src="..\imgs\熵之间的关系.jpg" style="zoom:100%"></p>
 
           
         
