@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="数学,">
+  <meta name="keywords" content="Hexo, NexT">
 
 
 
@@ -79,18 +79,24 @@
 
 
 
-<meta name="description" content="（以下内容是参考加上自己的理解，存在不对之处麻烦指出~) 一、存在的意义： 将现实生活的事物用计算机来识别并可以进行相应的处理。 例子：现实生活的红色，人眼能直接判断，但计算机表示会转为RGB向量。若对颜色进行转换，加深或改变颜色则要进行向量的加法、数乘等。 1. 主要内容：向量、矩阵、方程组2、相关概念：（1）N维空间：  零维空间：一个点（标量）存在于零维空间 一维空间：一条线（向量） 二维空">
-<meta name="keywords" content="数学">
+<meta name="description" content="本篇博客仅作为学习,如有侵权必删。 详解机器学习中的熵、条件熵、相对熵、交叉熵 1. 信息量：一个事件发生的概率越小，信息量越大，所以信息量应该为概率的减函数，对于相互独立的两个事有p(xy)=p(x)p(y)，对于这两个事件信息量应满足h(xy)=h(x)+h(y)，那么信息量应为对数函数： ​    h(x) = -ln p(x) ​    对于一个随机变量可以以不同的概率发生，那么通过信息量">
 <meta property="og:type" content="article">
-<meta property="og:title" content="线性代数几何意义理解">
-<meta property="og:url" content="http://yoursite.com/线性代数的几何意义理解/index.html">
+<meta property="og:title" content="熵">
+<meta property="og:url" content="http://yoursite.com/熵/index.html">
 <meta property="og:site_name" content="Lee_yl&#39;s blog">
-<meta property="og:description" content="（以下内容是参考加上自己的理解，存在不对之处麻烦指出~) 一、存在的意义： 将现实生活的事物用计算机来识别并可以进行相应的处理。 例子：现实生活的红色，人眼能直接判断，但计算机表示会转为RGB向量。若对颜色进行转换，加深或改变颜色则要进行向量的加法、数乘等。 1. 主要内容：向量、矩阵、方程组2、相关概念：（1）N维空间：  零维空间：一个点（标量）存在于零维空间 一维空间：一条线（向量） 二维空">
+<meta property="og:description" content="本篇博客仅作为学习,如有侵权必删。 详解机器学习中的熵、条件熵、相对熵、交叉熵 1. 信息量：一个事件发生的概率越小，信息量越大，所以信息量应该为概率的减函数，对于相互独立的两个事有p(xy)=p(x)p(y)，对于这两个事件信息量应满足h(xy)=h(x)+h(y)，那么信息量应为对数函数： ​    h(x) = -ln p(x) ​    对于一个随机变量可以以不同的概率发生，那么通过信息量">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2022-12-31T11:14:39.726Z">
+<meta property="og:image" content="e:/GitHub_learn/blog/source/imgs/熵.jpg">
+<meta property="og:image" content="e:/GitHub_learn/blog/source/imgs/交叉熵.jpg">
+<meta property="og:image" content="e:/GitHub_learn/blog/source/imgs/条件熵.jpg">
+<meta property="og:image" content="e:/GitHub_learn/blog/source/imgs/条件熵推导过程.jpg">
+<meta property="og:image" content="e:/GitHub_learn/blog/source/imgs/KL散度.jpg">
+<meta property="og:image" content="e:/GitHub_learn/blog/source/imgs/熵之间的关系.jpg">
+<meta property="og:updated_time" content="2023-02-20T12:16:44.512Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="线性代数几何意义理解">
-<meta name="twitter:description" content="（以下内容是参考加上自己的理解，存在不对之处麻烦指出~) 一、存在的意义： 将现实生活的事物用计算机来识别并可以进行相应的处理。 例子：现实生活的红色，人眼能直接判断，但计算机表示会转为RGB向量。若对颜色进行转换，加深或改变颜色则要进行向量的加法、数乘等。 1. 主要内容：向量、矩阵、方程组2、相关概念：（1）N维空间：  零维空间：一个点（标量）存在于零维空间 一维空间：一条线（向量） 二维空">
+<meta name="twitter:title" content="熵">
+<meta name="twitter:description" content="本篇博客仅作为学习,如有侵权必删。 详解机器学习中的熵、条件熵、相对熵、交叉熵 1. 信息量：一个事件发生的概率越小，信息量越大，所以信息量应该为概率的减函数，对于相互独立的两个事有p(xy)=p(x)p(y)，对于这两个事件信息量应满足h(xy)=h(x)+h(y)，那么信息量应为对数函数： ​    h(x) = -ln p(x) ​    对于一个随机变量可以以不同的概率发生，那么通过信息量">
+<meta name="twitter:image" content="e:/GitHub_learn/blog/source/imgs/熵.jpg">
 
 
 
@@ -120,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/线性代数的几何意义理解/">
+  <link rel="canonical" href="http://yoursite.com/熵/">
 
 
 
 
 
-  <title>线性代数几何意义理解 | Lee_yl's blog</title>
+  <title>熵 | Lee_yl's blog</title>
   
 
 
@@ -233,7 +239,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/线性代数的几何意义理解/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/熵/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Lee_yl">
@@ -250,7 +256,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">线性代数几何意义理解</h1>
+          <h1 class="post-title" itemprop="name headline">熵</h1>
         
 
         <div class="post-meta">
@@ -262,8 +268,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-10-21T00:00:00+08:00">
-                2020-10-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-20T00:00:00+08:00">
+                2023-02-20
               </time>
             
 
@@ -285,8 +291,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/数学/" itemprop="url" rel="index">
-                    <span itemprop="name">数学</span>
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
                   </a>
                 </span>
 
@@ -296,8 +302,19 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/数学/线性代数/" itemprop="url" rel="index">
-                    <span itemprop="name">线性代数</span>
+                  <a href="/categories/机器学习/先导知识/" itemprop="url" rel="index">
+                    <span itemprop="name">先导知识</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/先导知识/熵/" itemprop="url" rel="index">
+                    <span itemprop="name">熵</span>
                   </a>
                 </span>
 
@@ -333,47 +350,31 @@
       
 
       
-        <p>（以下内容是参考加上自己的理解，存在不对之处麻烦指出~)</p>
-<h1 id="一、存在的意义："><a href="#一、存在的意义：" class="headerlink" title="一、存在的意义："></a>一、存在的意义：</h1><p> 将现实生活的事物用计算机来识别并可以进行相应的处理。</p>
-<p>例子：现实生活的红色，人眼能直接判断，但计算机表示会转为RGB向量。若对颜色进行转换，加深或改变颜色则要进行向量的加法、数乘等。</p>
-<h2 id="1-主要内容：向量、矩阵、方程组"><a href="#1-主要内容：向量、矩阵、方程组" class="headerlink" title="1. 主要内容：向量、矩阵、方程组"></a>1. 主要内容：向量、矩阵、方程组</h2><h2 id="2、相关概念："><a href="#2、相关概念：" class="headerlink" title="2、相关概念："></a>2、相关概念：</h2><p>（1）N维空间：</p>
-<ul>
-<li>零维空间：一个点（标量）存在于零维空间</li>
-<li>一维空间：一条线（向量）</li>
-<li>二维空间：一个面（矩阵）</li>
-<li>三维空间：一个物体（三维张量），一个向量也可存在于三维空间</li>
-<li>四维空间：一个物体 + 时间维</li>
-</ul>
-<p>（2）意思一样的几个概念：行列式不为0，满秩，线性无关，两个向量可以形成一个平面/两个向量不平行，齐次方程组只有零解，非齐次方程组有唯一解</p>
-<p>阐述的是：</p>
-<p>​    向量：在空间中两个向量并不平行可以形成平面。</p>
-<p>​    矩阵：矩阵里几个行向量或列向量是线性无关的，其行列式不等于0且满秩。</p>
-<h2 id="3、标量："><a href="#3、标量：" class="headerlink" title="3、标量："></a>3、标量：</h2><ul>
-<li>是什么：一个数字</li>
-<li>作用：在向量空间中，标量的一个重要作用是缩放拉伸向量。</li>
-</ul>
-<h2 id="4、-向量："><a href="#4、-向量：" class="headerlink" title="4、 向量："></a>4、 向量：</h2><ul>
-<li><p>是什么：<strong>物理上，一个箭头，起点为坐标系的原点；</strong>如：作用力可以用一个向量来表示，一个方向为Y=X，大小为根号2的力用向量表示为[1,1].</p>
-<p>​              <strong>数学（计算机）上，一个有序的数字列表；</strong>如：一部电影多个评分2,3,5,4，可表示为[2,3,5,4]； 一个苹果重量1g, 价格1元，向量表示[1,1],存在于二维空间。</p>
-</li>
-<li><p>怎么用：</p>
-<ul>
-<li><strong>加法：</strong>点的运动，方向改变。</li>
-<li><strong>乘法：</strong>向量的拉伸缩放，方向不变。</li>
-<li>线性无关的向量通过加法和数乘的运算可以表示二维空间中所有向量。</li>
-<li><strong>内积（数量积）：</strong>在某个方向上，两个向量在上面的投影长度之和（即两个向量不同方向的能量忽略，考虑同方向所蕴含的能量，跟外积相反）</li>
-<li><strong>外积（向量积）：</strong>其大小是两个向量不同方向所积累的长度（能量）相乘。方向是跟两个向量正交，即形成平面的垂直方向。</li>
-</ul>
-</li>
-</ul>
-<h2 id="5、-矩阵：一种线性变换。"><a href="#5、-矩阵：一种线性变换。" class="headerlink" title="5、 矩阵：一种线性变换。"></a>5、 矩阵：一种线性变换。</h2><ul>
-<li>线性变换：保持网格线平行且等距分布。如：一个平面要逆时针旋转90度，即让该基左乘另一个矩阵。</li>
-<li>矩阵的列：坐标系中的一个轴/一个方向/一个基等</li>
-<li>矩阵的行：空间的维数，3行2列的矩阵表示三维空间中的两个轴。</li>
-<li>矩阵左乘：换基或线性变换，主要对矩阵行进行操作。</li>
-<li>行列式：线性变换后改变面积/体积等的比例。</li>
-<li></li>
-</ul>
+        <p>本篇博客仅作为学习,如有侵权必删。</p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzU0NjgzMDIxMQ==&amp;mid=2247599777&amp;idx=2&amp;sn=982e734b8de12d67ae64476c66f704bc&amp;chksm=fb54a44dcc232d5ba3fbf8f40c75801b0728beffb1b63f053b0c76209bbf54e47655dd421b25&amp;scene=27" target="_blank" rel="noopener">详解机器学习中的熵、条件熵、相对熵、交叉熵</a></p>
+<h1 id="1-信息量："><a href="#1-信息量：" class="headerlink" title="1. 信息量："></a>1. 信息量：</h1><p>一个事件发生的概率越小，信息量越大，所以信息量应该为概率的<strong>减函数</strong>，对于相互独立的两个事有<em>p</em>(<em>xy</em>)=<em>p</em>(<em>x</em>)<em>p</em>(<em>y</em>)，对于这两个事件信息量应满足<em>h</em>(<em>xy</em>)=<em>h</em>(<em>x</em>)+<em>h</em>(<em>y</em>)，那么信息量应为对数函数：</p>
+<p>​    h(x) = -ln p(x)</p>
+<p>​    对于一个随机变量可以以不同的概率发生，那么通过<strong>信息量期望</strong>的方式衡量，即<strong>信息熵</strong>。 </p>
+<h1 id="2-熵"><a href="#2-熵" class="headerlink" title="2. 熵"></a>2. 熵</h1><blockquote>
+<p> 熵：信息不确定性度量（信息量与不确定性相关）。事件发生的概率越小则携带的信息越大。</p>
+</blockquote>
+<p>​    一个离散随机变量X的可能取值为X=x1,x2,…,xn，而对应的概率为pi=p(X=xi),则随机变量的熵定义为： </p>
+<p><img src="E:\GitHub_learn\blog\source\imgs\熵.jpg" alt></p>
+<p>​    每个<em>xi</em>表示一种特征。 <em>H</em>(<em>X</em>)在每个<em>p</em>(<em>xi</em>) = 1/<em>N</em>是最大，<em>N</em>为信息的个数。在概率为1/<em>N</em>时信息是最不确定的。</p>
+<p>​    规定当p(xi)=0时，p(xi)log⁡(p(xi)=0</p>
+<p>【小思考：为何公式是这样子的？其实只需熵和概率P成反比，1/P , 但是有个量纲缺点：地震发生的概率很小（P = 1/百万)，则信息量为一百万。抛硬币概率1/2，则信息量为2。两者量纲差太大，取log之后，使得低范围的值稍微放大，高范围的值稍微放小。】</p>
+<h1 id="3-联合熵H-p-q"><a href="#3-联合熵H-p-q" class="headerlink" title="3. 联合熵H(p,q)"></a>3. 联合熵H(p,q)</h1><p>两个随机变量的p与q的联合分布形成的熵称为联合熵，记为<em>H</em>(p, q)。 </p>
+<p>​    <img src="E:\GitHub_learn\blog\source\imgs\交叉熵.jpg" alt></p>
+<h1 id="4-条件熵H-q-p"><a href="#4-条件熵H-q-p" class="headerlink" title="4. 条件熵H(q|p)"></a>4. 条件熵H(q|p)</h1><p><em>X</em>给定的条件下，<em>Y</em>的信息熵，即<em>H</em> (<em>Y</em> |X )。公式为：</p>
+<p><img src="E:\GitHub_learn\blog\source\imgs\条件熵.jpg" alt></p>
+<p><strong>推导过程：</strong></p>
+<p><img src="E:\GitHub_learn\blog\source\imgs\条件熵推导过程.jpg" alt></p>
+<h1 id="5-KL散度（相对熵）："><a href="#5-KL散度（相对熵）：" class="headerlink" title="5. KL散度（相对熵）："></a>5. KL散度（相对熵）：</h1><blockquote>
+<p> 交叉熵：两个概率分布之间的一个比较，如果两个分布越匹配，交叉熵就越低；如果两个概率分布完全比配，那么交叉熵就为 0。</p>
+</blockquote>
+<p>如果是两个随机变量P,Q，且其概率分布分别为p(x),q(x),则p相对q的相对熵为：</p>
+<p>​        <img src="E:\GitHub_learn\blog\source\imgs\KL散度.jpg" alt></p>
+<h1 id="6-几种熵之间的关系："><a href="#6-几种熵之间的关系：" class="headerlink" title="6. 几种熵之间的关系："></a>6. 几种熵之间的关系：</h1><p><img src="E:\GitHub_learn\blog\source\imgs\熵之间的关系.jpg" alt></p>
 
       
     </div>
@@ -389,12 +390,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/数学/" rel="tag"># 数学</a>
-          
-        </div>
-      
 
       
       
@@ -404,8 +399,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/字符/" rel="next" title="字符">
-                <i class="fa fa-chevron-left"></i> 字符
+              <a href="/MYSQL/" rel="next" title="SQL">
+                <i class="fa fa-chevron-left"></i> SQL
               </a>
             
           </div>
@@ -413,10 +408,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/数组/" rel="prev" title="数组">
-                数组 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -548,7 +539,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、存在的意义："><span class="nav-number">1.</span> <span class="nav-text">一、存在的意义：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-主要内容：向量、矩阵、方程组"><span class="nav-number">1.1.</span> <span class="nav-text">1. 主要内容：向量、矩阵、方程组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、相关概念："><span class="nav-number">1.2.</span> <span class="nav-text">2、相关概念：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、标量："><span class="nav-number">1.3.</span> <span class="nav-text">3、标量：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、-向量："><span class="nav-number">1.4.</span> <span class="nav-text">4、 向量：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5、-矩阵：一种线性变换。"><span class="nav-number">1.5.</span> <span class="nav-text">5、 矩阵：一种线性变换。</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-信息量："><span class="nav-number">1.</span> <span class="nav-text">1. 信息量：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-熵"><span class="nav-number">2.</span> <span class="nav-text">2. 熵</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-联合熵H-p-q"><span class="nav-number">3.</span> <span class="nav-text">3. 联合熵H(p,q)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-条件熵H-q-p"><span class="nav-number">4.</span> <span class="nav-text">4. 条件熵H(q|p)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-KL散度（相对熵）："><span class="nav-number">5.</span> <span class="nav-text">5. KL散度（相对熵）：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-几种熵之间的关系："><span class="nav-number">6.</span> <span class="nav-text">6. 几种熵之间的关系：</span></a></li></ol></div>
             
 
           </div>
