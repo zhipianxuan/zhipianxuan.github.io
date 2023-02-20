@@ -87,12 +87,13 @@
 <meta property="og:description" content="本篇博客仅作为学习,如有侵权必删。 详解机器学习中的熵、条件熵、相对熵、交叉熵 1. 信息量：一个事件发生的概率越小，信息量越大，所以信息量应该为概率的减函数，对于相互独立的两个事有p(xy)=p(x)p(y)，对于这两个事件信息量应满足h(xy)=h(x)+h(y)，那么信息量应为对数函数： ​    h(x) = -ln p(x) ​    对于一个随机变量可以以不同的概率发生，那么通过信息量">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/imgs/熵.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/熵.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/交叉熵.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/条件熵.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/条件熵推导过程.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/KL散度.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/熵之间的关系.jpg">
-<meta property="og:updated_time" content="2023-02-20T12:35:59.247Z">
+<meta property="og:updated_time" content="2023-02-20T12:37:53.078Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="熵">
 <meta name="twitter:description" content="本篇博客仅作为学习,如有侵权必删。 详解机器学习中的熵、条件熵、相对熵、交叉熵 1. 信息量：一个事件发生的概率越小，信息量越大，所以信息量应该为概率的减函数，对于相互独立的两个事有p(xy)=p(x)p(y)，对于这两个事件信息量应满足h(xy)=h(x)+h(y)，那么信息量应为对数函数： ​    h(x) = -ln p(x) ​    对于一个随机变量可以以不同的概率发生，那么通过信息量">
@@ -359,6 +360,7 @@
 <p> 熵：信息不确定性度量（信息量与不确定性相关）。事件发生的概率越小则携带的信息越大。</p>
 </blockquote>
 <p>​    一个离散随机变量X的可能取值为X=x1,x2,…,xn，而对应的概率为pi=p(X=xi),则随机变量的熵定义为： </p>
+<p><img src="..\imgs\熵.jpg" alt></p>
 <p><img src="..\imgs\熵.jpg" style="zoom:100%"></p>
 <p>​    每个<em>xi</em>表示一种特征。 <em>H</em>(<em>X</em>)在每个<em>p</em>(<em>xi</em>) = 1/<em>N</em>是最大，<em>N</em>为信息的个数。在概率为1/<em>N</em>时信息是最不确定的。</p>
 <p>​    规定当p(xi)=0时，p(xi)log⁡(p(xi)=0</p>
