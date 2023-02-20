@@ -229,6 +229,378 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/逻辑回归/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/逻辑回归/" itemprop="url">逻辑回归</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-20T00:00:00+08:00">
+                2023-02-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习基础/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习基础</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习基础/逻辑回归/" itemprop="url" rel="index">
+                    <span itemprop="name">逻辑回归</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本篇博客仅作为学习,如有侵权必删。</p>
+<p>[TOC]</p>
+<h1 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h1><h2 id="1-LR重点"><a href="#1-LR重点" class="headerlink" title="1. LR重点"></a>1. LR重点</h2><p><strong>LR的重点：</strong></p>
+<ul>
+<li><strong>目的</strong>：LR解决二分类问题。</li>
+<li><strong>输出结果</strong>：(0,1)之间的数值。</li>
+<li><strong>模型</strong>：线性模型 + sigmoid函数<ul>
+<li>y_pred = sigmoid(W0+W1 <em> x1 + … + Wn </em> xn) = sigmoid(∑W^TX)</li>
+</ul>
+</li>
+<li><strong>LR为何用sigmoid函数？</strong> sigmoid的性质 </li>
+<li><strong>损失函数</strong>：loss = -(∑y) log y_pred_i + (1-yi) log(1 - y_pred_i))</li>
+<li><strong>损失函数的推导：</strong></li>
+<li><strong>求解方法</strong>：梯度下降</li>
+<li></li>
+</ul>
+<h2 id="2-概念"><a href="#2-概念" class="headerlink" title="2. 概念"></a>2. 概念</h2><blockquote>
+<p><strong>二分类：</strong>假设有一批训练样本集合X={x1,x2,…,xn},其中xi有a个属性，对这些样本分类属于0还是1？</p>
+<p><strong>伯努利分布：</strong>离散型概率分布，成功则随机变量取值为1，失败则为0，设置成功的概率为p,则失败的概率为1-p，N次实验后，成功期望是Np，方差为 Np(1-p)</p>
+<ul>
+<li><p>​    期望/均值：实验中每次可能结果的概率乘其结果的总和。E(X)=∑xP(X), x表示随机变量的取值，P(X)表示随机变量X=x的概率。</p>
+</li>
+<li><p>​    方差：概率分布的数据期望，反映了随机变量取值的变异程度。D(x ) = E{[X-E(X)]^2}=E(X^2) - [ E(X)]^2</p>
+</li>
+</ul>
+<p><strong>似然函数（联合概率密度函数）：</strong></p>
+<ul>
+<li><p>先验概率：根据以往经验和分析得到的概率。主观上的经验估计p(x)</p>
+</li>
+<li><p>似然函数：在给定参数θ情况下得到结果 X 的概率分布p(x|θ) 。</p>
+<p>（给定输出x时，使得函数得到X概率最大的关于参数θ的似然函数L(θ|x)（在数值上）等于给定参数θ后变量X的概率， 即L(θ|x) = P(X=x|θ)）</p>
+</li>
+<li><p>后验概率：在给定结果信息X的情况下得到参数 θ 的概率： p(θ|x) 。</p>
+</li>
+</ul>
+<p><strong>梯度下降：</strong>一种求解模型的方法，后面细看。</p>
+<p><strong>LR：</strong>假设数据服从伯努利分布，通过极大化似然函数的方法，运用梯度下降来求解参数，达到将数据二分类的目的。</p>
+</blockquote>
+<h2 id="3-LR模型和损失函数"><a href="#3-LR模型和损失函数" class="headerlink" title="3. LR模型和损失函数"></a>3. LR模型和损失函数</h2><h3 id="模型和损失函数得到的过程："><a href="#模型和损失函数得到的过程：" class="headerlink" title="模型和损失函数得到的过程："></a>模型和损失函数得到的过程：</h3><p>第①步：引入参数θ=（θ1，θ2……），对于样本加权θ^TX</p>
+<p>第②步：引入logit函数：g(z)=1/(1+e^-z)，令z=θ^TX，故<strong>LR的模型</strong>：</p>
+<p>​        <img src="..\imgs\LR模型.jpg"></p>
+<p>​        <strong>假设样本服从的是伯努利分布（0-1分布）:</strong></p>
+<p>​        以上h的含义是：表示样本x属于类别1的概率，即P（y=1|x;θ）。则样本x属于类别0的概率为1-hθ(x)。</p>
+<p>​        联合两个概率即为似然函数。</p>
+<p>第③步：似然函数（联合概率密度函数）：</p>
+<p><img src="..\imgs\LR最大似然函数.jpg" alt></p>
+<p>​        所有样本的似然函数：（令概率最大化）</p>
+<p>​                    <img src="..\imgs\LR似然函数1.jpg" alt></p>
+<p>第④步：<strong>损失函数</strong>（对数似然函数取反min）：<strong>交叉熵</strong>损失函数</p>
+<p><img src="..\imgs\LR损失函数.jpg" alt></p>
+<p>​        </p>
+<h2 id="4-损失函数的来源推导"><a href="#4-损失函数的来源推导" class="headerlink" title="4. 损失函数的来源推导"></a>4. 损失函数的来源推导</h2><h3 id="法一：假设服从伯努利分布，伯努利分布的极大似然估计"><a href="#法一：假设服从伯努利分布，伯努利分布的极大似然估计" class="headerlink" title="法一：假设服从伯努利分布，伯努利分布的极大似然估计"></a><strong>法一：假设服从伯努利分布，伯努利分布的极大似然估计</strong></h3><ul>
+<li>假设样本服从伯努利(0-1)分布,有：</li>
+</ul>
+<p>​                    <img src="..\imgs\LR损失函数推导.jpg" alt></p>
+<h3 id="法二：熵角度确定损失函数"><a href="#法二：熵角度确定损失函数" class="headerlink" title="法二：熵角度确定损失函数"></a><strong>法二：熵角度确定损失函数</strong></h3><blockquote>
+<p><strong>KL散度（相对熵）：KL散度可以用来<code>衡量两个分布之间的差异程度</code>。若两者差异越小，KL散度越小，反之亦反。当两分布一致时，其KL散度为0。</strong></p>
+<p>​    相关概念请看：熵的章节</p>
+<p>​    如果是两个随机变量P,Q，且其概率分布分别为p(x),q(x),则p相对q的相对熵为：</p>
+<p>​        <img src="..\imgs\KL散度.jpg" alt></p>
+</blockquote>
+<p>模型预估值分布和实际值分布的KL散度：（KL散度越小，表明两个分布越相似，即预估值越接近实际值）。</p>
+<blockquote>
+<ul>
+<li><p>p <em> log(p/q) = p</em> logp - p* logq</p>
+<p>其中， p<em> logp是一个定值（实际值分布p = y_i，是固定的，0或1），- p</em> logq是交叉熵，只要交叉熵较大，则KL散度就越小，预测值和实际值越相似。</p>
+</li>
+<li><p>交叉熵：令-p <em> log q = -y_i </em> log y_pred_i . (可扩展为多个： -（y1 <em> log y_pred_1 + y2 </em> log y_pred_2 + y3 * log y_pred_3.。。。)</p>
+</li>
+</ul>
+</blockquote>
+<h3 id="法三、贝叶斯学派确定损失函数"><a href="#法三、贝叶斯学派确定损失函数" class="headerlink" title="法三、贝叶斯学派确定损失函数"></a><strong>法三、贝叶斯学派确定损失函数</strong></h3><p>贝叶斯公式：</p>
+<p><img src="..\imgs\贝叶斯推导损失函数.jpg" alt></p>
+<p>贝叶斯学派有先验函数，频率学派仅考虑似然函数。</p>
+<p>贝叶斯用上一次的后验当成下一次的先验与似然函数相乘，计算下一次的后验，不断迭代。</p>
+<h2 id="5-LR为何用sigmoid函数？"><a href="#5-LR为何用sigmoid函数？" class="headerlink" title="5. LR为何用sigmoid函数？"></a>5. LR为何用sigmoid函数？</h2><h3 id="（1）数学上"><a href="#（1）数学上" class="headerlink" title="（1）数学上"></a>（1）数学上</h3><pre><code>1. 因为LR服从伯努利分布，伯努利分布转化为广义线性模型指数分布族形式里可推导出sigmoid函数
+</code></pre><h3 id="（2）概率上："><a href="#（2）概率上：" class="headerlink" title="（2）概率上："></a>（2）概率上：</h3><p>sigmoid自身性质，值域在（0,1）之间，满足概率的要求</p>
+<h3 id="（3）单调性："><a href="#（3）单调性：" class="headerlink" title="（3）单调性："></a>（3）单调性：</h3><p>若sigmoid不具备单调性，LR不可用其作为映射函数。</p>
+<ul>
+<li><p>下图的g1 &lt; g2的x指的是线性中的g=wx的值。若LR的映射函数不具备单调性，则同一个y值会对应两个g值。</p>
+<p>因为x是给定的特征，则w没办法学习，因为LR是个记忆函数，在g1之前当学习w发现增大w1能让y接近高点（即在g1和g2之间）时，突然发现当w1更大时（大于g2），y越来越小，没办法沿着某些方向学习w值。</p>
+</li>
+</ul>
+<p><img src="..\imgs\sigmoid单调性.jpg" alt></p>
+<ul>
+<li>sigmoid具备单调性，则在使用redis存储参数w的key和value时，若推荐最终结果只涉及排序，则无需进行sigmoid计算，且若是离散特征，只需将x特征值为1对应的参数w相加得到最终值进行排序即可。又可以提高效率了。</li>
+</ul>
+<h3 id="sigmoid性质："><a href="#sigmoid性质：" class="headerlink" title="sigmoid性质："></a>sigmoid性质：</h3><blockquote>
+<ol>
+<li>定义域：（-∞，+∞）</li>
+<li>将任意input压缩到(0,1)之间，即值域为（0,1），符合概率定义</li>
+<li>设f(x) = sigmoid(x), f(x)导数为f(x)*(1-f(x)),  对梯度下降有好处，前向传递时计算结果可以保留，BP时可以直接用来计算，加快速度</li>
+<li>1/2处导数最大， 两边梯度趋于饱和，容易发生梯度消失（作为激活函数的弊端）<ol>
+<li><img src="https://pic2.zhimg.com/v2-729148803fc62ea5ee2327f28b6db301_b.jpg" alt="img"></li>
+</ol>
+</li>
+<li>不以原点为中心，BP时梯度下降更新慢，更新时以zigzag（折线）方式更新。（作为激活函数的弊端）</li>
+<li>单调性，LR的映射函数如果没有单调性不行。</li>
+</ol>
+</blockquote>
+<h2 id="6-【为什么参数的梯度方向一致容易造成zigzag现象】"><a href="#6-【为什么参数的梯度方向一致容易造成zigzag现象】" class="headerlink" title="6.【为什么参数的梯度方向一致容易造成zigzag现象】"></a>6.【为什么参数的梯度方向一致容易造成zigzag现象】</h2><p>当所有梯度同为正或者负时，参数在梯度更新时容易出现zigzag现象。</p>
+<p>zigzag现象如图4所示，不妨假设一共两个参数， w0 和 w1 ，紫色点为参数的最优解，蓝色箭头表示梯度最优方向，红色箭头表示实际梯度更新方向。</p>
+<p>由于参数的梯度方向一致，要么同正，要么同负，因此更新方向只能为第三象限角度或第一象限角度，而梯度的最优方向为第四象限角度，也就是参数 w0 要向着变小的方向， w1 要向着变大的方向，在这种情况下，每更新一次梯度，不管是同时变小(第三象限角度)还是同时变大(第四象限角度)，总是一个参数更接近最优状态，另一个参数远离最优状态，因此为了使参数尽快收敛到最优状态，出现交替向最优状态更新的现象，也就是zigzag现象。</p>
+<p><img src="https://pic3.zhimg.com/80/v2-bedaefcfbff2453f003365c10fc86356_720w.webp" alt="img"></p>
+<h2 id="7-梯度下降求解损失函数"><a href="#7-梯度下降求解损失函数" class="headerlink" title="7. 梯度下降求解损失函数"></a>7. 梯度下降求解损失函数</h2><p>梯度下降概念：根据loss求导，往</p>
+<p><img src="..\imgs\梯度下降.jpg" alt></p>
+<p><img src="..\imgs\LR的梯度下降求导.jpg" alt></p>
+<p>注意：这里梯度更新时用加号是因为max loss。 非min loss的值。</p>
+<h2 id="8-LR的优缺点"><a href="#8-LR的优缺点" class="headerlink" title="8. LR的优缺点"></a>8. LR的优缺点</h2><h3 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h3><ul>
+<li>1、<strong>形式简单，模型的可解释性非常好</strong>。从特征的权重可以看到不同的特征对最后结果的影响，某个特征的权重值比较高，那么这个特征最后对结果的影响会比较大。</li>
+<li>2、<strong>模型效果不错。</strong>在工程上是可以接受的（作为baseline)，如果特征工程做的好，效果不会太差，并且特征工程可以大家并行开发，大大加快开发的速度。</li>
+<li>3、<strong>训练速度较快。</strong>分类的时候，计算量仅仅只和特征的数目相关。并且逻辑回归的分布式优化sgd发展比较成熟，训练的速度可以通过堆机器进一步提高，这样我们可以在短时间内迭代好几个版本的模型。</li>
+<li>4、<strong>资源占用小,尤其是内存</strong>。因为只需要存储各个维度的特征值。</li>
+<li>5、<strong>方便输出结果调整。</strong>逻辑回归可以很方便的得到最后的分类结果，因为输出的是每个样本的概率分数，我们可以很容易的对这些概率分数进行cutoff，也就是划分阈值(大于某个阈值的是一类，小于某个阈值的是一类)。</li>
+<li>6、<strong>对稀疏数据比较友好。</strong>一个特征通过 one-hot : [0,0,1,……,0]  ，LR是个记忆模型，将该特征扔进LR之后，会将x3=1（w3）记得很好，别的都为0了，但这样也容易过拟合。（gbm，深度模型这些都不太喜欢稀疏数据）</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点:"></a>缺点:</h3><ul>
+<li>准<strong>确率并不是很高</strong>。因为形式非常的简单(非常类似线性模型)，很难去拟合数据的真实分布。</li>
+<li><strong>很难处理数据不平衡的问题。</strong>举个例子：如果我们对于一个正负样本非常不平衡的问题比如正负样本比      10000:1.我们把所有样本都预测为正也能使损失函数的值比较小。但是作为一个分类器，它对正负样本的区分能力不会很好。</li>
+<li><strong>处理非线性数据较麻烦。</strong>逻辑回归在不引入其他方法的情况下，只能处理线性可分的数据，或者进一步说，处理二分类的问题      。</li>
+<li><strong>逻辑回归本身无法筛选特征。</strong>有时候，我们会用gbdt来筛选特征，然后再上逻辑回归。</li>
+<li><strong>对模型中自变量多重共线性较为敏感</strong>，例如两个高度相关自变量同时放入模型，可能导致较弱的一个自变量回归符号不符合预期，符号被扭转。需要利用因子分析或者变量聚类分析等手段来选择代表性的自变量，以减少候选变量之间的相关性；</li>
+<li><strong>必须对缺失值处理</strong></li>
+</ul>
+<h2 id="9-扩展问题"><a href="#9-扩展问题" class="headerlink" title="9. 扩展问题"></a>9. 扩展问题</h2><blockquote>
+<ol>
+<li><strong>线性回归与LR的本质区别</strong>：</li>
+</ol>
+<p>【线形回归与 逻辑回归的本质区别是前者用于回归后者用于分类，二者都是线形模型。】</p>
+<ol start="2">
+<li><p><strong>什么情况下用LR</strong>【大规模样本下的线性二分类】</p>
+</li>
+<li><p><strong>LR的损失函数的公式和函数</strong></p>
+</li>
+<li><p>逻辑回归的损失函数为什么要使用极大似然函数作为损失函数？ </p>
+<p>【如果激活函数为sigmoid函数，使用均方误差作为损失函数的话为非凸函数，而使用对数损失函数为凸函数】</p>
+<p>【损失函数一般有四种，平方损失函数、对数损失函数、铰链损失函数和绝对值损失函数。极大似然取对数之后相当于对数损失，在LR模型下，对数损失函数的训练求解参数速度是比较快的，不选平方损失函数是因为梯度更新的速度和sigmoid函数本身的梯度是相关的，这样训练会比较慢】</p>
+</li>
+<li><p>LR的推导过程</p>
+</li>
+<li><p>LR如何解决共线性，为什么深度学习不强调</p>
+<p>【法1：岭回归（L2正则化）、</p>
+<p>法2：主成分分析，</p>
+<p>法3：共线性诊断常用的统计量：将所有回归中要用到的变量依次作为因变量、其他变量作为自变量进行回归分析，可以得到各个变量的膨胀系数VIF以及容忍度tolerance，如果容忍度越接近0，则共线性问题越严重，而VIF是越大共线性越严重，通常VIF小于5可以认为共线性不严重，宽泛一点的标准小于10即可。      】</p>
+<p>【因为深度学习不需要处理数据特征，自身可以学习】</p>
+<p>共线性问题有如下几种检验方法：</p>
+<ul>
+<li><strong>相关性分析</strong>。检验变量之间的相关系数；</li>
+<li><strong>方差膨胀因子VIF</strong>。当VIF大于5或10时，代表模型存在严重的共线性问题；</li>
+<li><strong>条件数检验</strong>。当条件数大于100、1000时，代表模型存在严重的共线性问题</li>
+</ul>
+</li>
+<li><p>为什么不能将线性或逻辑回归模型的系数绝对值解释为特征重要性？</p>
+<p>【因为很多现有线性回归量为每个系数返回P值，对于线性模型，许多实践者认为，系数绝对值越大，其对应特征越重要。事实很少如此，因为：</p>
+<p>(a)改变变量尺度就会改变系数绝对值；</p>
+<p>(b)如果特征是线性相关的，则系数可以从一个特征转移到另一个特征。此外，数据集特征越多，特征间越可能线性相关，用系数解释特征重要性就越不可靠。】</p>
+</li>
+<li><p>逻辑回归在训练的过程当中，如果有很多的特征高度相关或者说有一个特征重复了100遍，会造成怎样的影响？</p>
+<p>结论：如果在损失函数最终收敛的情况下，其实就算<strong>有很多特征高度相关也不会影响分类器的效果</strong>。原因：<strong>因为损失函数为凸函数，最终它会收敛到全局最小值，不再变化。</strong>因为LR是线性模型，其特征重复仅在每个特征分配权重缩小为百分之一，最后得到总结果和一个特征是一样的。】</p>
+</li>
+<li><p>为什么我们还是会在训练的过程当中将高度相关的特征去掉？</p>
+<p>【形式简单，模型可解释性好。训练速度快。资源占用内存小】</p>
+</li>
+<li><p>LR如何防止过拟合：</p>
+<p>【增加正则化项，L1、L2】</p>
+</li>
+<li><p>LR分布式训练怎么做</p>
+<p>【LR的并行化最主要的就是对目标函数梯度计算的并行化。梯度计算就是向量的点乘和相加，可通过按行或按列切分样本数据并行计算梯度，最后合并结果】</p>
+</li>
+<li><p>LR如何解决线性不可分问题？或者问LR为何常常要做特征组合？</p>
+<p>【逻辑回归本质上是一个线性模型，但是，这不意味着只有线性可分的数据能通过LR求解，实际上，我们可以通过2种方式帮助LR实现：（1）利用特殊核函数，对特征进行变换：把低维空间转换到高维空间，而在低维空间不可分的数据，到高维空间中线性可分的几率会高一些。（2）扩展LR算法，提出FM算法。】</p>
+</li>
+<li><p>LR为什么使用Sigmoid，</p>
+<p>【数学上：因为LR服从伯努利分布，伯努利分布转化成广义线性模型指数分布族形式里可推导出sigmoid函数；概率上：sigmoid自身性质，值域在（0,1）之间，满足概率的要求】</p>
+</li>
+<li><p>LR为什么要对连续数值特征进行离散化？</p>
+<p>【计算速度快，简单化模型，降低过拟合，可以做特征组合，对异常数据有强鲁棒性】</p>
+<p>①离散特征的增加和减少都很容易，易于模型的快速迭代；</p>
+<p>②稀疏向量内积乘法运算速度快，计算结果方便存储，容易扩展；</p>
+<p>③离散化后的特征对异常数据有很强的鲁棒性：比如一个特征是年龄&gt;30是1，否则0。如果特征没有离散化，一个异常数据“年龄300岁”会给模型造成很大的干扰；</p>
+<p>④逻辑回归属于广义线性模型，表达能力受限；单变量离散化为N个后，每个变量有单独的权重，相当于为模型引入了非线性，能够提升模型表达能力，加大拟合；</p>
+<p>⑤离散化后可以进行特征交叉，由M+N个变量变为M*N个变量，进一步引入非线性，提升表达能力；</p>
+<p>⑥特征离散化后，模型会更稳定，比如如果对用户年龄离散化，20-30作为一个区间，不会因为一个用户年龄长了一岁就变成一个完全不同的人。当然处于区间相邻处的样本会刚好相反，所以怎么划分区间是门学问；</p>
+<p>⑦特征离散化以后，起到了简化了逻辑回归模型的作用，降低了模型过拟合的风险。</p>
+<p>李沐曾经说过：模型是使用离散特征还是连续特征，其实是一个“海量离散特征+简单模型” 同 “少量连续特征+复杂模型”的权衡。既可以离散化用线性模型，也可以用连续特征加深度学习。就看是喜欢折腾特征还是折腾模型了。通常来说，前者容易，而且可以n个人一起并行做，有成功经验；后者目前看很赞，能走多远还须拭目以待。</p>
+</li>
+<li><p>LR与SVM的联系与区别：</p>
+<p>联系：</p>
+<p>1、<strong>LR和SVM都可以处理分类问题</strong>，且一般都用于处理线性二分类问题（在改进的情况下可以处理多分类问题）</p>
+<p>2、<strong>两个方法都可以增加不同的正则化项，</strong>如l1、l2等等。所以在很多实验中，两种算法的结果是很接近的。</p>
+<p>区别：</p>
+<p>1、<strong>LR是参数模型</strong>[逻辑回归是假设y服从Bernoulli分布]，<strong>SVM是非参数模型</strong>，LR对异常值更敏感。</p>
+<p>2、<strong>从目标函数来看，区别在于逻辑回归采用的是logistical loss，SVM采用的是hinge loss</strong>，这两个损失函数的目的都是增加对分类影响较大的数据点的权重，减少与分类关系较小的数据点的权重。</p>
+<p>3、<strong>SVM的处理方法是只考虑support vectors</strong>，也就是和分类最相关的少数点，去学习分类器。<strong>而逻辑回归通过非线性映射</strong>，大大减小了离分类平面较远的点的权重，相对提升了与分类最相关的数据点的权重。</p>
+<p>4、<strong>逻辑回归相对来说模型更简单，好理解，</strong>特别是<strong>大规模</strong>线性分类时比较方便。而<strong>SVM的理解和优化相对来说复杂一些</strong>，SVM转化为对偶问题后,分类只需要计算与少数几个支持向量的距离,这个在进行复杂核函数计算时优势很明显,能够大大简化模型和计算。</p>
+<p>5、logic 能做的 svm能做，但可能在<strong>准确率</strong>上有问题，svm能做的logic有的做不了。</p>
+</li>
+<li><p>如何选择LR与SVM？</p>
+<p>非线性分类器，低维空间可能很多特征都跑到一起了，导致线性不可分。</p>
+<p>①如果Feature的数量很大，跟样本数量差不多，这时候选用LR或者是Linear Kernel的SVM</p>
+<p>②如果Feature的数量比较小，样本数量一般，不算大也不算小，选用SVM+Gaussian Kernel</p>
+<p>③如果Feature的数量比较小，而样本数量很多，需要手工添加一些feature变成第一种情况。</p>
+<p>模型复杂度：SVM支持核函数，可处理线性非线性问题;LR模型简单，训练速度快，适合处理线性问题;决策树容易过拟合，需要进行剪枝</p>
+<p>损失函数：SVM hinge loss; LR L2正则化;</p>
+<p> adaboost 指数损失数据敏感度：SVM添加容忍度对outlier不敏感，只关心支持向量，且需要先做归一化; LR对远点敏感</p>
+<p>数据量：数据量大就用LR，数据量小且特征少就用SVM非线性核</p>
+</li>
+<li><p>什么是参数模型（LR）与非参数模型（SVM）？</p>
+<p>在统计学中，参数模型通常假设总体（随机变量）服从某一个分布，该分布由一些参数确定（比如正太分布由均值和方差确定），在此基础上构建的模型称为参数模型；</p>
+<p>非参数模型对于总体的分布不做任何假设，只是知道总体是一个随机变量，其分布是存在的（分布中也可能存在参数），但是无法知道其分布的形式，更不知道分布的相关参数，只有在给定一些样本的条件下，能够依据非参数统计的方法进行推断。</p>
+</li>
+<li><p>逻辑回归怎么多分类</p>
+<p>【把Sigmoid函数换成softmax函数，即可适用于多分类的场景。】</p>
+</li>
+<li><p>softmax公式，为什么用sigmoid函数进行非线性映射（从二项分布的伯努利方程角度）</p>
+</li>
+<li><p>Logistic回归能处理浮点数吗？</p>
+</li>
+</ol>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/熵/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1923,244 +2295,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/深二维矩阵DFS/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lee_yl">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lee_yl's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/深二维矩阵DFS/" itemprop="url">二维矩阵DFS</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-16T17:37:58+08:00">
-                2019-04-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/深度遍历DFS/" itemprop="url" rel="index">
-                    <span itemprop="name">深度遍历DFS</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="题目：输出所有路径数"><a href="#题目：输出所有路径数" class="headerlink" title="题目：输出所有路径数"></a>题目：<strong>输出所有路径数</strong></h1><p><strong><big>题目描述</big></strong></p>
-<div align="left"><img src="E:\GitHub_learn\blog\source\imgs\1338991-20190410212955245-631072021.png" align="left" style="zoom:45%; float:left;"></div>
-
-<h2 id="思路：DFS"><a href="#思路：DFS" class="headerlink" title="思路：DFS"></a>思路：DFS</h2><p>&emsp;&emsp;<strong>从起点开始，DFS，直到走到终点，用一个全局变量res[0]记录所有路径数量。</strong></p>
-<p><strong><big>代码:</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##dirs为上下左右方向</span></span><br><span class="line">dirs = [(<span class="number">-1</span>, <span class="number">0</span>), (<span class="number">1</span>, <span class="number">0</span>), (<span class="number">0</span>, <span class="number">1</span>), (<span class="number">0</span>, <span class="number">-1</span>)]</span><br><span class="line"><span class="comment">##结果设为全局变量</span></span><br><span class="line">res = <span class="number">0</span></span><br><span class="line"><span class="comment">##原始矩阵</span></span><br><span class="line">graph = [[<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>], [<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">0</span>], [<span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">0</span>], [<span class="number">0</span>, <span class="number">0</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">0</span>]]</span><br><span class="line">row = <span class="number">4</span></span><br><span class="line">col = <span class="number">5</span></span><br><span class="line"><span class="comment">##起始点和终点</span></span><br><span class="line">x1, y1, x2, y2 = <span class="number">0</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(x1, y1, visited)</span>:</span></span><br><span class="line">	<span class="keyword">global</span> res</span><br><span class="line">    <span class="keyword">if</span> x1 == x2 <span class="keyword">and</span> y1 == y2:</span><br><span class="line">        res += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">for</span> i, j <span class="keyword">in</span> dirs:</span><br><span class="line">        tmp_x = i + x1</span><br><span class="line">        tmp_y = j + y1</span><br><span class="line">        <span class="keyword">if</span> <span class="number">0</span> &lt;= tmp_x &lt; row <span class="keyword">and</span> <span class="number">0</span> &lt;= tmp_y &lt; col <span class="keyword">and</span> graph[tmp_x][tmp_y] &gt; graph[x1][y1] \</span><br><span class="line">                <span class="keyword">and</span> (tmp_x, tmp_y) <span class="keyword">not</span> <span class="keyword">in</span> visited:</span><br><span class="line">            dfs(tmp_x, tmp_y, visited | &#123;(tmp_x, tmp_y)&#125;)</span><br><span class="line"></span><br><span class="line">dfs(x1, y1, &#123;(x1, y1)&#125;)</span><br><span class="line">print(res)</span><br></pre></td></tr></table></figure>
-<h1 id="题目：图像渲染"><a href="#题目：图像渲染" class="headerlink" title="题目：图像渲染"></a>题目：<a href="https://leetcode-cn.com/problems/flood-fill/" target="_blank" rel="noopener">图像渲染</a></h1><p><strong><big>题目描述</big></strong></p>
-<p>有一幅以二维整数数组表示的图画，每一个整数表示该图画的像素值大小，数值在 0 到 65535 之间。</p>
-<p>给你一个坐标 <code>(sr, sc)</code> 表示图像渲染开始的像素值（行 ，列）和一个新的颜色值 <code>newColor</code>，让你重新上色这幅图像。</p>
-<p>为了完成上色工作，从初始坐标开始，记录初始坐标的上下左右四个方向上像素值与初始坐标相同的相连像素点，接着再记录这四个方向上符合条件的像素点与他们对应四个方向上像素值与初始坐标相同的相连像素点，……，重复该过程。将所有有记录的像素点的颜色值改为新的颜色值。</p>
-<p>最后返回经过上色渲染后的图像。</p>
-<p><strong>示例 1:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输入: </span><br><span class="line">image = [[1,1,1],[1,1,0],[1,0,1]]</span><br><span class="line">sr = 1, sc = 1, newColor = 2</span><br><span class="line">输出: [[2,2,2],[2,2,0],[2,0,1]]</span><br><span class="line">解析: </span><br><span class="line">在图像的正中间，(坐标(sr,sc)=(1,1)),</span><br><span class="line">在路径上所有符合条件的像素点的颜色都被更改成2。</span><br><span class="line">注意，右下角的像素没有更改为2，</span><br><span class="line">因为它不是在上下左右四个方向上与初始点相连的像素点。</span><br></pre></td></tr></table></figure>
-<h2 id="思路：DFS-1"><a href="#思路：DFS-1" class="headerlink" title="思路：DFS"></a>思路：DFS</h2><p>​    <strong>边界：</strong>如果当前值被浏览过则停止。即被赋予过新值。</p>
-<p>​    <strong>递归子问题：</strong>从起点开始，将当前点赋值为新值，上下左右移动查看符合条件（值与起始点相同，在矩阵维度内）的位置点，进行DFS。</p>
-<p><strong><big>代码</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">floodFill</span><span class="params">(self, image, sr, sc, newColor)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    :type image: List[List[int]]</span></span><br><span class="line"><span class="string">    :type sr: int</span></span><br><span class="line"><span class="string">    :type sc: int</span></span><br><span class="line"><span class="string">    :type newColor: int</span></span><br><span class="line"><span class="string">    :rtype: List[List[int]]</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment">##上下左右移动方向</span></span><br><span class="line">    stack = [(<span class="number">-1</span>,<span class="number">0</span>),(<span class="number">1</span>,<span class="number">0</span>),(<span class="number">0</span>,<span class="number">-1</span>),(<span class="number">0</span>,<span class="number">1</span>)] </span><br><span class="line">    <span class="comment">##矩阵维度</span></span><br><span class="line">    self.m , self.n = len(image) , len(image[<span class="number">0</span>])</span><br><span class="line">    <span class="comment">##val表示起点值</span></span><br><span class="line">    self.val = image[sr][sc] </span><br><span class="line">    <span class="comment">##递归函数</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(image,x,y,newColor)</span>:</span></span><br><span class="line">        <span class="comment">##如果该值被浏览过，则退出（边界）</span></span><br><span class="line">        <span class="keyword">if</span> image[x][y] == newColor:</span><br><span class="line">            <span class="keyword">return</span> image</span><br><span class="line">        <span class="comment">##将当前位置赋值为新值</span></span><br><span class="line">        image[x][y] = newColor</span><br><span class="line">        <span class="keyword">for</span> i,j <span class="keyword">in</span> stack:</span><br><span class="line">            <span class="comment">##tmpx,tmpy是上下左右移动的值</span></span><br><span class="line">            tmpx = x + i</span><br><span class="line">            tmpy = y + j</span><br><span class="line">            <span class="comment">##如果tmpx,tmpy在矩阵维度范围内，且该位置的值和起始点值一样，则进入递归。</span></span><br><span class="line">            <span class="keyword">if</span> <span class="number">0</span> &lt;= tmpx &lt; self.m <span class="keyword">and</span> <span class="number">0</span> &lt;= tmpy &lt; self.n <span class="keyword">and</span> image[tmpx][tmpy] == self.val:</span><br><span class="line">                dfs(image,tmpx,tmpy,newColor)</span><br><span class="line">    <span class="keyword">if</span> <span class="number">0</span> &lt;= sr &lt; self.m <span class="keyword">and</span> <span class="number">0</span> &lt;= sc &lt; self.n:</span><br><span class="line">        dfs(image,sr,sc,newColor)</span><br><span class="line">    <span class="keyword">return</span> image</span><br></pre></td></tr></table></figure>
-<h1 id="题目：单词搜索"><a href="#题目：单词搜索" class="headerlink" title="题目：单词搜索"></a>题目：<a href="https://leetcode-cn.com/problems/word-search/" target="_blank" rel="noopener">单词搜索</a></h1><p>给定一个二维网格和一个单词，找出该单词是否存在于网格中。</p>
-<p>单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。</p>
-<p><strong>示例:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">board =</span><br><span class="line">[</span><br><span class="line">  [&apos;A&apos;,&apos;B&apos;,&apos;C&apos;,&apos;E&apos;],</span><br><span class="line">  [&apos;S&apos;,&apos;F&apos;,&apos;C&apos;,&apos;S&apos;],</span><br><span class="line">  [&apos;A&apos;,&apos;D&apos;,&apos;E&apos;,&apos;E&apos;]</span><br><span class="line">]</span><br><span class="line">给定 word = &quot;ABCCED&quot;, 返回 true.</span><br><span class="line">给定 word = &quot;SEE&quot;, 返回 true.</span><br><span class="line">给定 word = &quot;ABCB&quot;, 返回 false.</span><br></pre></td></tr></table></figure>
-<h2 id="思路：DFS-2"><a href="#思路：DFS-2" class="headerlink" title="思路：DFS"></a>思路：DFS</h2><p>对所有的点进行遍历，找到第一个字母与word的第一个字母相同的，开始进行dfs。</p>
-<p><strong><big>代码</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">exist</span><span class="params">(self, board,word)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> word:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> board <span class="keyword">or</span> <span class="keyword">not</span> board[<span class="number">0</span>]:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        self.m , self.n = len(board) , len(board[<span class="number">0</span>])</span><br><span class="line">        stack = [(<span class="number">0</span>,<span class="number">1</span>),(<span class="number">0</span>,<span class="number">-1</span>),(<span class="number">1</span>,<span class="number">0</span>),(<span class="number">-1</span>,<span class="number">0</span>)]</span><br><span class="line">        self.flag = <span class="literal">False</span></span><br><span class="line">        <span class="comment">##DFS</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(board,word,stack,x,y,w,visited)</span>:</span></span><br><span class="line">            <span class="keyword">if</span> w == len(word):</span><br><span class="line">                self.flag = <span class="literal">True</span></span><br><span class="line">                <span class="keyword">return</span> </span><br><span class="line">            <span class="keyword">for</span> i,j <span class="keyword">in</span> stack:</span><br><span class="line">                temx = x + i</span><br><span class="line">                temy = y + j</span><br><span class="line">                <span class="keyword">if</span> <span class="number">0</span> &lt;= temx &lt; self.m <span class="keyword">and</span> <span class="number">0</span> &lt;= temy &lt; self.n <span class="keyword">and</span> board[temx][temy] == word[w] <span class="keyword">and</span> (temx,temy) <span class="keyword">not</span> <span class="keyword">in</span> visited:</span><br><span class="line">                    dfs(board,word,stack,temx,temy,w+<span class="number">1</span>,visited|&#123;(temx,temy)&#125;)</span><br><span class="line">                    <span class="comment">##这里是要一遇到可不继续递归则立马停止，不然时间复杂度太高</span></span><br><span class="line">                    <span class="keyword">if</span> self.flag:</span><br><span class="line">                        <span class="keyword">return</span></span><br><span class="line">        <span class="comment">#每个点都有看是不是可以作为起始。</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.m):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(self.n):</span><br><span class="line">                <span class="keyword">if</span> board[i][j] == word[<span class="number">0</span>]:</span><br><span class="line">                    dfs(board,word,stack,i,j,<span class="number">1</span>,&#123;(i,j)&#125;)</span><br><span class="line">                    <span class="comment">##这里是要一遇到可不继续递归则立马停止，不然时间复杂度太高</span></span><br><span class="line">                    <span class="keyword">if</span> self.flag:</span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">return</span> self.flag</span><br></pre></td></tr></table></figure>
-<h1 id="题目：岛屿的最大面积"><a href="#题目：岛屿的最大面积" class="headerlink" title="题目：岛屿的最大面积"></a>题目：<a href="https://leetcode-cn.com/problems/max-area-of-island/" target="_blank" rel="noopener"><strong>岛屿的最大面积</strong></a></h1><p><strong><big>题目描述</big></strong></p>
-<p>给定一个包含了一些 0 和 1的非空二维数组 <code>grid</code> , 一个 <strong>岛屿</strong> 是由四个方向 (水平或垂直) 的 <code>1</code> (代表土地) 构成的组合。你可以假设二维矩阵的四个边缘都被水包围着。</p>
-<p>找到给定的二维数组中最大的岛屿面积。(如果没有岛屿，则返回面积为0。)</p>
-<p><strong>示例 1:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[[0,0,1,0,0,0,0,1,0,0,0,0,0],</span><br><span class="line"> [0,0,0,0,0,0,0,1,1,1,0,0,0],</span><br><span class="line"> [0,1,1,0,1,0,0,0,0,0,0,0,0],</span><br><span class="line"> [0,1,0,0,1,1,0,0,1,0,1,0,0],</span><br><span class="line"> [0,1,0,0,1,1,0,0,1,1,1,0,0],</span><br><span class="line"> [0,0,0,0,0,0,0,0,0,0,1,0,0],</span><br><span class="line"> [0,0,0,0,0,0,0,1,1,1,0,0,0],</span><br><span class="line"> [0,0,0,0,0,0,0,1,1,0,0,0,0]]</span><br></pre></td></tr></table></figure>
-<p>对于上面这个给定矩阵应返回 <code>6</code>。注意答案不应该是11，因为岛屿只能包含水平或垂直的四个方向的‘1’。</p>
-<p><strong>示例 2:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[0,0,0,0,0,0,0,0]]</span><br></pre></td></tr></table></figure>
-<p>对于上面这个给定的矩阵, 返回 <code>0</code>。</p>
-<p><strong>注意:</strong> 给定的矩阵<code>grid</code> 的长度和宽度都不超过 50。</p>
-<h2 id="思路：DFS-3"><a href="#思路：DFS-3" class="headerlink" title="思路：DFS"></a>思路：DFS</h2><p>&emsp;&emsp;遍历矩阵，遇到 grid [i] [j] = 1时，就算值【采用dfs来算】</p>
-<p>&emsp;&emsp;dfs : 先将grid [i] [j] 置0，然后再 return 1 + dfs [i-1] [j] + dfs [i+1] [j] +dfs [i] [j-1] +dfs [i] [j+1]</p>
-<p><strong><big>代码</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">maxAreaOfIsland</span><span class="params">(self, grid)</span>:</span></span><br><span class="line">       <span class="string">"""</span></span><br><span class="line"><span class="string">       :type grid: List[List[int]]</span></span><br><span class="line"><span class="string">       :rtype: int</span></span><br><span class="line"><span class="string">       """</span></span><br><span class="line">       <span class="keyword">if</span> <span class="keyword">not</span> grid:</span><br><span class="line">           <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">       l,h = len(grid),len(grid[<span class="number">0</span>])</span><br><span class="line">       </span><br><span class="line">       <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(i,j)</span>:</span></span><br><span class="line">           <span class="keyword">if</span> <span class="number">0</span> &lt;= i &lt; l <span class="keyword">and</span> <span class="number">0</span> &lt;= j &lt; h <span class="keyword">and</span> grid[i][j]:</span><br><span class="line">               grid[i][j] = <span class="number">0</span></span><br><span class="line">               <span class="keyword">return</span> <span class="number">1</span> + dfs(i<span class="number">-1</span>,j) + dfs(i+<span class="number">1</span>,j) +dfs(i,j<span class="number">-1</span>) + dfs(i,j+<span class="number">1</span>)</span><br><span class="line">           <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">           </span><br><span class="line">       result = [dfs(i,j) <span class="keyword">for</span> i <span class="keyword">in</span> range(l) <span class="keyword">for</span> j <span class="keyword">in</span> range(h) <span class="keyword">if</span> grid[i][j]]</span><br><span class="line">       <span class="keyword">return</span> max(result) <span class="keyword">if</span> result <span class="keyword">else</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<h1 id="题目：岛屿的个数"><a href="#题目：岛屿的个数" class="headerlink" title="题目：岛屿的个数"></a>题目：岛屿的个数</h1><p>给定一个由 <code>&#39;1&#39;</code>（陆地）和 <code>&#39;0&#39;</code>（水）组成的的二维网格，计算岛屿的数量。一个岛被水包围，并且它是通过水平方向或垂直方向上相邻的陆地连接而成的。你可以假设网格的四个边均被水包围。<br><strong>示例 1:</strong><br>输入:<br>11110<br>11010<br>11000<br>00000<br>输出: 1<br><strong>示例 2:</strong><br>输入:<br>11000<br>11000<br>00100<br>00011<br>输出: 3</p>
-<h2 id="思路：DFS-4"><a href="#思路：DFS-4" class="headerlink" title="思路：DFS"></a>思路：DFS</h2><p>​    遍历矩阵，遇到 grid [i] [j] = 1时，将最大面积的岛屿置0【采用dfs来算】，res记录几个岛屿个数。</p>
-<p>&emsp;&emsp;dfs : 将grid [i] [j] 置0</p>
-<p><strong><big>代码</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">numIslands</span><span class="params">(self, grid)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type grid: List[List[str]]</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> grid <span class="keyword">or</span> <span class="keyword">not</span> grid[<span class="number">0</span>]:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        stack = [(<span class="number">-1</span>,<span class="number">0</span>),(<span class="number">1</span>,<span class="number">0</span>),(<span class="number">0</span>,<span class="number">1</span>),(<span class="number">0</span>,<span class="number">-1</span>)]</span><br><span class="line">        self.m , self.n = len(grid) , len(grid[<span class="number">0</span>])</span><br><span class="line">        res = <span class="number">0</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(grid,stack,x,y)</span>:</span></span><br><span class="line">            grid[x][y] = <span class="string">'0'</span></span><br><span class="line">            <span class="keyword">for</span> i,j <span class="keyword">in</span> stack:</span><br><span class="line">                tmpx = x + i</span><br><span class="line">                tmpy = y + j</span><br><span class="line">                <span class="keyword">if</span> <span class="number">0</span> &lt;= tmpx &lt; self.m <span class="keyword">and</span> <span class="number">0</span> &lt;= tmpy &lt; self.n <span class="keyword">and</span> grid[tmpx][tmpy] == <span class="string">'1'</span>:</span><br><span class="line">                    dfs(grid,stack,tmpx,tmpy)</span><br><span class="line">            <span class="keyword">return</span> grid</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.m):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(self.n):</span><br><span class="line">                <span class="keyword">if</span> grid[i][j]==<span class="string">'1'</span>:</span><br><span class="line">                    dfs(grid,stack,i,j)</span><br><span class="line">                    res += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
-<h1 id="题目：最大正方形"><a href="#题目：最大正方形" class="headerlink" title="题目：最大正方形"></a>题目：最大正方形</h1><p><strong><big>题目描述</big></strong></p>
-<p>在一个由 0 和 1 组成的二维矩阵内，找到只包含 1 的最大正方形，并返回其面积。</p>
-<p><strong>示例:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">输入: </span><br><span class="line">1 0 1 0 0</span><br><span class="line">1 0 1 1 1</span><br><span class="line">1 1 1 1 1</span><br><span class="line">1 0 0 1 0</span><br><span class="line">输出: 4</span><br></pre></td></tr></table></figure>
-<h2 id="思路：动态规划"><a href="#思路：动态规划" class="headerlink" title="思路：动态规划"></a>思路：动态规划</h2><p><img src="https://img2018.cnblogs.com/blog/1338991/201901/1338991-20190116104224296-1178881118.png" alt="img"></p>
-<p><strong><big>代码</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public class Solution &#123;</span><br><span class="line">    public int maximalSquare(char[][] matrix) &#123;</span><br><span class="line">        <span class="keyword">if</span>(matrix.length == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        int m = matrix.length, n = matrix[<span class="number">0</span>].length;</span><br><span class="line">        int max = <span class="number">0</span>;</span><br><span class="line">        int[][] dp = new int[m][n];</span><br><span class="line">        // 第一列赋值</span><br><span class="line">        <span class="keyword">for</span>(int i = <span class="number">0</span>; i &lt; m; i++)&#123;</span><br><span class="line">            dp[i][<span class="number">0</span>] = matrix[i][<span class="number">0</span>] - <span class="string">'0'</span>;</span><br><span class="line">            max = Math.max(max, dp[i][<span class="number">0</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        // 第一行赋值</span><br><span class="line">        <span class="keyword">for</span>(int i = <span class="number">0</span>; i &lt; n; i++)&#123;</span><br><span class="line">            dp[<span class="number">0</span>][i] = matrix[<span class="number">0</span>][i] - <span class="string">'0'</span>;</span><br><span class="line">            max = Math.max(max, dp[<span class="number">0</span>][i]);</span><br><span class="line">        &#125;</span><br><span class="line">        // 递推</span><br><span class="line">        <span class="keyword">for</span>(int i = <span class="number">1</span>; i &lt; m; i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(int j = <span class="number">1</span>; j &lt; n; j++)&#123;</span><br><span class="line">                dp[i][j] = matrix[i][j] == '1' ? Math.min(dp[i-1][j-1], Math.min(dp[i-1][j], dp[i][j-1])) + 1 : 0;</span><br><span class="line">                max = Math.max(max, dp[i][j]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> max * max;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="题目：01矩阵"><a href="#题目：01矩阵" class="headerlink" title="题目：01矩阵"></a>题目：01矩阵</h1><p>给定一个由 0 和 1 组成的矩阵，找出每个元素到最近的 0 的距离。</p>
-<p>两个相邻元素间的距离为 1 。</p>
-<p><strong>示例 1:</strong><br> 输入:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0 0 0</span><br><span class="line">0 1 0</span><br><span class="line">0 0 0</span><br></pre></td></tr></table></figure>
-<p>输出：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0 0 0</span><br><span class="line">0 1 0</span><br><span class="line">0 0 0</span><br></pre></td></tr></table></figure>
-<p><strong>示例 2:</strong><br> 输入:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0 0 0</span><br><span class="line">0 1 0</span><br><span class="line">1 1 1</span><br></pre></td></tr></table></figure>
-<p>输出:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0 0 0</span><br><span class="line">0 1 0</span><br><span class="line">1 2 1</span><br></pre></td></tr></table></figure>
-<p><strong>注意:</strong></p>
-<ol>
-<li>给定矩阵的元素个数不超过 10000。</li>
-<li>给定矩阵中至少有一个元素是 0。</li>
-<li>矩阵中的元素只在四个方向上相邻: 上、下、左、右。</li>
-</ol>
-<h2 id="思路1：DFS"><a href="#思路1：DFS" class="headerlink" title="思路1：DFS"></a>思路1：DFS</h2><p><strong><big>代码</big></strong></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">dfs</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt; &amp;matrix,<span class="keyword">int</span> i,<span class="keyword">int</span> j,<span class="keyword">int</span> R,<span class="keyword">int</span> C,<span class="keyword">bool</span>** visited)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> res=R+C;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="number">0</span>==matrix[i][j]) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        visited[i][j]=<span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (j&gt;<span class="number">0</span>&amp;&amp;!visited[i][j<span class="number">-1</span>])&#123;<span class="comment">//left</span></span><br><span class="line">            res=min(res,<span class="number">1</span>+dfs(matrix,i,j<span class="number">-1</span>,R,C,visited));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (j&lt;C<span class="number">-1</span>&amp;&amp;!visited[i][j+<span class="number">1</span>])&#123;<span class="comment">//right</span></span><br><span class="line">            res=min(res,<span class="number">1</span>+dfs(matrix,i,j+<span class="number">1</span>,R,C,visited));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (i&gt;<span class="number">0</span>&amp;&amp;!visited[i<span class="number">-1</span>][j])&#123;<span class="comment">//up</span></span><br><span class="line">            res=min(res,<span class="number">1</span>+dfs(matrix,i<span class="number">-1</span>,j,R,C,visited));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (i&lt;R<span class="number">-1</span>&amp;&amp;!visited[i+<span class="number">1</span>][j])&#123;<span class="comment">//down</span></span><br><span class="line">             res=min(res,<span class="number">1</span>+dfs(matrix,i+<span class="number">1</span>,j,R,C,visited));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        visited[i][j]=<span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt; updateMatrix(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt;&amp; matrix) &#123;</span><br><span class="line">        <span class="keyword">int</span> R=matrix.size(),C=matrix[<span class="number">0</span>].size();</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt; ret(R,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;(C,<span class="number">0</span>));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">bool</span> **visited=<span class="keyword">new</span> <span class="keyword">bool</span> *[R];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;R;i++)&#123;</span><br><span class="line">           visited[i]=<span class="keyword">new</span> <span class="keyword">bool</span> [C];</span><br><span class="line">           fill(visited[i],visited[i]+C,<span class="literal">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;R;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;C;j++)&#123;</span><br><span class="line">                ret[i][j]=dfs(matrix,i,j,R,C,visited);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">delete</span> [] visited;</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h2 id="思路2：BFS"><a href="#思路2：BFS" class="headerlink" title="思路2：BFS"></a>思路2：<a href="https://blog.csdn.net/qq_28327765/article/details/85054778" target="_blank" rel="noopener">BFS</a></h2><h1 id="题目：被围绕的区域"><a href="#题目：被围绕的区域" class="headerlink" title="题目：被围绕的区域"></a>题目：<a href="https://leetcode-cn.com/problems/surrounded-regions/" target="_blank" rel="noopener">被围绕的区域</a></h1><p>给定一个二维的矩阵，包含 <code>&#39;X&#39;</code> 和 <code>&#39;O&#39;</code>（<strong>字母 O</strong>）。</p>
-<p>找到所有被 <code>&#39;X&#39;</code> 围绕的区域，并将这些区域里所有的 <code>&#39;O&#39;</code> 用 <code>&#39;X&#39;</code> 填充。</p>
-<p><strong>示例:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">X X X X</span><br><span class="line">X O O X</span><br><span class="line">X X O X</span><br><span class="line">X O X X</span><br></pre></td></tr></table></figure>
-<p>运行你的函数后，矩阵变为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">X X X X</span><br><span class="line">X X X X</span><br><span class="line">X X X X</span><br><span class="line">X O X X</span><br></pre></td></tr></table></figure>
-<p><strong>解释:</strong></p>
-<p>被围绕的区间不会存在于边界上，换句话说，任何边界上的 <code>&#39;O&#39;</code> 都不会被填充为 <code>&#39;X&#39;</code>。 任何不在边界上，或不与边界上的 <code>&#39;O&#39;</code> 相连的 <code>&#39;O&#39;</code> 最终都会被填充为 <code>&#39;X&#39;</code>。如果两个元素在水平或垂直方向相邻，则称它们是“相连”的。</p>
-<h2 id="思路：DFS-5"><a href="#思路：DFS-5" class="headerlink" title="思路：DFS"></a>思路：DFS</h2><p>题意就是找出被‘X’完全包围的‘O’的区域，填充为‘X’。</p>
-<p>解决思路就是反向找出没有完全被‘X’完全包围的‘O’的区域，标记一下，然后没有标记的就是要被填充的。</p>
-<ul>
-<li>思路就是绕着矩阵的最外圈转一圈，碰到‘O’，说明这里可以往里进行深搜；</li>
-<li>将深搜经过的所有‘O’都标记成‘Y’；</li>
-<li>外圈深搜完成后，所有没有被包围的‘O’都已经标记成了‘Y’；</li>
-<li>将所有‘Y’填充为‘O’，所有‘O’填充为‘X’。</li>
-</ul>
-<p><strong><big>代码</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solve</span><span class="params">(board)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Do not return anything, modify board in-place instead.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> board <span class="keyword">or</span> <span class="keyword">not</span> board[<span class="number">0</span>]:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    m , n = len(board) , len(board[<span class="number">0</span>])</span><br><span class="line">    stack = [(<span class="number">0</span>,<span class="number">1</span>),(<span class="number">0</span>,<span class="number">-1</span>),(<span class="number">1</span>,<span class="number">0</span>),(<span class="number">-1</span>,<span class="number">0</span>)]</span><br><span class="line">    <span class="comment">#将深搜经过的所有‘O’都标记成‘Y’；</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(board,x,y,stack,m,n)</span>:</span></span><br><span class="line">        board[x][y] = <span class="string">'Y'</span></span><br><span class="line">        <span class="keyword">for</span> i,j <span class="keyword">in</span> stack:</span><br><span class="line">            temx = x + i</span><br><span class="line">            temy = y + j</span><br><span class="line">            <span class="keyword">if</span> <span class="number">0</span> &lt;= temx &lt; m <span class="keyword">and</span> <span class="number">0</span> &lt;= temy &lt; n <span class="keyword">and</span> board[temx][temy] == <span class="string">'O'</span>:</span><br><span class="line">                board[temx][temy] = <span class="string">'Y'</span></span><br><span class="line">                dfs(board,temx,temy,stack,m,n)</span><br><span class="line">    <span class="comment">#外圈深搜完成后，所有没有被包围的‘O’都已经标记成了‘Y’；</span></span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">in</span> range(n):</span><br><span class="line">        <span class="keyword">if</span> board[<span class="number">0</span>][y] == <span class="string">'O'</span>:</span><br><span class="line">            dfs(board,<span class="number">0</span>,y,stack,m,n)</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> range(m):</span><br><span class="line">        <span class="keyword">if</span> board[x][n<span class="number">-1</span>] == <span class="string">'O'</span>:</span><br><span class="line">            dfs(board,x,n<span class="number">-1</span>,stack,m,n)            </span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">in</span> range(n):</span><br><span class="line">        <span class="keyword">if</span> board[m<span class="number">-1</span>][y] == <span class="string">'O'</span>:</span><br><span class="line">            dfs(board,m<span class="number">-1</span>,y,stack,m,n)</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> range(m):</span><br><span class="line">        <span class="keyword">if</span> board[x][<span class="number">0</span>] == <span class="string">'O'</span>:</span><br><span class="line">            dfs(board,x,<span class="number">0</span>,stack,m,n)</span><br><span class="line">    <span class="comment">#将所有‘Y’填充为‘O’，所有‘O’填充为‘X’。</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">            <span class="keyword">if</span> board[i][j] == <span class="string">'O'</span>:</span><br><span class="line">                board[i][j] = <span class="string">'X'</span></span><br><span class="line">            <span class="keyword">elif</span> board[i][j] == <span class="string">'Y'</span>:</span><br><span class="line">                board[i][j] = <span class="string">'O'</span></span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2211,7 +2345,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2222,7 +2356,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
