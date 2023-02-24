@@ -1310,6 +1310,26 @@
 <p><strong>代码：</strong></p>
 <p>注意在导出模型时，最终结果过完sigmoid，再进行bias_correct。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bias_correct</span><span class="params">(b, nr)</span>:</span></span><br><span class="line">	<span class="string">"""</span></span><br><span class="line"><span class="string">	nr: neg_sample_rate</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">	"""</span></span><br><span class="line">    <span class="keyword">if</span> nr &lt; <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> b + math.log(nr)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> b</span><br><span class="line"></span><br><span class="line">nr = <span class="number">0.1</span> <span class="comment"># 负采样率</span></span><br><span class="line">last_op[<span class="string">'bias'</span>] = bias_correct(last_op[<span class="string">'bias'</span>]， nr) <span class="comment"># 纠正sigmoid后的bias</span></span><br></pre></td></tr></table></figure>
+<h3 id="（3）校准算法3-—-SIR（保序回归平滑校准算法）"><a href="#（3）校准算法3-—-SIR（保序回归平滑校准算法）" class="headerlink" title="（3）校准算法3 —-SIR（保序回归平滑校准算法）"></a>（3）校准算法3 —-SIR（保序回归平滑校准算法）</h3><p><img src="https://filescdn.proginn.com/29a600113e1c6026170821dcf5fa7a04/451e0a9c1532a7386e09b155b8915293.webp" alt="img"></p>
+<blockquote>
+<p> SIR算法是18年提出的，如上图所示，结合了Binning、Isotonic Regression和线性Scaling方法。</p>
+</blockquote>
+<p>具体思想为：</p>
+<p>模型原始打分相近的PV具有近似的真实点击率，PCTR大小区间可作为一个合理的校准维度（分桶）；</p>
+<p>分桶数据量稀疏时，进一步利用模型本身的排序能力，对各分桶后验点击率与模型预估点击率做保序处理（保序回归）；</p>
+<p>最后使用单调平滑函数拟合模型原始打分和后验点击率的映射关系（线性Scaling）就得到了校准函数。</p>
+<p>该算法的优势在于充分利用了保序和平滑思想缓解了数据稀疏的问题，而且具备轻量级和可解释性特点。</p>
+<p>（详细可见论文：﻿Calibrating user response predictions in online advertising）。</p>
+<h3 id="（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR"><a href="#（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR" class="headerlink" title="（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR)"></a>（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR)</h3><blockquote>
+<p>beta分布： <a href="https://www.cnblogs.com/Lee-yl/p/9640280.html" target="_blank" rel="noopener">https://www.cnblogs.com/Lee-yl/p/9640280.html</a></p>
+</blockquote>
+<p>在SIR算法应用中，发现广告计划投放初期校准效果明显差于平均水平，并在实际业务中造成以下问题：</p>
+<p>1）影响新建计划初始阶段的投放表现；</p>
+<p>2）影响强时效性广告的全生命周期效果；</p>
+<p>3）小客户在整个投放周期里数据一直稀疏，得不到准确的校准，影响竞价公平性。</p>
+<p>这是SIR校准算法的冷启动问题，采用了Bayes平滑的思想进行优化（贝叶斯平滑方法最早在雅虎的一篇论文里面中提出，用于解决数据稀疏问题下的点击率预估优化）。</p>
+<p><img src="https://filescdn.proginn.com/4fb2c28c63d789c5ca40d06456dc981b/72eee4b95763445a4209eafb84023c4e.webp" alt="img"></p>
+<p>Bayes-SIR的算法思想：如上图所示，首先从丰富的先验数据中估计出每个广告计划的点击率先验分布，然后依据该先验知识和新观测到的少量数据，根据贝叶斯定理计算得到更准确的后验点击率。这种估计方法能充分利用先验知识，具备置信程度过渡平滑的特点。将贝叶斯平滑CTR估计过程替换掉SIR算法的朴素CTR统计逻辑即构成了具有冷启动问题优化效果的校准方法。实际上线后，新广告的投放效果得到明显的提升。</p>
 
           
         
