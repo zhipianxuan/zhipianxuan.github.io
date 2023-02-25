@@ -419,6 +419,195 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/熵/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/熵/" itemprop="url">熵</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-20T00:00:00+08:00">
+                2023-02-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/先导知识/" itemprop="url" rel="index">
+                    <span itemprop="name">先导知识</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/先导知识/熵/" itemprop="url" rel="index">
+                    <span itemprop="name">熵</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本篇博客仅作为学习,如有侵权必删。</p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzU0NjgzMDIxMQ==&amp;mid=2247599777&amp;idx=2&amp;sn=982e734b8de12d67ae64476c66f704bc&amp;chksm=fb54a44dcc232d5ba3fbf8f40c75801b0728beffb1b63f053b0c76209bbf54e47655dd421b25&amp;scene=27" target="_blank" rel="noopener">详解机器学习中的熵、条件熵、相对熵、交叉熵</a></p>
+<h1 id="1-信息量："><a href="#1-信息量：" class="headerlink" title="1. 信息量："></a>1. 信息量：</h1><p>一个事件发生的概率越小，信息量越大，所以信息量应该为概率的<strong>减函数</strong>，对于相互独立的两个事有<em>p</em>(<em>xy</em>)=<em>p</em>(<em>x</em>)<em>p</em>(<em>y</em>)，对于这两个事件信息量应满足<em>h</em>(<em>xy</em>)=<em>h</em>(<em>x</em>)+<em>h</em>(<em>y</em>)，那么信息量应为对数函数：</p>
+<p>​    h(x) = -ln p(x)</p>
+<p>​    对于一个随机变量可以以不同的概率发生，那么通过<strong>信息量期望</strong>的方式衡量，即<strong>信息熵</strong>。 </p>
+<h1 id="2-熵"><a href="#2-熵" class="headerlink" title="2. 熵"></a>2. 熵</h1><blockquote>
+<p> 熵：信息不确定性度量（信息量与不确定性相关）。事件发生的概率越小则携带的信息越大。</p>
+</blockquote>
+<p>​    一个离散随机变量X的可能取值为X=x1,x2,…,xn，而对应的概率为pi=p(X=xi),则随机变量的熵定义为： </p>
+<p><img src="..\imgs\熵.jpg" alt></p>
+<p><img src="..\imgs\熵.jpg" style="zoom:100%"></p>
+<p>​    每个<em>xi</em>表示一种特征。 <em>H</em>(<em>X</em>)在每个<em>p</em>(<em>xi</em>) = 1/<em>N</em>是最大，<em>N</em>为信息的个数。在概率为1/<em>N</em>时信息是最不确定的。</p>
+<p>​    规定当p(xi)=0时，p(xi)log⁡(p(xi)=0</p>
+<p>【小思考：为何公式是这样子的？其实只需熵和概率P成反比，1/P , 但是有个量纲缺点：地震发生的概率很小（P = 1/百万)，则信息量为一百万。抛硬币概率1/2，则信息量为2。两者量纲差太大，取log之后，使得低范围的值稍微放大，高范围的值稍微放小。】</p>
+<h1 id="3-联合熵H-p-q"><a href="#3-联合熵H-p-q" class="headerlink" title="3. 联合熵H(p,q)"></a>3. 联合熵H(p,q)</h1><p>两个随机变量的p与q的联合分布形成的熵称为联合熵，记为<em>H</em>(p, q)。 </p>
+<p><img src="..\imgs\交叉熵.jpg" style="zoom:100%"></p>
+<h1 id="4-条件熵H-q-p"><a href="#4-条件熵H-q-p" class="headerlink" title="4. 条件熵H(q|p)"></a>4. 条件熵H(q|p)</h1><p><em>X</em>给定的条件下，<em>Y</em>的信息熵，即<em>H</em> (<em>Y</em> |X )。公式为：</p>
+<p><img src="..\imgs\条件熵.jpg" style="zoom:100%"></p>
+<p><strong>推导过程：</strong></p>
+<p><img src="..\imgs\条件熵推导过程.jpg" style="zoom:100%"></p>
+<h1 id="5-KL散度（相对熵）："><a href="#5-KL散度（相对熵）：" class="headerlink" title="5. KL散度（相对熵）："></a>5. KL散度（相对熵）：</h1><blockquote>
+<p> 交叉熵：两个概率分布之间的一个比较，如果两个分布越匹配，交叉熵就越低；如果两个概率分布完全比配，那么交叉熵就为 0。</p>
+</blockquote>
+<p>如果是两个随机变量P,Q，且其概率分布分别为p(x),q(x),则p相对q的相对熵为：</p>
+<p><img src="..\imgs\KL散度.jpg" style="zoom:100%"></p>
+<h1 id="6-几种熵之间的关系："><a href="#6-几种熵之间的关系：" class="headerlink" title="6. 几种熵之间的关系："></a>6. 几种熵之间的关系：</h1><p><img src="..\imgs\熵之间的关系.jpg" style="zoom:100%"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/逻辑回归/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -791,195 +980,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/熵/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lee_yl">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lee_yl's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/熵/" itemprop="url">熵</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-20T00:00:00+08:00">
-                2023-02-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/先导知识/" itemprop="url" rel="index">
-                    <span itemprop="name">先导知识</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/先导知识/熵/" itemprop="url" rel="index">
-                    <span itemprop="name">熵</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本篇博客仅作为学习,如有侵权必删。</p>
-<p><a href="https://mp.weixin.qq.com/s?__biz=MzU0NjgzMDIxMQ==&amp;mid=2247599777&amp;idx=2&amp;sn=982e734b8de12d67ae64476c66f704bc&amp;chksm=fb54a44dcc232d5ba3fbf8f40c75801b0728beffb1b63f053b0c76209bbf54e47655dd421b25&amp;scene=27" target="_blank" rel="noopener">详解机器学习中的熵、条件熵、相对熵、交叉熵</a></p>
-<h1 id="1-信息量："><a href="#1-信息量：" class="headerlink" title="1. 信息量："></a>1. 信息量：</h1><p>一个事件发生的概率越小，信息量越大，所以信息量应该为概率的<strong>减函数</strong>，对于相互独立的两个事有<em>p</em>(<em>xy</em>)=<em>p</em>(<em>x</em>)<em>p</em>(<em>y</em>)，对于这两个事件信息量应满足<em>h</em>(<em>xy</em>)=<em>h</em>(<em>x</em>)+<em>h</em>(<em>y</em>)，那么信息量应为对数函数：</p>
-<p>​    h(x) = -ln p(x)</p>
-<p>​    对于一个随机变量可以以不同的概率发生，那么通过<strong>信息量期望</strong>的方式衡量，即<strong>信息熵</strong>。 </p>
-<h1 id="2-熵"><a href="#2-熵" class="headerlink" title="2. 熵"></a>2. 熵</h1><blockquote>
-<p> 熵：信息不确定性度量（信息量与不确定性相关）。事件发生的概率越小则携带的信息越大。</p>
-</blockquote>
-<p>​    一个离散随机变量X的可能取值为X=x1,x2,…,xn，而对应的概率为pi=p(X=xi),则随机变量的熵定义为： </p>
-<p><img src="..\imgs\熵.jpg" alt></p>
-<p><img src="..\imgs\熵.jpg" style="zoom:100%"></p>
-<p>​    每个<em>xi</em>表示一种特征。 <em>H</em>(<em>X</em>)在每个<em>p</em>(<em>xi</em>) = 1/<em>N</em>是最大，<em>N</em>为信息的个数。在概率为1/<em>N</em>时信息是最不确定的。</p>
-<p>​    规定当p(xi)=0时，p(xi)log⁡(p(xi)=0</p>
-<p>【小思考：为何公式是这样子的？其实只需熵和概率P成反比，1/P , 但是有个量纲缺点：地震发生的概率很小（P = 1/百万)，则信息量为一百万。抛硬币概率1/2，则信息量为2。两者量纲差太大，取log之后，使得低范围的值稍微放大，高范围的值稍微放小。】</p>
-<h1 id="3-联合熵H-p-q"><a href="#3-联合熵H-p-q" class="headerlink" title="3. 联合熵H(p,q)"></a>3. 联合熵H(p,q)</h1><p>两个随机变量的p与q的联合分布形成的熵称为联合熵，记为<em>H</em>(p, q)。 </p>
-<p><img src="..\imgs\交叉熵.jpg" style="zoom:100%"></p>
-<h1 id="4-条件熵H-q-p"><a href="#4-条件熵H-q-p" class="headerlink" title="4. 条件熵H(q|p)"></a>4. 条件熵H(q|p)</h1><p><em>X</em>给定的条件下，<em>Y</em>的信息熵，即<em>H</em> (<em>Y</em> |X )。公式为：</p>
-<p><img src="..\imgs\条件熵.jpg" style="zoom:100%"></p>
-<p><strong>推导过程：</strong></p>
-<p><img src="..\imgs\条件熵推导过程.jpg" style="zoom:100%"></p>
-<h1 id="5-KL散度（相对熵）："><a href="#5-KL散度（相对熵）：" class="headerlink" title="5. KL散度（相对熵）："></a>5. KL散度（相对熵）：</h1><blockquote>
-<p> 交叉熵：两个概率分布之间的一个比较，如果两个分布越匹配，交叉熵就越低；如果两个概率分布完全比配，那么交叉熵就为 0。</p>
-</blockquote>
-<p>如果是两个随机变量P,Q，且其概率分布分别为p(x),q(x),则p相对q的相对熵为：</p>
-<p><img src="..\imgs\KL散度.jpg" style="zoom:100%"></p>
-<h1 id="6-几种熵之间的关系："><a href="#6-几种熵之间的关系：" class="headerlink" title="6. 几种熵之间的关系："></a>6. 几种熵之间的关系：</h1><p><img src="..\imgs\熵之间的关系.jpg" style="zoom:100%"></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/MYSQL/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1273,6 +1273,7 @@
             <p>本篇博客仅作为学习,如有侵权必删。</p>
 <p><a href="https://zhuanlan.zhihu.com/p/460061332" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/460061332</a></p>
 <p><a href="https://zhuanlan.zhihu.com/p/582530785" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/582530785</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/398235467" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/398235467</a></p>
 <h1 id="广告校准"><a href="#广告校准" class="headerlink" title="广告校准"></a>广告校准</h1><h2 id="1-业务背景"><a href="#1-业务背景" class="headerlink" title="1. 业务背景"></a>1. 业务背景</h2><blockquote>
 <p>广告三大角色：广告主、媒体、DSP</p>
 <ol>
@@ -1293,9 +1294,16 @@
 <p>​    实际分布和离线分布的差异</p>
 <p>​    模型学习能力</p>
 <p>（2）预估模型的准确性度量</p>
-<p>​    AUC：仅作为排序指标，无法度量预估值的大小准确性</p>
-<p>​    COPC：（Click On Predict Click) = sum( 实际ctr) / sum(pctr)</p>
+<p>​    <strong>AUC：</strong>仅作为排序指标，无法度量预估值的大小准确性</p>
+<p>​    <strong>COPC：</strong>（Click On Predict Click) = sum( 实际ctr) / sum(pctr)</p>
 <p>​            用于评估某段细分的流量模型预估值是否偏差较大。</p>
+<p>（3）校准评价指标：</p>
+<p>​    <strong>PCOC：</strong>（predict click over click）COPC是相反的指标。</p>
+<p>​    <strong>cal-N：（calibration-N）</strong></p>
+<p>​        cal-N将样本集合分桶后分别计算PCOC，并计算与1的偏差作为标准误差。举个例子，将pctr根据值大小划分为多个桶，每个桶为一个簇，计算每个簇的PCOC及其与1的偏差 数学公式:</p>
+<p><img src="..\imgs\校准评价指标.jpg" alt></p>
+<p>​    <strong>GC-N：（grouped calibration-N）</strong></p>
+<p>​        在具体业务场景下，有时会重点关注某一维度下的校准效果(如广告计费维度)，GC-N可以解决这个问题，它可以在cal-N基础上自定义各维度权重。例如，下面这个式子定义了m个广告计划的GC-N 数学公式:</p>
 </blockquote>
 <h2 id="3-校准算法"><a href="#3-校准算法" class="headerlink" title="3. 校准算法"></a>3. 校准算法</h2><p><img src="https://pic2.zhimg.com/80/v2-c452e8c2822418e0b744fe751123b275_720w.webp" alt="img"></p>
 <h3 id="（1）-Bias-Correction：负采样率修正"><a href="#（1）-Bias-Correction：负采样率修正" class="headerlink" title="（1） Bias Correction：负采样率修正"></a>（1） Bias Correction：负采样率修正</h3><blockquote>
@@ -1310,26 +1318,54 @@
 <p><strong>代码：</strong></p>
 <p>注意在导出模型时，最终结果过完sigmoid，再进行bias_correct。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bias_correct</span><span class="params">(b, nr)</span>:</span></span><br><span class="line">	<span class="string">"""</span></span><br><span class="line"><span class="string">	nr: neg_sample_rate</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">	"""</span></span><br><span class="line">    <span class="keyword">if</span> nr &lt; <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> b + math.log(nr)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> b</span><br><span class="line"></span><br><span class="line">nr = <span class="number">0.1</span> <span class="comment"># 负采样率</span></span><br><span class="line">last_op[<span class="string">'bias'</span>] = bias_correct(last_op[<span class="string">'bias'</span>]， nr) <span class="comment"># 纠正sigmoid后的bias</span></span><br></pre></td></tr></table></figure>
-<h3 id="（3）校准算法3-—-SIR（保序回归平滑校准算法）"><a href="#（3）校准算法3-—-SIR（保序回归平滑校准算法）" class="headerlink" title="（3）校准算法3 —-SIR（保序回归平滑校准算法）"></a>（3）校准算法3 —-SIR（保序回归平滑校准算法）</h3><p><img src="https://filescdn.proginn.com/29a600113e1c6026170821dcf5fa7a04/451e0a9c1532a7386e09b155b8915293.webp" alt="img"></p>
+<h3 id="2-校准算法—保序回归"><a href="#2-校准算法—保序回归" class="headerlink" title="(2) 校准算法—保序回归"></a>(2) 校准算法—保序回归</h3><blockquote>
+<p>解决模型高低估、模型over-confidence等问题。</p>
+</blockquote>
+<p><img src="..\imgs\保序回归.jpg" alt></p>
+<h3 id="（3）校准算法3-—-SIR（保序回归平滑校准算法）"><a href="#（3）校准算法3-—-SIR（保序回归平滑校准算法）" class="headerlink" title="（3）校准算法3 —-SIR（保序回归平滑校准算法）"></a>（3）校准算法3 —-SIR（保序回归平滑校准算法）</h3><blockquote>
+<p>解决桶间数据稀疏问题</p>
+</blockquote>
+<p><img src="https://filescdn.proginn.com/29a600113e1c6026170821dcf5fa7a04/451e0a9c1532a7386e09b155b8915293.webp" alt="img"></p>
 <blockquote>
 <p> SIR算法是18年提出的，如上图所示，结合了Binning、Isotonic Regression和线性Scaling方法。</p>
 </blockquote>
 <p>具体思想为：</p>
-<p>模型原始打分相近的PV具有近似的真实点击率，PCTR大小区间可作为一个合理的校准维度（分桶）；</p>
-<p>分桶数据量稀疏时，进一步利用模型本身的排序能力，对各分桶后验点击率与模型预估点击率做保序处理（保序回归）；</p>
-<p>最后使用单调平滑函数拟合模型原始打分和后验点击率的映射关系（线性Scaling）就得到了校准函数。</p>
-<p>该算法的优势在于充分利用了保序和平滑思想缓解了数据稀疏的问题，而且具备轻量级和可解释性特点。</p>
+<ol>
+<li><p>进行保序回归。</p>
+</li>
+<li><p>使用单调平滑函数拟合模型预估值和实际点击率的映射关系（线性Scaling）就得到了校准函数。</p>
+</li>
+</ol>
+<p>该算法的优势在于充分利用了<strong>保序和平滑</strong>思想缓解了<strong>数据稀疏</strong>的问题。</p>
 <p>（详细可见论文：﻿Calibrating user response predictions in online advertising）。</p>
 <h3 id="（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR"><a href="#（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR" class="headerlink" title="（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR)"></a>（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR)</h3><blockquote>
-<p>beta分布： <a href="https://www.cnblogs.com/Lee-yl/p/9640280.html" target="_blank" rel="noopener">https://www.cnblogs.com/Lee-yl/p/9640280.html</a></p>
+<ul>
+<li><p>Bayes-SIR解决冷启动问题。</p>
+</li>
+<li><p>beta分布：可以看作一个概率的概率分布</p>
+<p><a href="https://blog.csdn.net/a358463121/article/details/52562940" target="_blank" rel="noopener">带你理解beta分布</a></p>
+</li>
+<li><p>贝叶斯平滑方法:（最早在雅虎的一篇论文里面中提出，用于解决数据稀疏问题下的点击率预估优化）。</p>
+</li>
+</ul>
 </blockquote>
 <p>在SIR算法应用中，发现广告计划投放初期校准效果明显差于平均水平，并在实际业务中造成以下问题：</p>
 <p>1）影响新建计划初始阶段的投放表现；</p>
 <p>2）影响强时效性广告的全生命周期效果；</p>
 <p>3）小客户在整个投放周期里数据一直稀疏，得不到准确的校准，影响竞价公平性。</p>
-<p>这是SIR校准算法的冷启动问题，采用了Bayes平滑的思想进行优化（贝叶斯平滑方法最早在雅虎的一篇论文里面中提出，用于解决数据稀疏问题下的点击率预估优化）。</p>
+<p>这是SIR校准算法的冷启动问题，采用了Bayes平滑的思想进行优化.</p>
 <p><img src="https://filescdn.proginn.com/4fb2c28c63d789c5ca40d06456dc981b/72eee4b95763445a4209eafb84023c4e.webp" alt="img"></p>
-<p>Bayes-SIR的算法思想：如上图所示，首先从丰富的先验数据中估计出每个广告计划的点击率先验分布，然后依据该先验知识和新观测到的少量数据，根据贝叶斯定理计算得到更准确的后验点击率。这种估计方法能充分利用先验知识，具备置信程度过渡平滑的特点。将贝叶斯平滑CTR估计过程替换掉SIR算法的朴素CTR统计逻辑即构成了具有冷启动问题优化效果的校准方法。实际上线后，新广告的投放效果得到明显的提升。</p>
+<p>Bayes-SIR的算法思想：如上图所示，</p>
+<ol>
+<li><p>从丰富的先验数据中估计出每个广告计划的点击率先验分布，</p>
+</li>
+<li><p>依据该先验知识求解出belta分布的参数α和β。</p>
+</li>
+<li>依据α和β和新观测到的少量数据，计算得到更准确的后验点击率。</li>
+</ol>
+<p>这种估计方法能充分利用先验知识，具备置信程度过渡平滑的特点。</p>
+<p>将贝叶斯平滑CTR估计过程替换掉SIR算法的朴素CTR统计逻辑即构成了具有冷启动问题优化效果的校准方法。</p>
+<p>实际上线后，新广告的投放效果得到明显的提升。</p>
 
           
         
