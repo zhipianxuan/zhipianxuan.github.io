@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本篇博客仅作为学习,如有侵权必删。 正则化/惩罚项一、概念  （1）范数： （2）方差和偏差： Error = Bias + Variance  Error反映的是整个模型的准确度， Bias反映的是模型在样本上的输出与真实值之间的误差，即模型本身的精准度， Variance反映的是模型每一次输出结果与模型输出期望之间的误差（描述的是样本上训练的模型在测试集上的表现。），即模型的稳定性。 欠拟合是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="正则化">
+<meta property="og:url" content="http://yoursite.com/正则化/index.html">
+<meta property="og:site_name" content="Lee_yl&#39;s blog">
+<meta property="og:description" content="本篇博客仅作为学习,如有侵权必删。 正则化/惩罚项一、概念  （1）范数： （2）方差和偏差： Error = Bias + Variance  Error反映的是整个模型的准确度， Bias反映的是模型在样本上的输出与真实值之间的误差，即模型本身的精准度， Variance反映的是模型每一次输出结果与模型输出期望之间的误差（描述的是样本上训练的模型在测试集上的表现。），即模型的稳定性。 欠拟合是">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/imgs/范数.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/正则化1.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/L1正则解释.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/正则公式1.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/正则公式2.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/正则公式3.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/正则公式4.jpg">
+<meta property="og:updated_time" content="2023-02-26T14:02:55.850Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="正则化">
+<meta name="twitter:description" content="本篇博客仅作为学习,如有侵权必删。 正则化/惩罚项一、概念  （1）范数： （2）方差和偏差： Error = Bias + Variance  Error反映的是整个模型的准确度， Bias反映的是模型在样本上的输出与真实值之间的误差，即模型本身的精准度， Variance反映的是模型每一次输出结果与模型输出期望之间的误差（描述的是样本上训练的模型在测试集上的表现。），即模型的稳定性。 欠拟合是">
+<meta name="twitter:image" content="http://yoursite.com/imgs/范数.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/正则化/">
+
+
+
+
+
+  <title>正则化 | Lee_yl's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Lee_yl's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/正则化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">正则化</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-26T00:00:00+08:00">
+                2023-02-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/正则化/" itemprop="url" rel="index">
+                    <span itemprop="name">正则化</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本篇博客仅作为学习,如有侵权必删。</p>
+<h1 id="正则化-惩罚项"><a href="#正则化-惩罚项" class="headerlink" title="正则化/惩罚项"></a>正则化/惩罚项</h1><h2 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h2><blockquote>
+<p> <strong>（1）范数：</strong><img src="..\imgs\范数.jpg" alt></p>
+<p><strong>（2）方差和偏差：</strong></p>
+<p>Error = Bias + Variance</p>
+<ul>
+<li>Error反映的是整个模型的准确度，</li>
+<li>Bias反映的是模型在样本上的输出与真实值之间的误差，即模型本身的精准度，</li>
+<li>Variance反映的是模型每一次输出结果与模型输出期望之间的误差（描述的是样本上训练的模型在测试集上的表现。），即模型的稳定性。</li>
+<li>欠拟合是高bias，过拟合是高variance。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p><strong>（3）正则化的目的</strong>：减少模型参数大小或者参数数量，缓解过拟合。</p>
+<p>正则化的作用是给模型加一个先验，lasso(l1)认为模型是拉普拉斯分布，ridge(l2)认为是高斯分布，正则项对应参数的协方差，协方差越小，这个模型的variance越小，泛化 能力越强，也就抵抗了过拟合。</p>
+<p><strong>（4）正则化通用形式：</strong></p>
+<p>​        Loss_with_regularization = loss(w,x) + λf(w)</p>
+<ul>
+<li>正则化恒为非负</li>
+<li>f(w)不能为负数，若其为负数，Loss(w,x)+λf(x)本来尽可能想让其变小，那f(x)为负数，f(x)绝对值会越学越大。</li>
+</ul>
+<p><strong>(5) 正则化方法：</strong>L1正则、L2正则、Dropout正则</p>
+</blockquote>
+<h2 id="二、-从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】"><a href="#二、-从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】" class="headerlink" title="二、 从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】"></a>二、 从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】</h2><p><strong>过拟合就是模型在学习训练样本时将噪声异常值也学习得非常好，使得模型参数过多，模型较复杂，给参数加上一个先验约束，可降低过拟合。</strong></p>
+<p> <img src="..\imgs\正则化1.jpg" alt></p>
+<h2 id="三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；"><a href="#三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；" class="headerlink" title="三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；"></a>三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；</h2><p><strong>区别</strong>：L1假设参数服从拉普拉斯分布，L2则符合高斯分布；</p>
+<p>L1范数更容易产生稀疏的权重，L2范数更容易产生分散的权重。</p>
+<p><strong>原因</strong>：（L1稀疏的原因，L2不稀疏的原因）【几何、公式两个角度】</p>
+<p><strong>场景</strong>：具有高维的数据特征时采用L1正则效果好一点。因为L1具有稀疏性。</p>
+<h2 id="四、解释L1范数更容易产生稀疏的权重，L2不的原因："><a href="#四、解释L1范数更容易产生稀疏的权重，L2不的原因：" class="headerlink" title="四、解释L1范数更容易产生稀疏的权重，L2不的原因："></a>四、解释L1范数更容易产生稀疏的权重，L2不的原因：</h2><h3 id="（1）几何角度"><a href="#（1）几何角度" class="headerlink" title="（1）几何角度"></a>（1）几何角度</h3><p>L2正则项约束后的解空间是圆形，L1正则项约束后的解空间是多方形，L1易在角点发生交点，从而产生稀疏解。</p>
+<blockquote>
+<p>绿色等高线代表未施加正则化的代价函数，菱形和圆形分别代表L1和L2正则化约束，L1-ball 与L2-ball的不同就在于L1在和每个坐标轴相交的地方都有“角”出现，而目标函数的”等高线”除非位置摆得非常好，大部分时候都会在角的地方相交。注意到在角的位置就会产生稀疏性。相比之下，L2-ball 就没有这样的性质，因为没有角，所以第一次相交的地方出现在具有稀疏性的位置的概率就变得非常小</p>
+</blockquote>
+<p><img src="..\imgs\L1正则解释.jpg" alt></p>
+<h3 id="（2）公式角度：（拉格朗日求导）"><a href="#（2）公式角度：（拉格朗日求导）" class="headerlink" title="（2）公式角度：（拉格朗日求导）"></a>（2）公式角度：（拉格朗日求导）</h3><blockquote>
+<p>深度学习花书7.1节（202页左右）。带L1正则化的最优参数w=sign(w<em>) max{|w</em>|- a/H , 0}，其中w代表未正则化的目标函数的最优参数，H代表海森矩阵，a是正则化系数，只要a足够大，w就会在更大区间范围内使w变为0，而带L2正则化的最优参数w=H/(H+a)▪w,只要w不为0，w也不为0.</p>
+</blockquote>
+<p><strong>1、稀疏性的约束：</strong></p>
+<p><img src="..\imgs\正则公式1.jpg" alt></p>
+<p>​    L1范数和L0范数可以实现稀疏，L1因具有比L0更好的优化求解特性而被广泛应用。</p>
+<p><strong>2、不好求解，松弛为L1，L2：</strong></p>
+<p><img src="..\imgs\正则公式2.jpg" alt></p>
+<p><strong>3、拉格朗日</strong></p>
+<p><img src="..\imgs\正则公式3.jpg" alt></p>
+<h3 id="（3）贝叶斯先验"><a href="#（3）贝叶斯先验" class="headerlink" title="（3）贝叶斯先验"></a>（3）贝叶斯先验</h3><blockquote>
+<p>L1正则化相当于对模型参数w引入了拉普拉斯先验，L2正则化相当于引入了高斯先验，而拉普拉斯先验使参数为0的可能性更大。</p>
+</blockquote>
+<p><strong>L1正则化可通过假设权重w的先验分布为拉普拉斯分布，由最大后验概率估计导出。</strong></p>
+<p><strong>L2正则化可通过假设权重w的先验分布为高斯分布，由最大后验概率估计导出。</strong></p>
+<p><strong>详细解释：</strong> <a href="https://blog.csdn.net/m0_38045485/article/details/82147817" target="_blank" rel="noopener">https://blog.csdn.net/m0_38045485/article/details/82147817</a></p>
+<p><img src="..\imgs\正则公式4.jpg" alt></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/过拟合欠拟合/" rel="next" title="过拟合">
+                <i class="fa fa-chevron-left"></i> 过拟合
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/标准化/" rel="prev" title="标准化">
+                标准化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Lee_yl</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#正则化-惩罚项"><span class="nav-number">1.</span> <span class="nav-text">正则化/惩罚项</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、概念"><span class="nav-number">1.1.</span> <span class="nav-text">一、概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、-从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】"><span class="nav-number">1.2.</span> <span class="nav-text">二、 从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；"><span class="nav-number">1.3.</span> <span class="nav-text">三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、解释L1范数更容易产生稀疏的权重，L2不的原因："><span class="nav-number">1.4.</span> <span class="nav-text">四、解释L1范数更容易产生稀疏的权重，L2不的原因：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）几何角度"><span class="nav-number">1.4.1.</span> <span class="nav-text">（1）几何角度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（2）公式角度：（拉格朗日求导）"><span class="nav-number">1.4.2.</span> <span class="nav-text">（2）公式角度：（拉格朗日求导）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（3）贝叶斯先验"><span class="nav-number">1.4.3.</span> <span class="nav-text">（3）贝叶斯先验</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lee_yl</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

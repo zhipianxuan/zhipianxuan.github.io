@@ -92,7 +92,7 @@
 <meta property="og:image" content="http://yoursite.com/imgs/保序回归.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/保序回归平滑校准1.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/贝叶斯SIR.jpg">
-<meta property="og:updated_time" content="2023-02-26T07:19:52.227Z">
+<meta property="og:updated_time" content="2023-02-26T07:24:43.011Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="广告校准">
 <meta name="twitter:description" content="本篇博客仅作为学习,如有侵权必删。 https://zhuanlan.zhihu.com/p/460061332 https://zhuanlan.zhihu.com/p/582530785 https://zhuanlan.zhihu.com/p/398235467 广告校准1. 业务背景 广告三大角色：广告主、媒体、DSP  ctr : (Click Through Rate) 点击率 = c">
@@ -384,7 +384,7 @@
 <p><strong>代码：</strong></p>
 <p>注意在导出模型时，最终结果过完sigmoid，再进行bias_correct。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bias_correct</span><span class="params">(b, nr)</span>:</span></span><br><span class="line">	<span class="string">"""</span></span><br><span class="line"><span class="string">	nr: neg_sample_rate</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">	"""</span></span><br><span class="line">    <span class="keyword">if</span> nr &lt; <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> b + math.log(nr)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> b</span><br><span class="line"></span><br><span class="line">nr = <span class="number">0.1</span> <span class="comment"># 负采样率</span></span><br><span class="line">last_op[<span class="string">'bias'</span>] = bias_correct(last_op[<span class="string">'bias'</span>]， nr) <span class="comment"># 纠正sigmoid后的bias</span></span><br></pre></td></tr></table></figure>
-<h3 id="2-校准算法—保序回归"><a href="#2-校准算法—保序回归" class="headerlink" title="(2) 校准算法—保序回归"></a>(2) 校准算法—保序回归</h3><blockquote>
+<h3 id="（2）校准算法—保序回归"><a href="#（2）校准算法—保序回归" class="headerlink" title="（2）校准算法—保序回归"></a>（2）校准算法—保序回归</h3><blockquote>
 <p>解决模型高低估、模型over-confidence等问题。</p>
 </blockquote>
 <p><img src="..\imgs\保序回归.jpg" alt></p>
@@ -467,6 +467,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/概率论1/" rel="prev" title="概率论">
+                概率论 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -542,7 +546,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -553,7 +557,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">24</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -597,7 +601,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#广告校准"><span class="nav-number">1.</span> <span class="nav-text">广告校准</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-业务背景"><span class="nav-number">1.1.</span> <span class="nav-text">1. 业务背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-面临的问题"><span class="nav-number">1.2.</span> <span class="nav-text">2. 面临的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-校准算法"><span class="nav-number">1.3.</span> <span class="nav-text">3. 校准算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）-Bias-Correction：负采样率修正"><span class="nav-number">1.3.1.</span> <span class="nav-text">（1） Bias Correction：负采样率修正</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-校准算法—保序回归"><span class="nav-number">1.3.2.</span> <span class="nav-text">(2) 校准算法—保序回归</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（3）校准算法3-—-SIR（保序回归平滑校准算法）"><span class="nav-number">1.3.3.</span> <span class="nav-text">（3）校准算法3 —-SIR（保序回归平滑校准算法）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR"><span class="nav-number">1.3.4.</span> <span class="nav-text">（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR)</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#广告校准"><span class="nav-number">1.</span> <span class="nav-text">广告校准</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-业务背景"><span class="nav-number">1.1.</span> <span class="nav-text">1. 业务背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-面临的问题"><span class="nav-number">1.2.</span> <span class="nav-text">2. 面临的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-校准算法"><span class="nav-number">1.3.</span> <span class="nav-text">3. 校准算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）-Bias-Correction：负采样率修正"><span class="nav-number">1.3.1.</span> <span class="nav-text">（1） Bias Correction：负采样率修正</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（2）校准算法—保序回归"><span class="nav-number">1.3.2.</span> <span class="nav-text">（2）校准算法—保序回归</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（3）校准算法3-—-SIR（保序回归平滑校准算法）"><span class="nav-number">1.3.3.</span> <span class="nav-text">（3）校准算法3 —-SIR（保序回归平滑校准算法）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR"><span class="nav-number">1.3.4.</span> <span class="nav-text">（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR)</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
