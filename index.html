@@ -229,6 +229,252 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/广告校准/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/广告校准/" itemprop="url">广告校准</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-25T00:00:00+08:00">
+                2023-02-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/计算广告/" itemprop="url" rel="index">
+                    <span itemprop="name">计算广告</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/计算广告/校准广告/" itemprop="url" rel="index">
+                    <span itemprop="name">校准广告</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本篇博客仅作为学习,如有侵权必删。</p>
+<p><a href="https://zhuanlan.zhihu.com/p/460061332" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/460061332</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/582530785" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/582530785</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/398235467" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/398235467</a></p>
+<h1 id="广告校准"><a href="#广告校准" class="headerlink" title="广告校准"></a>广告校准</h1><h2 id="1-业务背景"><a href="#1-业务背景" class="headerlink" title="1. 业务背景"></a>1. 业务背景</h2><blockquote>
+<p>广告三大角色：广告主、媒体、DSP</p>
+<ol>
+<li>ctr : (Click Through Rate) 点击率 = click / show， 曝光广告中用户点击的概率。</li>
+<li>cvr: (Conversion Rate) 转化率 = order / click，点击广告中用户转化的概率。（如注册，激活，创角等）</li>
+<li>cpa：(Cost per Action) 转化成本 = cost / order, 表示广告主每获得一个转化需付的成本。</li>
+<li>ecpm / rpm：= ctr <em> cvr </em> cpa<ol>
+<li>ecpm : 对广告主来说，(Effective Cost Per Mile) 每千次展示的有效费用。 </li>
+<li>rpm：对DSP来说，(Revenue Per Mile)每千次展示的收入。</li>
+</ol>
+</li>
+<li>pctr: (Predict CTR) 预估点击率</li>
+<li>pcvr: (Predict CVR) 预估转化率</li>
+</ol>
+</blockquote>
+<h2 id="2-面临的问题"><a href="#2-面临的问题" class="headerlink" title="2. 面临的问题"></a>2. 面临的问题</h2><blockquote>
+<p>（1）模型准确性存在偏差，受限于</p>
+<p>​    实际分布和离线分布的差异</p>
+<p>​    模型学习能力</p>
+<p>（2）预估模型的准确性度量</p>
+<p>​    <strong>AUC：</strong>仅作为排序指标，无法度量预估值的大小准确性</p>
+<p>​    <strong>COPC：</strong>（Click On Predict Click) = sum( 实际ctr) / sum(pctr)</p>
+<p>​            用于评估某段细分的流量模型预估值是否偏差较大。</p>
+<p>（3）校准评价指标：</p>
+<p>​    <strong>PCOC：</strong>（predict click over click）COPC是相反的指标。</p>
+<p>​    <strong>cal-N：（calibration-N）</strong></p>
+<p>​        cal-N将样本集合分桶后分别计算PCOC，并计算与1的偏差作为标准误差。举个例子，将pctr根据值大小划分为多个桶，每个桶为一个簇，计算每个簇的PCOC及其与1的偏差 数学公式:</p>
+<p><img src="..\imgs\校准评价指标.jpg" alt></p>
+<p>​    <strong>GC-N：（grouped calibration-N）</strong></p>
+<p>​        在具体业务场景下，有时会重点关注某一维度下的校准效果(如广告计费维度)，GC-N可以解决这个问题，它可以在cal-N基础上自定义各维度权重。例如，下面这个式子定义了m个广告计划的GC-N 数学公式:</p>
+</blockquote>
+<h2 id="3-校准算法"><a href="#3-校准算法" class="headerlink" title="3. 校准算法"></a>3. 校准算法</h2><p><img src="https://pic2.zhimg.com/80/v2-c452e8c2822418e0b744fe751123b275_720w.webp" alt="img"></p>
+<h3 id="（1）-Bias-Correction：负采样率修正"><a href="#（1）-Bias-Correction：负采样率修正" class="headerlink" title="（1） Bias Correction：负采样率修正"></a>（1） Bias Correction：负采样率修正</h3><blockquote>
+<p><strong>原因：</strong>正负样本不均衡情况下，负采样通常可以提升模型的AUC精度，但pctr值会发生变化，与真实差距扩大。</p>
+<p><strong>校准公式：</strong></p>
+<p><img src="..\imgs\采样校准1.jpg" alt></p>
+<p>因此可以计算出校准后的bias: <strong>b′=b+log(n)</strong></p>
+</blockquote>
+<p><strong>代码：</strong></p>
+<p>注意在导出模型时，最终结果过完sigmoid，再进行bias_correct。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bias_correct</span><span class="params">(b, nr)</span>:</span></span><br><span class="line">	<span class="string">"""</span></span><br><span class="line"><span class="string">	nr: neg_sample_rate</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">	"""</span></span><br><span class="line">    <span class="keyword">if</span> nr &lt; <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> b + math.log(nr)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> b</span><br><span class="line"></span><br><span class="line">nr = <span class="number">0.1</span> <span class="comment"># 负采样率</span></span><br><span class="line">last_op[<span class="string">'bias'</span>] = bias_correct(last_op[<span class="string">'bias'</span>]， nr) <span class="comment"># 纠正sigmoid后的bias</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-校准算法—保序回归"><a href="#2-校准算法—保序回归" class="headerlink" title="(2) 校准算法—保序回归"></a>(2) 校准算法—保序回归</h3><blockquote>
+<p>解决模型高低估、模型over-confidence等问题。</p>
+</blockquote>
+<p><img src="..\imgs\保序回归.jpg" alt></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_sir_calibration_model</span><span class="params">(pctr_list = [<span class="number">0.01</span>,<span class="number">0.02</span>,<span class="number">0.03</span>,<span class="number">0.04</span>], ctr_list = [<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>], bin_size = <span class="number">0.01</span>)</span>:</span></span><br><span class="line">	sort_ctr_list = sorted(list(zip(pctr_list, ctr_list)), key = <span class="keyword">lambda</span> x:x[<span class="number">0</span>])</span><br><span class="line">    bin_index = <span class="number">0</span></span><br><span class="line">    ind = <span class="number">0</span></span><br><span class="line">    n = len(ctr_list)</span><br><span class="line">    cctr_res = []</span><br><span class="line">    <span class="keyword">while</span> ind &lt; n:</span><br><span class="line">        <span class="keyword">while</span> (bin_index + bin_size) &lt; sort_ctr_list[ind][<span class="number">0</span>]:</span><br><span class="line">            cctr_res.append(sort_ctr_list[ind][<span class="number">1</span>])</span><br><span class="line">            bin_index += <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> (bin_index + bin_size) == sort_ctr_list[ind][<span class="number">0</span>]:</span><br><span class="line">            cctr_res.append(sort_ctr_list[ind][<span class="number">1</span>])</span><br><span class="line">            ind += <span class="number">1</span></span><br><span class="line">            bin_index += bin_size</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">if</span> ind + <span class="number">1</span>== n:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        tmp_cctr = sort_ctr_list[ind + <span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line">        tmp_num = <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> ind + <span class="number">1</span> &lt; n <span class="keyword">and</span> bin_index + bin_size &gt; sort_ctr_list[ind][<span class="number">0</span>]:</span><br><span class="line">            tmp_cctr += sort_ctr_list[ind][<span class="number">1</span>]</span><br><span class="line">            tmp_num += <span class="number">1</span></span><br><span class="line">            ind += <span class="number">1</span></span><br><span class="line">        cctr_res.append(tmp_cctr/tmp_num)</span><br><span class="line">        bin_index += bin_size</span><br></pre></td></tr></table></figure>
+<h3 id="（3）校准算法3-—-SIR（保序回归平滑校准算法）"><a href="#（3）校准算法3-—-SIR（保序回归平滑校准算法）" class="headerlink" title="（3）校准算法3 —-SIR（保序回归平滑校准算法）"></a>（3）校准算法3 —-SIR（保序回归平滑校准算法）</h3><blockquote>
+<p>解决桶间数据稀疏问题</p>
+</blockquote>
+<p><img src="https://filescdn.proginn.com/29a600113e1c6026170821dcf5fa7a04/451e0a9c1532a7386e09b155b8915293.webp" alt="img"></p>
+<blockquote>
+<p> SIR算法是18年提出的，如上图所示，结合了Binning、Isotonic Regression和线性Scaling方法。</p>
+</blockquote>
+<p>具体思想为：</p>
+<ol>
+<li><p>进行保序回归。</p>
+</li>
+<li><p>使用单调平滑函数拟合模型预估值和实际点击率的映射关系（线性Scaling）就得到了校准函数。</p>
+</li>
+</ol>
+<p>该算法的优势在于充分利用了<strong>保序和平滑</strong>思想缓解了<strong>数据稀疏</strong>的问题。</p>
+<p>（详细可见论文：﻿Calibrating user response predictions in online advertising）。</p>
+<h3 id="（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR"><a href="#（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR" class="headerlink" title="（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR)"></a>（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR)</h3><blockquote>
+<ul>
+<li><p>Bayes-SIR解决冷启动问题。</p>
+</li>
+<li><p>beta分布：可以看作一个概率的概率分布</p>
+<p><a href="https://blog.csdn.net/a358463121/article/details/52562940" target="_blank" rel="noopener">带你理解beta分布</a></p>
+</li>
+<li><p>贝叶斯平滑方法:（最早在雅虎的一篇论文里面中提出，用于解决数据稀疏问题下的点击率预估优化）。</p>
+</li>
+</ul>
+</blockquote>
+<p>在SIR算法应用中，发现广告计划投放初期校准效果明显差于平均水平，并在实际业务中造成以下问题：</p>
+<p>1）影响新建计划初始阶段的投放表现；</p>
+<p>2）影响强时效性广告的全生命周期效果；</p>
+<p>3）小客户在整个投放周期里数据一直稀疏，得不到准确的校准，影响竞价公平性。</p>
+<p>这是SIR校准算法的冷启动问题，采用了Bayes平滑的思想进行优化.</p>
+<p><img src="https://filescdn.proginn.com/4fb2c28c63d789c5ca40d06456dc981b/72eee4b95763445a4209eafb84023c4e.webp" alt="img"></p>
+<p>Bayes-SIR的算法思想：如上图所示，</p>
+<ol>
+<li><p>从丰富的先验数据中估计出每个广告计划的点击率先验分布，</p>
+</li>
+<li><p>依据该先验知识求解出belta分布的参数α和β。</p>
+</li>
+<li>依据α和β和新观测到的少量数据，计算得到更准确的后验点击率。</li>
+</ol>
+<p>这种估计方法能充分利用先验知识，具备置信程度过渡平滑的特点。</p>
+<p>将贝叶斯平滑CTR估计过程替换掉SIR算法的朴素CTR统计逻辑即构成了具有冷启动问题优化效果的校准方法。</p>
+<p>实际上线后，新广告的投放效果得到明显的提升。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/梯度下降/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1118,254 +1364,6 @@
 <li>域：有效数据类型的集合。create domain MONEY_D AS NUMBER(8,2) ？？？</li>
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">'''基于记录的增删改查'''</span><br><span class="line">1.插入数据</span><br><span class="line">	<span class="keyword">insert</span> <span class="keyword">into</span> 表名 <span class="keyword">values</span>(数据值<span class="number">1</span>,数据值<span class="number">2</span>);</span><br><span class="line">2.查询数据</span><br><span class="line">	<span class="keyword">select</span> * <span class="keyword">from</span> 表名;  		查询表中所有的数据</span><br><span class="line">3.编辑数据</span><br><span class="line">	<span class="keyword">update</span> 表名 <span class="keyword">set</span> 字段名=新数据 <span class="keyword">where</span> 筛选条件;</span><br><span class="line">4.删除数据</span><br><span class="line">	<span class="keyword">delete</span> <span class="keyword">from</span> 表名;</span><br><span class="line">	<span class="keyword">delete</span> <span class="keyword">from</span> 表名 <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">2</span>;</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/广告校准/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lee_yl">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lee_yl's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/广告校准/" itemprop="url">广告校准</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-16T00:00:00+08:00">
-                2023-02-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/计算广告/" itemprop="url" rel="index">
-                    <span itemprop="name">计算广告</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/计算广告/校准广告/" itemprop="url" rel="index">
-                    <span itemprop="name">校准广告</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本篇博客仅作为学习,如有侵权必删。</p>
-<p><a href="https://zhuanlan.zhihu.com/p/460061332" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/460061332</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/582530785" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/582530785</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/398235467" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/398235467</a></p>
-<h1 id="广告校准"><a href="#广告校准" class="headerlink" title="广告校准"></a>广告校准</h1><h2 id="1-业务背景"><a href="#1-业务背景" class="headerlink" title="1. 业务背景"></a>1. 业务背景</h2><blockquote>
-<p>广告三大角色：广告主、媒体、DSP</p>
-<ol>
-<li>ctr : (Click Through Rate) 点击率 = click / show， 曝光广告中用户点击的概率。</li>
-<li>cvr: (Conversion Rate) 转化率 = order / click，点击广告中用户转化的概率。（如注册，激活，创角等）</li>
-<li>cpa：(Cost per Action) 转化成本 = cost / order, 表示广告主每获得一个转化需付的成本。</li>
-<li>ecpm / rpm：= ctr <em> cvr </em> cpa<ol>
-<li>ecpm : 对广告主来说，(Effective Cost Per Mile) 每千次展示的有效费用。 </li>
-<li>rpm：对DSP来说，(Revenue Per Mile)每千次展示的收入。</li>
-</ol>
-</li>
-<li>pctr: (Predict CTR) 预估点击率</li>
-<li>pcvr: (Predict CVR) 预估转化率</li>
-</ol>
-</blockquote>
-<h2 id="2-面临的问题"><a href="#2-面临的问题" class="headerlink" title="2. 面临的问题"></a>2. 面临的问题</h2><blockquote>
-<p>（1）模型准确性存在偏差，受限于</p>
-<p>​    实际分布和离线分布的差异</p>
-<p>​    模型学习能力</p>
-<p>（2）预估模型的准确性度量</p>
-<p>​    <strong>AUC：</strong>仅作为排序指标，无法度量预估值的大小准确性</p>
-<p>​    <strong>COPC：</strong>（Click On Predict Click) = sum( 实际ctr) / sum(pctr)</p>
-<p>​            用于评估某段细分的流量模型预估值是否偏差较大。</p>
-<p>（3）校准评价指标：</p>
-<p>​    <strong>PCOC：</strong>（predict click over click）COPC是相反的指标。</p>
-<p>​    <strong>cal-N：（calibration-N）</strong></p>
-<p>​        cal-N将样本集合分桶后分别计算PCOC，并计算与1的偏差作为标准误差。举个例子，将pctr根据值大小划分为多个桶，每个桶为一个簇，计算每个簇的PCOC及其与1的偏差 数学公式:</p>
-<p><img src="..\imgs\校准评价指标.jpg" alt></p>
-<p>​    <strong>GC-N：（grouped calibration-N）</strong></p>
-<p>​        在具体业务场景下，有时会重点关注某一维度下的校准效果(如广告计费维度)，GC-N可以解决这个问题，它可以在cal-N基础上自定义各维度权重。例如，下面这个式子定义了m个广告计划的GC-N 数学公式:</p>
-</blockquote>
-<h2 id="3-校准算法"><a href="#3-校准算法" class="headerlink" title="3. 校准算法"></a>3. 校准算法</h2><p><img src="https://pic2.zhimg.com/80/v2-c452e8c2822418e0b744fe751123b275_720w.webp" alt="img"></p>
-<h3 id="（1）-Bias-Correction：负采样率修正"><a href="#（1）-Bias-Correction：负采样率修正" class="headerlink" title="（1） Bias Correction：负采样率修正"></a>（1） Bias Correction：负采样率修正</h3><blockquote>
-<p><strong>原因：</strong>正负样本不均衡情况下，负采样通常可以提升模型的AUC精度，但pctr值会发生变化，与真实差距扩大。</p>
-<p><strong>校准公式：</strong></p>
-<p>设采样前CTR为 p  ,采样后CTR为p’ ,正样本数为a  ,负样本数为b  ,正样本采样概率为l  ,负样本采样概率为m ，其中 n=m/l。(或者一般情况下， 正样本不采样，只对负样本采样，采样率设为n。）<br>$$<br>p = \frac{a}{a + b}<br>$$</p>
-<p>$$<br>p’= \frac{la}{la + mb} = \frac{a}{a + nb}<br>$$</p>
-<p>两者化简得到：<br>$$<br>p′= \frac {p} {n+p−np}<br>$$<br>注意 p为我们希望得到的校准后概率；但由于我们用采样的数据进行训练，模型计算出的pCTR实际为校准前概率p′ 。</p>
-<p>可以看到，负采样之后的pCTR值会被高估【p′+(1−p′)/n&gt;1】。这对于一般的CTR排序影响不大，但对于DSP这类有强烈的保距需求的场景，需要将pCTR校准回对采样前的估计。</p>
-<p>对于二分类模型，最后一层采用sigmoid激活函数，则可以得到<br>$$<br>p′= \frac {p} {n+p−np}=\frac {1}{1+e^{−(w^Tx+b)}}<br>$$<br>两者化简可得<br>$$<br>p = \frac {1} {1+e^{-(w^Tx + b + log(n))}}<br>$$<br>因此可以计算出校准后的bias: <strong>b′=b+log(n)</strong></p>
-</blockquote>
-<p><strong>代码：</strong></p>
-<p>注意在导出模型时，最终结果过完sigmoid，再进行bias_correct。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bias_correct</span><span class="params">(b, nr)</span>:</span></span><br><span class="line">	<span class="string">"""</span></span><br><span class="line"><span class="string">	nr: neg_sample_rate</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">	"""</span></span><br><span class="line">    <span class="keyword">if</span> nr &lt; <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> b + math.log(nr)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> b</span><br><span class="line"></span><br><span class="line">nr = <span class="number">0.1</span> <span class="comment"># 负采样率</span></span><br><span class="line">last_op[<span class="string">'bias'</span>] = bias_correct(last_op[<span class="string">'bias'</span>]， nr) <span class="comment"># 纠正sigmoid后的bias</span></span><br></pre></td></tr></table></figure>
-<h3 id="2-校准算法—保序回归"><a href="#2-校准算法—保序回归" class="headerlink" title="(2) 校准算法—保序回归"></a>(2) 校准算法—保序回归</h3><blockquote>
-<p>解决模型高低估、模型over-confidence等问题。</p>
-</blockquote>
-<p><img src="..\imgs\保序回归.jpg" alt></p>
-<h3 id="（3）校准算法3-—-SIR（保序回归平滑校准算法）"><a href="#（3）校准算法3-—-SIR（保序回归平滑校准算法）" class="headerlink" title="（3）校准算法3 —-SIR（保序回归平滑校准算法）"></a>（3）校准算法3 —-SIR（保序回归平滑校准算法）</h3><blockquote>
-<p>解决桶间数据稀疏问题</p>
-</blockquote>
-<p><img src="https://filescdn.proginn.com/29a600113e1c6026170821dcf5fa7a04/451e0a9c1532a7386e09b155b8915293.webp" alt="img"></p>
-<blockquote>
-<p> SIR算法是18年提出的，如上图所示，结合了Binning、Isotonic Regression和线性Scaling方法。</p>
-</blockquote>
-<p>具体思想为：</p>
-<ol>
-<li><p>进行保序回归。</p>
-</li>
-<li><p>使用单调平滑函数拟合模型预估值和实际点击率的映射关系（线性Scaling）就得到了校准函数。</p>
-</li>
-</ol>
-<p>该算法的优势在于充分利用了<strong>保序和平滑</strong>思想缓解了<strong>数据稀疏</strong>的问题。</p>
-<p>（详细可见论文：﻿Calibrating user response predictions in online advertising）。</p>
-<h3 id="（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR"><a href="#（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR" class="headerlink" title="（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR)"></a>（4）校准算法4—贝叶斯平滑SIR校准算法（Bayes-SIR)</h3><blockquote>
-<ul>
-<li><p>Bayes-SIR解决冷启动问题。</p>
-</li>
-<li><p>beta分布：可以看作一个概率的概率分布</p>
-<p><a href="https://blog.csdn.net/a358463121/article/details/52562940" target="_blank" rel="noopener">带你理解beta分布</a></p>
-</li>
-<li><p>贝叶斯平滑方法:（最早在雅虎的一篇论文里面中提出，用于解决数据稀疏问题下的点击率预估优化）。</p>
-</li>
-</ul>
-</blockquote>
-<p>在SIR算法应用中，发现广告计划投放初期校准效果明显差于平均水平，并在实际业务中造成以下问题：</p>
-<p>1）影响新建计划初始阶段的投放表现；</p>
-<p>2）影响强时效性广告的全生命周期效果；</p>
-<p>3）小客户在整个投放周期里数据一直稀疏，得不到准确的校准，影响竞价公平性。</p>
-<p>这是SIR校准算法的冷启动问题，采用了Bayes平滑的思想进行优化.</p>
-<p><img src="https://filescdn.proginn.com/4fb2c28c63d789c5ca40d06456dc981b/72eee4b95763445a4209eafb84023c4e.webp" alt="img"></p>
-<p>Bayes-SIR的算法思想：如上图所示，</p>
-<ol>
-<li><p>从丰富的先验数据中估计出每个广告计划的点击率先验分布，</p>
-</li>
-<li><p>依据该先验知识求解出belta分布的参数α和β。</p>
-</li>
-<li>依据α和β和新观测到的少量数据，计算得到更准确的后验点击率。</li>
-</ol>
-<p>这种估计方法能充分利用先验知识，具备置信程度过渡平滑的特点。</p>
-<p>将贝叶斯平滑CTR估计过程替换掉SIR算法的朴素CTR统计逻辑即构成了具有冷启动问题优化效果的校准方法。</p>
-<p>实际上线后，新广告的投放效果得到明显的提升。</p>
 
           
         
