@@ -229,6 +229,183 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/DBMTL模型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/DBMTL模型/" itemprop="url">DBMTL模型</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-13T00:00:00+08:00">
+                2023-02-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/推荐算法/" itemprop="url" rel="index">
+                    <span itemprop="name">推荐算法</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/推荐算法/多任务/" itemprop="url" rel="index">
+                    <span itemprop="name">多任务</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本篇博客仅作为学习,如有侵权必删。</p>
+<p><a href="https://blog.csdn.net/weixin_48534929/article/details/123404348" target="_blank" rel="noopener">https://blog.csdn.net/weixin_48534929/article/details/123404348</a></p>
+<h1 id="DBMTL模型"><a href="#DBMTL模型" class="headerlink" title="DBMTL模型"></a>DBMTL模型</h1><h2 id="1-简单总结："><a href="#1-简单总结：" class="headerlink" title="1. 简单总结："></a>1. 简单总结：</h2><p>阿里19年提出的一个多任务模型，该模型显示地建模目标间的贝叶斯网络因果关系。</p>
+<h2 id="2-背景："><a href="#2-背景：" class="headerlink" title="2. 背景："></a>2. 背景：</h2><p>目前单任务（如CTR）不能满足工业界推荐算法的需求，还需关注后续的转化链路，如：是否评论、收藏、加购、购买、观看时长等。</p>
+<p>常见的多目标转化模型结构：</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/6144c18e030076bb470d4d4b687ed838.png" alt="img"></p>
+<blockquote>
+<ol>
+<li>底层共享参数</li>
+<li>各塔学习自己的目标</li>
+<li>此类网络的概率模型：</li>
+</ol>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/5ee80ce45cd5f5f33b205dd12b4a9957.png" alt="img"></p>
+<p>其中l,m为目标，x为样本特征，H是模型。（各目标独立假设）</p>
+<h2 id="3-DBMTL介绍"><a href="#3-DBMTL介绍" class="headerlink" title="3. DBMTL介绍"></a>3. DBMTL介绍</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/b99772c2c8167dad5aedc8fde0b1bd51.png" alt="img"></p>
+<p>DBMTL与传统MTL结构（认为各目标独立）最主要差别在于构建了目标节点之间的贝叶斯网络，显式建模了目标间可能存在的因果关系。</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/e467002f699eff7ba6fdec858c75de9d.png" alt="img"></p>
+<p>DBMTL模型结构：</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/be18be0f3a50f9a241df70373edcb384.png" alt="img"></p>
+<p>贝叶斯层对应的损失函数是：</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/dd83ac348fa84540cc59eb5178b9e1fb.png" alt="img"></p>
+<p>不同目标加权后：</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/2a8032175d55c8ef5a97d331cf8abf37.png" alt="img"></p>
+<p>在网络的贝叶斯层中，函数f1, f2, f3 被实现为全连接的MLP，以学习目标间的隐含因果关系。他们把函数输入变量的embedding级联作为输入，并输入一个表示函数输出变量的embedding。每一个目标的embedding最后再经过一层MLP以输出最终目标的概率。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/Spark简介/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -334,6 +511,7 @@
         
           
             <p>本文仅做学习总结，如有侵权立删</p>
+<p><a href="https://blog.csdn.net/weixin_42331985/article/details/124126019" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42331985/article/details/124126019</a></p>
 <h1 id="Spark简介"><a href="#Spark简介" class="headerlink" title="Spark简介"></a>Spark简介</h1><h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1. 概念"></a>1. 概念</h2><blockquote>
 <p><strong>Spark：</strong>基于内存的迭代式计算引擎。</p>
 <p><strong>RDD：</strong>Resillient Distributed Dataset（弹性分布式数据集），是分布式内存的一个抽象概念。</p>
@@ -348,6 +526,8 @@
 </blockquote>
 <p>1个Job —&gt;多个stage</p>
 <p>1 job -&gt;多个 RDD + RDD的操作</p>
+<p><img src="..\imgs\spark组件介绍.jpg" alt></p>
+<p><img src="..\imgs\Spark基本组件.jpg" alt></p>
 <h2 id="2-架构设计"><a href="#2-架构设计" class="headerlink" title="2. 架构设计"></a>2. 架构设计</h2><blockquote>
 <p>Cluster Manager（集群资源管理器）：如Mesos、YARN。</p>
 <p>Worker Node（运行Job任务的工作节点）：</p>
@@ -358,11 +538,11 @@
 <p>1 Application = 1 Driver + 多 Job </p>
 <p>1 Job = 多个Stage</p>
 <p>1 Stage = 多个Task</p>
-<p>当执行一个Application时，Driver会向Yarn申请资源，启动Exeutor（Worker），并向Executor发送代码和文件，执行任务，任务结束后执行结果会返回给任务控制节点，或者写到HDFS/Hive等。</p>
+<p>当执行一个Application时，Driver会向Yarn申请资源，启动Executor（Worker），并向Executor发送代码和文件，执行任务，任务结束后执行结果会返回给任务控制节点，或者写到HDFS/Hive等。</p>
 </blockquote>
 <h2 id="3-运行流程"><a href="#3-运行流程" class="headerlink" title="3. 运行流程"></a>3. 运行流程</h2><blockquote>
 <ol>
-<li><p>一个Spark提交时，Driver创建一个SparkContext，由SparkContext负责和Yarn的通信、资源的申请、任务的分配和监控等。</p>
+<li><p>一个Spark提交时，由Driver运行main方法创建一个SparkContext，由SparkContext负责和Yarn的通信、资源的申请、任务的分配和监控等。</p>
 <p>SparkContext会向Yarn注册并申请运行Executor的资源。</p>
 </li>
 <li><p>Yarn为Executor分配资源，启动Executor进程，Executor发送心跳到Yarn上</p>
@@ -374,6 +554,123 @@
 </ol>
 </blockquote>
 <p><img src="https://img-blog.csdnimg.cn/1115a2d3fe534bd8b172961157a56eb2.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAemt5Q29kZXI=,size_19,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<h2 id="4-spark特点"><a href="#4-spark特点" class="headerlink" title="4. spark特点"></a>4. spark特点</h2><blockquote>
+<ol>
+<li>运行速度快 <ol>
+<li>提供了RDD数据结构，可在内存计算，采用DAG进行计算操作，中间结果保存在内存中。MR是基于磁盘的。</li>
+<li>spark是基于线程运行的，MR是基于进程的，线程的启动和销毁要高于进程</li>
+</ol>
+</li>
+<li>易用性<ol>
+<li>多语言</li>
+<li>更高阶的API</li>
+</ol>
+</li>
+<li>通用性强<ol>
+<li>spark core</li>
+<li>spark SQL</li>
+<li>spark streaming</li>
+<li>spark MLlib</li>
+<li>spark grapgX</li>
+</ol>
+</li>
+</ol>
+</blockquote>
+<p><img src="..\imgs\Spark_module.jpg" alt></p>
+<h2 id="5-MR和spark区别"><a href="#5-MR和spark区别" class="headerlink" title="5. MR和spark区别"></a>5. MR和spark区别</h2><blockquote>
+<h3 id="（1）中间结果输出："><a href="#（1）中间结果输出：" class="headerlink" title="（1）中间结果输出："></a>（1）中间结果输出：</h3><ul>
+<li><p>MapReduce：读–处理–写磁盘–读–处理–写磁盘（<strong>中间结果落地，即存入磁盘</strong>）</p>
+</li>
+<li><p>spark：读–处理–处理–（需要的时候）写磁盘（<strong>中间结果存入内存</strong>）</p>
+</li>
+</ul>
+<p><strong>减少落地时间，速度快</strong></p>
+<p><img src="../imgs/Hadoop%E5%92%8Cspark%E5%8C%BA%E5%88%AB.jpg" alt></p>
+<h3 id="（2）数据格式："><a href="#（2）数据格式：" class="headerlink" title="（2）数据格式："></a>（2）数据格式：</h3><ul>
+<li><p>MapReduce<strong>：从</strong>DB中读取数据再处理</p>
+</li>
+<li><p>spark：采用弹性分布式数据结构RDD存储数据</p>
+</li>
+</ul>
+<h3 id="（3）容错性："><a href="#（3）容错性：" class="headerlink" title="（3）容错性："></a>（3）容错性：</h3><ul>
+<li>Spark：采用RDD存储数据，若数据集丢失，可重建。</li>
+</ul>
+<h3 id="（4）通用性："><a href="#（4）通用性：" class="headerlink" title="（4）通用性："></a>（4）通用性：</h3><ul>
+<li><p>MapReduce：只提供map和reduce两种操作。</p>
+</li>
+<li><p>spark：提供很多数据集操作类型（transformations、actions）【transformations包括map\filter\</p>
+</li>
+</ul>
+<p>Groupbykey\sort等，action包括reduce、save、collect、lookup等】</p>
+<h3 id="（5）执行策略"><a href="#（5）执行策略" class="headerlink" title="（5）执行策略"></a>（5）执行策略</h3><ul>
+<li><p>MapReduce：数据shuffle前需排序</p>
+</li>
+<li><p>spark：不是所有场景都要排序</p>
+</li>
+</ul>
+</blockquote>
+<h2 id="6、spark1-x和spark2-x的区别"><a href="#6、spark1-x和spark2-x的区别" class="headerlink" title="6、spark1.x和spark2.x的区别"></a>6、spark1.x和spark2.x的区别</h2><blockquote>
+<ul>
+<li><p>Spark1.x：采用SparkContext作为进入点</p>
+</li>
+<li><p>Spark2.x：SparkSession 是 Spark SQL 的入口。</p>
+<ul>
+<li>采用SparkSession作为进入点，SparkSession可直接读取各种资料源，可直接与Hive元数据沟通，同时包含设定以及资源管理功能。</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h2 id="7-spark-应用执行模式"><a href="#7-spark-应用执行模式" class="headerlink" title="7. spark 应用执行模式"></a>7. spark 应用执行模式</h2><h3 id="（1）local模式"><a href="#（1）local模式" class="headerlink" title="（1）local模式"></a>（1）local模式</h3><p>local 模式主要是用于本地代码测试操作</p>
+<p>本质上就是一个单进程程序, 在一个进程中运行多个线程</p>
+<p>类似于pandas , 都是一个单进程程序, 无法处理大规模数据, 只需要处理小规模数据</p>
+<p><img src="..\imgs\Spark环境1.jpg" alt></p>
+<h3 id="（2）standalone："><a href="#（2）standalone：" class="headerlink" title="（2）standalone："></a>（2）standalone：</h3><blockquote>
+<p> Spark Standalone模式：该模式是不借助于第三方资源管理框架的完全分布式模式。Spark 使用自己的 Master 进程对应用程序运行过程中所需的资源进行调度和管理；对于中小规模的 Spark 集群首选 Standalone 模式。目前Spark 在 Standalone 模式下主要是借助 Zookeeper 实现单点故障问题；思想也是类似于 Hbase Master 单点故障解决方案。</p>
+</blockquote>
+<h3 id="（3）YARN"><a href="#（3）YARN" class="headerlink" title="（3）YARN"></a>（3）YARN</h3><blockquote>
+<p>该模式是借助于第三方资源管理框架 Yarn 的完全分布式模式。Spark 作为一个提交程序的客户端将 Job 任务提交到 Yarn 上；然后通过 Yarn 来调度和管理 Job 任务执行过程中所需的资源。需要此模式需要先搭建 Yarn 集群，然后将 Spark 作为 Hadoop 中的一个组件纳入到 Yarn 的调度管理下，这样将更有利于系统资源的共享。</p>
+</blockquote>
+<h2 id="8-提交任务方法"><a href="#8-提交任务方法" class="headerlink" title="8. 提交任务方法"></a>8. 提交任务方法</h2><blockquote>
+<p><strong>（1）spark shell</strong></p>
+<ul>
+<li>spark-shell 是 Spark 自带的交互式 Shell 程序，方便用户进行交互式编程，用户可以在该命令行下用 <a href="https://so.csdn.net/so/search?q=Scala&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener">Scala</a> 编写 spark 程序。</li>
+<li><p>应用场景</p>
+<ul>
+<li>通常是以测试为主</li>
+<li>所以一般直接以<code>./spark-shell</code>启动，进入本地模式测试</li>
+</ul>
+</li>
+<li>local方式启动：./spark-shell</li>
+<li>standalone集群模式启动：./spark-shell –master spark://master:7077</li>
+<li>yarn client模式启动：./spark-shell –master yarn-client</li>
+</ul>
+<p><strong>（2）spark submit</strong></p>
+<p>使用spark 自带的spark-submit工具提交任务</p>
+<p>程序一旦打包好，就可以使用 bin/spark-submit 脚本启动应用了。这个脚本负责设置 spark 使用的 classpath 和依赖，支持不同类型的集群管理器和发布模式。</p>
+<p><strong>它主要是用于提交编译并打包好的Jar包到集群环境中来运行</strong>，和hadoop中的hadoop jar命令很类似，hadoop jar是提交一个MR-task,而spark-submit是提交一个spark任务，这个脚本 可以设置Spark类路径（classpath）和应用程序依赖包，并且可以设置不同的Spark所支持的集群管理和部署模式。 相对于spark-shell来讲它不具有REPL(交互式的编程环境)的，在运行前需要指定应用的启动类，jar包路径,参数等内容。</p>
+</blockquote>
+<h2 id="9-参数配置："><a href="#9-参数配置：" class="headerlink" title="9. 参数配置："></a>9. 参数配置：</h2><p>参数名    参数说明</p>
+<ul>
+<li>-class    应用程序的主类，仅针对 java 或 scala 应用</li>
+<li>-master    master 的地址，提交任务到哪里执行，例如 local,spark://host:port, yarn, local</li>
+<li>-deploy-mode    在本地 (client) 启动 driver 或在 cluster 上启动，默认是 client</li>
+<li>-name    应用程序的名称，会显示在Spark的网页用户界面</li>
+<li>-jars    用逗号分隔的本地 jar 包，设置后，这些 jar 将包含在 driver 和 executor 的 classpath 下</li>
+<li>-packages    包含在driver 和executor 的 classpath 中的 jar 的 maven 坐标</li>
+<li>-exclude-packages    为了避免冲突 而指定不包含的 package</li>
+<li>-repositories    远程 repository</li>
+<li>-conf PROP=VALUE    指定 spark 配置属性的值，例如 -conf spark.executor.extraJavaOptions=”-XX:MaxPermSize=256m”</li>
+<li>-properties-file    加载的配置文件，默认为 conf/spark-defaults.conf</li>
+<li>-driver-memory    Driver内存，默认 1G</li>
+<li>-driver-java-options    传给 driver 的额外的 Java 选项</li>
+<li>-driver-library-path    传给 driver 的额外的库路径</li>
+<li>-driver-class-path    传给 driver 的额外的类路径</li>
+<li>-driver-cores    Driver 的核数，默认是1。在 yarn 或者 standalone 下使用</li>
+<li>-executor-memory    每个 executor 的内存，默认是1G</li>
+<li>-total-executor-cores    所有 executor 总共的核数。仅仅在 mesos 或者 standalone 下使用</li>
+<li>-num-executors    启动的 executor 数量。默认为2。在 yarn 下使用</li>
+<li>-executor-core    每个 executor 的核数。在yarn或者standalone下使用</li>
+</ul>
 
           
         
@@ -2006,7 +2303,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

@@ -79,12 +79,12 @@
 
 
 
-<meta name="description" content="本篇博客仅作为学习,如有侵权必删。 [TOC] 梯度下降1. 重点 (1) GD三种变形：BGD、SGD、MBGD (2) 多种改进方法：Momentum、NAG、Adagrad、Adadelta、RMSProp、Adam  2. 概念（1）常用的优化方法：直接法、迭代法（梯度下降、牛顿法、拟牛顿法、共轭梯度法）（2）直接法（求解析解）：求梯度，令梯度为0 （3）牛顿法：  （4） GD 梯度下降">
+<meta name="description" content="本篇博客仅作为学习,如有侵权必删。 [TOC] 梯度下降1. 重点 (1) 常用的优化方法：牛顿法、GD、拟牛顿法、共轭梯度法，之间的区别 (2) GD三种变形：BGD、SGD、MBGD (3) 多种改进方法：Momentum、NAG、Adagrad、Adadelta、RMSProp、Adam  2. 概念（1）常用的优化方法：直接法、迭代法（梯度下降、牛顿法、拟牛顿法、共轭梯度法）（2）直接法（">
 <meta property="og:type" content="article">
 <meta property="og:title" content="梯度下降">
 <meta property="og:url" content="http://yoursite.com/梯度下降/index.html">
 <meta property="og:site_name" content="Lee_yl&#39;s blog">
-<meta property="og:description" content="本篇博客仅作为学习,如有侵权必删。 [TOC] 梯度下降1. 重点 (1) GD三种变形：BGD、SGD、MBGD (2) 多种改进方法：Momentum、NAG、Adagrad、Adadelta、RMSProp、Adam  2. 概念（1）常用的优化方法：直接法、迭代法（梯度下降、牛顿法、拟牛顿法、共轭梯度法）（2）直接法（求解析解）：求梯度，令梯度为0 （3）牛顿法：  （4） GD 梯度下降">
+<meta property="og:description" content="本篇博客仅作为学习,如有侵权必删。 [TOC] 梯度下降1. 重点 (1) 常用的优化方法：牛顿法、GD、拟牛顿法、共轭梯度法，之间的区别 (2) GD三种变形：BGD、SGD、MBGD (3) 多种改进方法：Momentum、NAG、Adagrad、Adadelta、RMSProp、Adam  2. 概念（1）常用的优化方法：直接法、迭代法（梯度下降、牛顿法、拟牛顿法、共轭梯度法）（2）直接法（">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/imgs/牛顿法.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/牛顿法2.jpg">
@@ -97,10 +97,10 @@
 <meta property="og:image" content="http://yoursite.com/imgs/MBGD.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/Momentum_SGD.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/Momentum_SGD_1.jpg">
-<meta property="og:updated_time" content="2023-02-27T13:57:28.607Z">
+<meta property="og:updated_time" content="2023-02-28T00:49:34.576Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="梯度下降">
-<meta name="twitter:description" content="本篇博客仅作为学习,如有侵权必删。 [TOC] 梯度下降1. 重点 (1) GD三种变形：BGD、SGD、MBGD (2) 多种改进方法：Momentum、NAG、Adagrad、Adadelta、RMSProp、Adam  2. 概念（1）常用的优化方法：直接法、迭代法（梯度下降、牛顿法、拟牛顿法、共轭梯度法）（2）直接法（求解析解）：求梯度，令梯度为0 （3）牛顿法：  （4） GD 梯度下降">
+<meta name="twitter:description" content="本篇博客仅作为学习,如有侵权必删。 [TOC] 梯度下降1. 重点 (1) 常用的优化方法：牛顿法、GD、拟牛顿法、共轭梯度法，之间的区别 (2) GD三种变形：BGD、SGD、MBGD (3) 多种改进方法：Momentum、NAG、Adagrad、Adadelta、RMSProp、Adam  2. 概念（1）常用的优化方法：直接法、迭代法（梯度下降、牛顿法、拟牛顿法、共轭梯度法）（2）直接法（">
 <meta name="twitter:image" content="http://yoursite.com/imgs/牛顿法.jpg">
 
 
@@ -347,8 +347,9 @@
         <p>本篇博客仅作为学习,如有侵权必删。</p>
 <p>[TOC]</p>
 <h1 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h1><h2 id="1-重点"><a href="#1-重点" class="headerlink" title="1. 重点"></a>1. 重点</h2><blockquote>
-<p>(1) GD三种变形：BGD、SGD、MBGD</p>
-<p>(2) 多种改进方法：Momentum、NAG、Adagrad、Adadelta、RMSProp、Adam</p>
+<p>(1) 常用的优化方法：牛顿法、GD、拟牛顿法、共轭梯度法，之间的区别</p>
+<p>(2) GD三种变形：BGD、SGD、MBGD</p>
+<p>(3) 多种改进方法：Momentum、NAG、Adagrad、Adadelta、RMSProp、Adam</p>
 </blockquote>
 <h2 id="2-概念"><a href="#2-概念" class="headerlink" title="2. 概念"></a>2. 概念</h2><h3 id="（1）常用的优化方法：直接法、迭代法（梯度下降、牛顿法、拟牛顿法、共轭梯度法）"><a href="#（1）常用的优化方法：直接法、迭代法（梯度下降、牛顿法、拟牛顿法、共轭梯度法）" class="headerlink" title="（1）常用的优化方法：直接法、迭代法（梯度下降、牛顿法、拟牛顿法、共轭梯度法）"></a>（1）常用的优化方法：直接法、迭代法（梯度下降、牛顿法、拟牛顿法、共轭梯度法）</h3><h3 id="（2）直接法（求解析解）："><a href="#（2）直接法（求解析解）：" class="headerlink" title="（2）直接法（求解析解）："></a>（2）直接法（求解析解）：</h3><p>求梯度，令梯度为0</p>
 <h3 id="（3）牛顿法："><a href="#（3）牛顿法：" class="headerlink" title="（3）牛顿法："></a>（3）牛顿法：</h3><p><img src="..\imgs\牛顿法.jpg" alt></p>
@@ -428,8 +429,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/熵/" rel="next" title="熵">
-                <i class="fa fa-chevron-left"></i> 熵
+              <a href="/向量乘积/" rel="next" title="向量乘积">
+                <i class="fa fa-chevron-left"></i> 向量乘积
               </a>
             
           </div>
@@ -517,7 +518,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
