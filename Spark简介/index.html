@@ -79,27 +79,31 @@
 
 
 
-<meta name="description" content="本文仅做学习总结，如有侵权立删 https://blog.csdn.net/weixin_42331985/article/details/124126019 Spark简介1. 概念 Spark：基于内存的迭代式计算引擎。 RDD：Resillient Distributed Dataset（弹性分布式数据集），是分布式内存的一个抽象概念。 DAG：Directed Acyclic Graph（">
+<meta name="description" content="本文仅做学习总结，如有侵权立删 https://blog.csdn.net/weixin_42331985/article/details/124126019 https://zhuanlan.zhihu.com/p/396809439 https://blog.csdn.net/czz1141979570/article/details/105877261/ [TOC] Spark简介1. 概念">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spark简介">
 <meta property="og:url" content="http://yoursite.com/Spark简介/index.html">
 <meta property="og:site_name" content="Lee_yl&#39;s blog">
-<meta property="og:description" content="本文仅做学习总结，如有侵权立删 https://blog.csdn.net/weixin_42331985/article/details/124126019 Spark简介1. 概念 Spark：基于内存的迭代式计算引擎。 RDD：Resillient Distributed Dataset（弹性分布式数据集），是分布式内存的一个抽象概念。 DAG：Directed Acyclic Graph（">
+<meta property="og:description" content="本文仅做学习总结，如有侵权立删 https://blog.csdn.net/weixin_42331985/article/details/124126019 https://zhuanlan.zhihu.com/p/396809439 https://blog.csdn.net/czz1141979570/article/details/105877261/ [TOC] Spark简介1. 概念">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/imgs/spark组件介绍.jpg">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/99c95c8e6e724185b86fa7e0ba42f7fc.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAUmVsaWFu5ZOI5ZOI,size_20,color_FFFFFF,t_70,g_se,x_16">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/70e593dbb2c54f53a01f239947f7e451.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAUmVsaWFu5ZOI5ZOI,size_20,color_FFFFFF,t_70,g_se,x_16">
-<meta property="og:image" content="http://yoursite.com/imgs/spark组件介绍.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/Spark组件关系.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/Spark基本组件.jpg">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/dd9f4c224c3e42f0b29065d04c24eeb5.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAUmVsaWFu5ZOI5ZOI,size_20,color_FFFFFF,t_70,g_se,x_16">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/1115a2d3fe534bd8b172961157a56eb2.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAemt5Q29kZXI=,size_19,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="http://yoursite.com/imgs/Spark架构.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/Spark代码执行流程.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/Master和Worker关系.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/Driver和Executor关系.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/Spark_module.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/Hadoop%E5%92%8Cspark%E5%8C%BA%E5%88%AB.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/Spark环境1.jpg">
-<meta property="og:updated_time" content="2023-03-05T14:18:01.459Z">
+<meta property="og:updated_time" content="2023-03-09T14:32:30.767Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spark简介">
-<meta name="twitter:description" content="本文仅做学习总结，如有侵权立删 https://blog.csdn.net/weixin_42331985/article/details/124126019 Spark简介1. 概念 Spark：基于内存的迭代式计算引擎。 RDD：Resillient Distributed Dataset（弹性分布式数据集），是分布式内存的一个抽象概念。 DAG：Directed Acyclic Graph（">
-<meta name="twitter:image" content="https://img-blog.csdnimg.cn/99c95c8e6e724185b86fa7e0ba42f7fc.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAUmVsaWFu5ZOI5ZOI,size_20,color_FFFFFF,t_70,g_se,x_16">
+<meta name="twitter:description" content="本文仅做学习总结，如有侵权立删 https://blog.csdn.net/weixin_42331985/article/details/124126019 https://zhuanlan.zhihu.com/p/396809439 https://blog.csdn.net/czz1141979570/article/details/105877261/ [TOC] Spark简介1. 概念">
+<meta name="twitter:image" content="http://yoursite.com/imgs/spark组件介绍.jpg">
 
 
 
@@ -271,8 +275,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-12T00:00:00+08:00">
-                2023-02-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-09T00:00:00+08:00">
+                2023-03-09
               </time>
             
 
@@ -344,35 +348,30 @@
       
         <p>本文仅做学习总结，如有侵权立删</p>
 <p><a href="https://blog.csdn.net/weixin_42331985/article/details/124126019" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42331985/article/details/124126019</a></p>
-<h1 id="Spark简介"><a href="#Spark简介" class="headerlink" title="Spark简介"></a>Spark简介</h1><h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1. 概念"></a>1. 概念</h2><blockquote>
+<p><a href="https://zhuanlan.zhihu.com/p/396809439" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/396809439</a></p>
+<p><a href="https://blog.csdn.net/czz1141979570/article/details/105877261/" target="_blank" rel="noopener">https://blog.csdn.net/czz1141979570/article/details/105877261/</a></p>
+<p>[TOC]</p>
+<h1 id="Spark简介"><a href="#Spark简介" class="headerlink" title="Spark简介"></a>Spark简介</h1><h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1. 概念"></a>1. 概念</h2><p><img src="..\imgs\spark组件介绍.jpg" alt></p>
+<blockquote>
 <p><strong>Spark：</strong>基于内存的迭代式计算引擎。</p>
 <p><strong>RDD：</strong>Resillient Distributed Dataset（弹性分布式数据集），是分布式内存的一个抽象概念。</p>
 <p><strong>DAG：</strong>Directed Acyclic Graph（有向无环图），反映RDD之间的依赖关系。</p>
 <p><img src="https://img-blog.csdnimg.cn/99c95c8e6e724185b86fa7e0ba42f7fc.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAUmVsaWFu5ZOI5ZOI,size_20,color_FFFFFF,t_70,g_se,x_16" alt="img"></p>
 <p><strong>Executor</strong>：是运行在工作节点（WorkerNode）的一个进程，负责运行Task</p>
 <p><strong>应用（Application）</strong>：用户编写的Spark应用程序</p>
-<p><strong>任务（ Task ）</strong>：运行在Executor上的工作单元</p>
+<p><strong>任务（ Task ）</strong>：运行在Executor上的工作单元(线程)</p>
 <p><strong>作业（ Job ）</strong>：一个作业包含多个RDD及作用于相应RDD上的各种操作</p>
 <p><strong>阶段（ Stage ）</strong>：是作业的基本调度单位，一个作业会分为多组任务，每组任务被称为阶段，或者也被称为任务集合，代表了一组关联的、相互之间没有Shuffle依赖关系的任务组成的任务集, 下图为DAG划分Stage过程：</p>
 <p><img src="https://img-blog.csdnimg.cn/70e593dbb2c54f53a01f239947f7e451.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAUmVsaWFu5ZOI5ZOI,size_20,color_FFFFFF,t_70,g_se,x_16" alt="img"></p>
 </blockquote>
-<p>1个Job —&gt;多个stage</p>
-<p>1 job -&gt;多个 RDD + RDD的操作</p>
-<p><img src="..\imgs\spark组件介绍.jpg" alt></p>
-<p><img src="..\imgs\Spark基本组件.jpg" alt></p>
-<h2 id="2-架构设计"><a href="#2-架构设计" class="headerlink" title="2. 架构设计"></a>2. 架构设计</h2><blockquote>
-<p>Cluster Manager（集群资源管理器）：如Mesos、YARN。</p>
-<p>Worker Node（运行Job任务的工作节点）：</p>
-<p>Driver（每个Application的任务控制节点）：</p>
-<p>Executor（执行进程）：在Worker上负责具体任务的执行进程</p>
-<p>在Spark中，一个Application有一个任务控制节点（Driver）和若干个作业（Job）构成，一个Job由多个阶段（Stage）构成，一个阶段由多个任务（Task）组成。</p>
-<p><img src="https://img-blog.csdnimg.cn/dd9f4c224c3e42f0b29065d04c24eeb5.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAUmVsaWFu5ZOI5ZOI,size_20,color_FFFFFF,t_70,g_se,x_16" alt="img"></p>
+<h2 id="2-组件关系"><a href="#2-组件关系" class="headerlink" title="2. 组件关系"></a>2. 组件关系</h2><p>当执行一个Application时，Driver会向Yarn申请资源，启动Executor（Worker），并向Executor发送代码和文件，执行任务，任务结束后执行结果会返回给任务控制节点，或者写到HDFS/Hive等。</p>
 <p>1 Application = 1 Driver + 多 Job </p>
-<p>1 Job = 多个Stage</p>
+<p>1 Job（多个 RDD + RDD的操作） = 多个Stage </p>
 <p>1 Stage = 多个Task</p>
-<p>当执行一个Application时，Driver会向Yarn申请资源，启动Executor（Worker），并向Executor发送代码和文件，执行任务，任务结束后执行结果会返回给任务控制节点，或者写到HDFS/Hive等。</p>
-</blockquote>
-<h2 id="3-运行流程"><a href="#3-运行流程" class="headerlink" title="3. 运行流程"></a>3. 运行流程</h2><blockquote>
+<p><img src="..\imgs\Spark组件关系.jpg" alt></p>
+<p><img src="..\imgs\Spark基本组件.jpg" alt></p>
+<h2 id="3-运行流程"><a href="#3-运行流程" class="headerlink" title="3. 运行流程"></a>3. 运行流程</h2><h3 id="（1）概念层级"><a href="#（1）概念层级" class="headerlink" title="（1）概念层级"></a>（1）概念层级</h3><p>解释1：</p>
+<blockquote>
 <ol>
 <li><p>一个Spark提交时，由Driver运行main方法创建一个SparkContext，由SparkContext负责和Yarn的通信、资源的申请、任务的分配和监控等。</p>
 <p>SparkContext会向Yarn注册并申请运行Executor的资源。</p>
@@ -386,6 +385,90 @@
 </ol>
 </blockquote>
 <p><img src="https://img-blog.csdnimg.cn/1115a2d3fe534bd8b172961157a56eb2.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAemt5Q29kZXI=,size_19,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>解释2：</p>
+<blockquote>
+<p>每个 worker 节点包含一个或者多个 executor，一个 executor 中又包含多个 task。task 是真正实现并行计算的最小工作单元。</p>
+<ul>
+<li><h3 id="Driver"><a href="#Driver" class="headerlink" title="Driver"></a>Driver</h3><p>Driver 是一个 Java 进程，负责执行 Spark 任务的 main 方法，它的职责有：</p>
+<ul>
+<li><p>执行用户提交的代码，创建 SparkContext 或者 SparkSession</p>
+</li>
+<li><p>将用户代码转化为Spark任务（Jobs）</p>
+</li>
+<li><ul>
+<li>创建血缘（Lineage），逻辑计划（Logical Plan）和物理计划（Physical Plan)</li>
+</ul>
+</li>
+<li><p>在 Cluster Manager 的辅助下，把 task 任务分发调度出去</p>
+</li>
+<li><p>跟踪任务的执行情况</p>
+</li>
+</ul>
+</li>
+<li><h3 id="Spark-Context-Session"><a href="#Spark-Context-Session" class="headerlink" title="Spark Context/Session"></a>Spark Context/Session</h3><p>它是由Spark driver创建，每个 Spark 应用对应一个。程序和集群交互的入口。可以连接到 Cluster Manager</p>
+</li>
+<li><h3 id="Cluster-Manager"><a href="#Cluster-Manager" class="headerlink" title="Cluster Manager"></a>Cluster Manager</h3><p>负责部署整个Spark 集群，包括上面提到的 driver 和 executors。具有以下几种部署模式</p>
+<ol>
+<li>Standalone 模式</li>
+<li>YARN</li>
+<li>Mesos</li>
+<li>Kubernetes</li>
+</ol>
+</li>
+<li><h3 id="Executor"><a href="#Executor" class="headerlink" title="Executor"></a>Executor</h3><p>一个创建在 worker 节点的进程。一个 Executor 有多个 slots(线程) 可以并发执行多个 tasks。</p>
+<ul>
+<li>负责执行spark任务，把结果返回给 Driver</li>
+<li>可以将数据缓存到 worker 节点的内存</li>
+<li>一个 slot 就是一个线程，对应了一个 task</li>
+</ul>
+</li>
+</ul>
+<p><img src="..\imgs\Spark架构.jpg" alt></p>
+</blockquote>
+<p><img src="..\imgs\Spark代码执行流程.jpg" alt></p>
+<h3 id="（2）代码层级"><a href="#（2）代码层级" class="headerlink" title="（2）代码层级"></a>（2）代码层级</h3><p>Spark 有懒加载的特性，也就是说 Spark 计算按兵不动，直到遇到 action 类型的 operator 的时候才会触发一次计算。</p>
+<blockquote>
+<ul>
+<li><p>DAG</p>
+<ul>
+<li>Spark Job如何执行，都是由这个 DAG 来管的，包括决定 task 运行在什么节点</li>
+</ul>
+</li>
+<li><p>Spark Job</p>
+<ul>
+<li>每个Spark Job 对应一个action</li>
+</ul>
+</li>
+<li><p>Stages</p>
+<ul>
+<li>每个 Spark Job 包含一系列 stages</li>
+<li>Stages 按照数据是否需要 shuffle 来划分（宽依赖）</li>
+<li>Stages 之间的执行是串行的（除非stage 间计算的RDD不同）</li>
+<li>因为 Stages 是串行的，所以 shuffle 越少越好</li>
+</ul>
+</li>
+<li><p>Tasks</p>
+<ul>
+<li>每个 stage 包含一系列的 tasks</li>
+<li>Tasks 是并行计算的最小单元</li>
+<li>一个 stage 中的所有 tasks 执行同一段代码逻辑，只是基于不同的数据块</li>
+<li>一个 task 只能在一个executor中执行，不能是多个</li>
+<li>一个 stage 输出的 partition 数量等于这个 stage 执行 tasks 的数量</li>
+</ul>
+</li>
+<li><p>Partition</p>
+<ul>
+<li>Spark 中 partition（分区） 可以理解为内存中的一个数据集</li>
+<li>一个 partition 对应一个 task，一个 task 对应 一个 executor 中的一个 slot，一个 slot 对应物理资源是一个线程 thread</li>
+<li>1 partition = 1 task = 1 slot = 1 thread</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h3 id="3-spark中Master与Worker区别及Driver与Executor区别"><a href="#3-spark中Master与Worker区别及Driver与Executor区别" class="headerlink" title="(3) spark中Master与Worker区别及Driver与Executor区别"></a>(3) spark中Master与Worker区别及Driver与Executor区别</h3><p><img src="..\imgs\Master和Worker关系.jpg" alt></p>
+<p><img src="..\imgs\Driver和Executor关系.jpg" alt></p>
+<p> Master和Worker是Spark的守护进程，即Spark在特定模式下正常运行所必须的进程。Driver和Executor是临时程序，当有具体任务提交到Spark集群才会开启的程序。</p>
+<p><a href="https://blog.csdn.net/nicole_33/article/details/122520395" target="_blank" rel="noopener">了解 Spark中的master、worker和Driver、Executor</a></p>
 <h2 id="4-spark特点"><a href="#4-spark特点" class="headerlink" title="4. spark特点"></a>4. spark特点</h2><blockquote>
 <ol>
 <li>运行速度快 <ol>
@@ -527,8 +610,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/数组/" rel="next" title="数组">
-                <i class="fa fa-chevron-left"></i> 数组
+              <a href="/概率论1/" rel="next" title="概率论">
+                <i class="fa fa-chevron-left"></i> 概率论
               </a>
             
           </div>
@@ -536,10 +619,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/DBMTL模型/" rel="prev" title="DBMTL模型">
-                DBMTL模型 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -671,7 +750,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spark简介"><span class="nav-number">1.</span> <span class="nav-text">Spark简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-概念"><span class="nav-number">1.1.</span> <span class="nav-text">1. 概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-架构设计"><span class="nav-number">1.2.</span> <span class="nav-text">2. 架构设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-运行流程"><span class="nav-number">1.3.</span> <span class="nav-text">3. 运行流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-spark特点"><span class="nav-number">1.4.</span> <span class="nav-text">4. spark特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-MR和spark区别"><span class="nav-number">1.5.</span> <span class="nav-text">5. MR和spark区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）中间结果输出："><span class="nav-number">1.5.1.</span> <span class="nav-text">（1）中间结果输出：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（2）数据格式："><span class="nav-number">1.5.2.</span> <span class="nav-text">（2）数据格式：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（3）容错性："><span class="nav-number">1.5.3.</span> <span class="nav-text">（3）容错性：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（4）通用性："><span class="nav-number">1.5.4.</span> <span class="nav-text">（4）通用性：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（5）执行策略"><span class="nav-number">1.5.5.</span> <span class="nav-text">（5）执行策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6、spark1-x和spark2-x的区别"><span class="nav-number">1.6.</span> <span class="nav-text">6、spark1.x和spark2.x的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-spark-应用执行模式"><span class="nav-number">1.7.</span> <span class="nav-text">7. spark 应用执行模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）local模式"><span class="nav-number">1.7.1.</span> <span class="nav-text">（1）local模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（2）standalone："><span class="nav-number">1.7.2.</span> <span class="nav-text">（2）standalone：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（3）YARN"><span class="nav-number">1.7.3.</span> <span class="nav-text">（3）YARN</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-提交任务方法"><span class="nav-number">1.8.</span> <span class="nav-text">8. 提交任务方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-参数配置："><span class="nav-number">1.9.</span> <span class="nav-text">9. 参数配置：</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spark简介"><span class="nav-number">1.</span> <span class="nav-text">Spark简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-概念"><span class="nav-number">1.1.</span> <span class="nav-text">1. 概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-组件关系"><span class="nav-number">1.2.</span> <span class="nav-text">2. 组件关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-运行流程"><span class="nav-number">1.3.</span> <span class="nav-text">3. 运行流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）概念层级"><span class="nav-number">1.3.1.</span> <span class="nav-text">（1）概念层级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Driver"><span class="nav-number">1.3.2.</span> <span class="nav-text">Driver</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark-Context-Session"><span class="nav-number">1.3.3.</span> <span class="nav-text">Spark Context/Session</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cluster-Manager"><span class="nav-number">1.3.4.</span> <span class="nav-text">Cluster Manager</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Executor"><span class="nav-number">1.3.5.</span> <span class="nav-text">Executor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（2）代码层级"><span class="nav-number">1.3.6.</span> <span class="nav-text">（2）代码层级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-spark中Master与Worker区别及Driver与Executor区别"><span class="nav-number">1.3.7.</span> <span class="nav-text">(3) spark中Master与Worker区别及Driver与Executor区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-spark特点"><span class="nav-number">1.4.</span> <span class="nav-text">4. spark特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-MR和spark区别"><span class="nav-number">1.5.</span> <span class="nav-text">5. MR和spark区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）中间结果输出："><span class="nav-number">1.5.1.</span> <span class="nav-text">（1）中间结果输出：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（2）数据格式："><span class="nav-number">1.5.2.</span> <span class="nav-text">（2）数据格式：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（3）容错性："><span class="nav-number">1.5.3.</span> <span class="nav-text">（3）容错性：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（4）通用性："><span class="nav-number">1.5.4.</span> <span class="nav-text">（4）通用性：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（5）执行策略"><span class="nav-number">1.5.5.</span> <span class="nav-text">（5）执行策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6、spark1-x和spark2-x的区别"><span class="nav-number">1.6.</span> <span class="nav-text">6、spark1.x和spark2.x的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-spark-应用执行模式"><span class="nav-number">1.7.</span> <span class="nav-text">7. spark 应用执行模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）local模式"><span class="nav-number">1.7.1.</span> <span class="nav-text">（1）local模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（2）standalone："><span class="nav-number">1.7.2.</span> <span class="nav-text">（2）standalone：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（3）YARN"><span class="nav-number">1.7.3.</span> <span class="nav-text">（3）YARN</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-提交任务方法"><span class="nav-number">1.8.</span> <span class="nav-text">8. 提交任务方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-参数配置："><span class="nav-number">1.9.</span> <span class="nav-text">9. 参数配置：</span></a></li></ol></li></ol></div>
             
 
           </div>
