@@ -229,6 +229,508 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/DataFrame/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/DataFrame/" itemprop="url">DataFrame</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-12T00:00:00+08:00">
+                2023-03-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/" itemprop="url" rel="index">
+                    <span itemprop="name">大数据</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本文仅做学习总结，如有侵权立删</p>
+<h1 id="DataFrame"><a href="#DataFrame" class="headerlink" title="DataFrame"></a>DataFrame</h1><h2 id="一、Spark-SQL"><a href="#一、Spark-SQL" class="headerlink" title="一、Spark SQL"></a>一、Spark SQL</h2><blockquote>
+<p><strong>Spark SQL用于对结构化数据进行处理，它提供了DataFrame的抽象</strong>，作为分布式平台数据查询引擎，可以在此组件上构建大数据仓库。</p>
+<p><strong>DataFrame是一个分布式数据集，在概念上类似于传统数据库的表结构</strong>，数据被组织成命名的列，DataFrame的数据源可以是结构化的数据文件，也可以是Hive中的表或外部数据库，也还可以是现有的RDD。</p>
+<p>DataFrame的一个主要优点是，Spark引擎一开始就构建了一个逻辑执行计划，而且执行生成的代码是基于成本优化程序确定的物理计划。与Java或者Scala相比，<strong>Python中的RDD是非常慢的，而DataFrame的引入则使性能在各种语言中都保持稳定。</strong></p>
+</blockquote>
+<h2 id="二、初始化"><a href="#二、初始化" class="headerlink" title="二、初始化"></a>二、初始化</h2><blockquote>
+<p>在过去，你可能会使用SparkConf、SparkContext、SQLContext和HiveContext来分别执行配置、Spark环境、SQL环境和Hive环境的各种Spark查询。</p>
+<p><strong>SparkSession现在是读取数据、处理元数据、配置会话和管理集群资源的入口。SparkSession本质上是这些环境的组合</strong>，包括StreamingContext。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> SparkSession</span><br><span class="line">spark=SparkSession \</span><br><span class="line">   .builder \</span><br><span class="line">   .appName(<span class="string">'test'</span>) \</span><br><span class="line">   .config(<span class="string">'master'</span>,<span class="string">'yarn'</span>) \</span><br><span class="line">   .getOrCreate()</span><br></pre></td></tr></table></figure>
+<p>Spark 交互式环境下，默认已经创建了名为 spark 的 SparkSession 对象，不需要自行创建。</p>
+<p><strong>从RDD创建DataFrame</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 推断schema</span></span><br><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> Row</span><br><span class="line">lines = sc.textFile(<span class="string">"users.txt"</span>)</span><br><span class="line">parts = lines.map(<span class="keyword">lambda</span> l: l.split(<span class="string">","</span>))</span><br><span class="line">data = parts.map(<span class="keyword">lambda</span> p: Row(name=p[<span class="number">0</span>],age=p[<span class="number">1</span>],city=p[<span class="number">2</span>]))</span><br><span class="line">df=createDataFrame(data)</span><br><span class="line"><span class="comment"># 指定schema</span></span><br><span class="line">data = parts.map(<span class="keyword">lambda</span> p: Row(name=p[<span class="number">0</span>],age=int(p[<span class="number">1</span>]),city=p[<span class="number">2</span>]))</span><br><span class="line">df=createDataFrame(data)</span><br><span class="line"><span class="comment"># StructType指定schema</span></span><br><span class="line"><span class="keyword">from</span> pyspark.sql.types <span class="keyword">import</span> *</span><br><span class="line">schema = StructType([</span><br><span class="line">    StructField(<span class="string">'name'</span>,StringType(),<span class="literal">True</span>),</span><br><span class="line">    StructField(<span class="string">'age'</span>,LongType(),<span class="literal">True</span>),</span><br><span class="line">    StructField(<span class="string">'city'</span>,StringType(),<span class="literal">True</span>)</span><br><span class="line">    ])</span><br><span class="line">df=createDataFrame(parts, schema)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>StructField包括以下方面的内容：<br>name：字段名<br>dataType：数据类型<br>nullable：此字段的值是否为空</p>
+</blockquote>
+<p><strong>从文件系统创建DataFrame</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">df = spark.read.json(<span class="string">"customer.json"</span>)</span><br><span class="line">df = spark.read.load(<span class="string">"customer.json"</span>, format=<span class="string">"json"</span>)</span><br><span class="line">df = spark.read.load(<span class="string">"users.parquet"</span>)</span><br><span class="line">df = spark.read.text(<span class="string">"users.txt"</span>)</span><br></pre></td></tr></table></figure>
+<p><strong>输出和保存</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">df.rdd <span class="comment"># df转化为RDD</span></span><br><span class="line">df.toJSON() <span class="comment"># df转化为RDD字符串</span></span><br><span class="line">df.toPandas() <span class="comment"># df转化为pandas</span></span><br><span class="line">df.write.save(<span class="string">"customer.json"</span>, format=<span class="string">"json"</span>)</span><br><span class="line">df.write.save(<span class="string">"users.parquet"</span>)</span><br><span class="line">df.write.json(<span class="string">"users.json"</span>)</span><br><span class="line">df.write.text(<span class="string">"users.txt"</span>)</span><br></pre></td></tr></table></figure>
+<p><strong>数据库读写</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">df = spark.sql(<span class="string">'select name,age,city from users'</span>) </span><br><span class="line">df.createOrReplaceTempView(name) <span class="comment"># 创建临时视图</span></span><br><span class="line">df.write.saveAsTable(name,mode=<span class="string">'overwrite'</span>,partitionBy=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+<p><strong>操作hive表</strong><br><code>df.write</code> 有两种方法操作hive表</p>
+<ul>
+<li><code>saveAsTable()</code><br>如果hive中不存在该表，则spark会自动创建此表匹。<br>如果表已存在，则匹配插入数据和原表 schema(数据格式，分区等)，只要有区别就会报错<br>若是分区表可以调用<code>partitionBy</code>指定分区，使用<code>mode</code>方法调整数据插入方式：</li>
+</ul>
+<blockquote>
+<p>Specifies the behavior when data or table already exists. Options include:</p>
+<ul>
+<li><code>overwrite</code>: 覆盖原始数据(包括原表的格式，注释等)</li>
+<li><code>append</code>: 追加数据(需要严格匹配)</li>
+<li><code>ignore</code>: ignore the operation (i.e. no-op).</li>
+<li><code>error</code> or <code>errorifexists</code>: default option, throw an exception at runtime.</li>
+</ul>
+</blockquote>
+<ul>
+<li><code>df.write.partitionBy(&#39;dt&#39;).mode(&#39;append&#39;).saveAsTable(&#39;tb2&#39;)</code></li>
+<li><code>insertInto()</code></li>
+</ul>
+<p>无关schema，只按数据的顺序插入，如果原表不存在则会报错<br>对于分区表，先开启Hive动态分区，则不需要指定分区字段，如果有一个分区，那么默认为数据中最后一列为分区字段，有两个分区则为最后两列为分区字段，以此类推</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sqlContext.setConf(<span class="string">"hive.exec.dynamic.partition"</span>, <span class="string">"true"</span>)</span><br><span class="line">sqlContext.setConf(<span class="string">"hive.exec.dynamic.partition.mode"</span>, <span class="string">"nonstrict"</span>)</span><br><span class="line">df.write.insertInto(<span class="string">'tb2'</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>同样也可以先开启Hive动态分区，用SQL语句直接运行<br><code>sql(&quot;insert into tb2 select * from tb1&quot;)</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">DataFrame信息</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>df.show(n)</code></td>
+<td style="text-align:left">预览前 n 行数据</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.collect()</code></td>
+<td style="text-align:left">列表形式返回</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.dtypes</code></td>
+<td style="text-align:left">列名与数据类型</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.head(n)</code></td>
+<td style="text-align:left">返回前 n 行数据</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.first()</code></td>
+<td style="text-align:left">返回第 1 行数据</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.take(n)</code></td>
+<td style="text-align:left">返回前 n 行数据</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.printSchema()</code></td>
+<td style="text-align:left">打印模式信息</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.columns</code></td>
+<td style="text-align:left">列名</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">查询语句</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>df.select(*cols)</code></td>
+<td style="text-align:left"><code>SELECT</code> in SQL</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.union(other)</code></td>
+<td style="text-align:left"><code>UNION ALL</code> in SQL</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.when(condition,value)</code></td>
+<td style="text-align:left"><code>CASE WHEN</code> in SQL</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.alias(*alias,**kwargs)</code></td>
+<td style="text-align:left"><code>as</code> in SQL</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>F.cast(dataType)</code></td>
+<td style="text-align:left">数据类型转换（函数）</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>F.lit(col)</code></td>
+<td style="text-align:left">常数列（函数）</td>
+</tr>
+<tr>
+<td style="text-align:left">selectExpr</td>
+<td style="text-align:left">表查询</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> functions <span class="keyword">as</span> F</span><br><span class="line">df.select(<span class="string">'*'</span>)</span><br><span class="line">df.select(<span class="string">'name'</span>,<span class="string">'age'</span>) <span class="comment"># 字段名查询</span></span><br><span class="line">df.select([<span class="string">'name'</span>,<span class="string">'age'</span>]) <span class="comment"># 字段列表查询</span></span><br><span class="line">df.select(df[<span class="string">'name'</span>],df[<span class="string">'age'</span>]+<span class="number">1</span>) <span class="comment"># 表达式查询</span></span><br><span class="line">df.select(<span class="string">'name'</span>,df.mobile.alias(<span class="string">'phone'</span>)) <span class="comment"># 重命名列</span></span><br><span class="line">df.select(<span class="string">'name'</span>,<span class="string">'age'</span>,F.lit(<span class="string">'2020'</span>).alias(<span class="string">'update'</span>))  <span class="comment"># 常数</span></span><br><span class="line">df.select(<span class="string">'name'</span>,</span><br><span class="line">          F.when(df.age &gt; <span class="number">100</span>,<span class="number">100</span>)</span><br><span class="line">           .when(df.age &lt; <span class="number">0</span>,<span class="number">-1</span>)</span><br><span class="line">           .otherwise(df.age)</span><br><span class="line">          ).show()</span><br><span class="line"><span class="keyword">from</span> pyspark.sql.types <span class="keyword">import</span> *</span><br><span class="line">df.select(<span class="string">'name'</span>,df.age.cast(<span class="string">'float'</span>))</span><br><span class="line">df.select(<span class="string">'name'</span>,df.age.cast(FloatType()))</span><br><span class="line"><span class="comment"># selectExpr接口支持并行计算</span></span><br><span class="line">expr=[<span class="string">'count(&#123;&#125;)'</span>.format(i) <span class="keyword">for</span> i <span class="keyword">in</span> df.columns]</span><br><span class="line">df.selectExpr(*expr).collect()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">#表查询selectExpr,可以使用UDF函数，指定别名等</span></span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line">spark.udf.register(<span class="string">"getBirthYear"</span>,<span class="keyword">lambda</span> age:datetime.datetime.now().year-age)</span><br><span class="line">dftest = df.selectExpr(<span class="string">"name"</span>, <span class="string">"getBirthYear(age) as birth_year"</span> , <span class="string">"UPPER(gender) as gender"</span> )</span><br><span class="line">dftest.show()</span><br><span class="line"></span><br><span class="line">---------------------------</span><br><span class="line"><span class="comment">#窗口函数</span></span><br><span class="line"></span><br><span class="line">df = spark.createDataFrame([(<span class="string">"LiLei"</span>,<span class="number">78</span>,<span class="string">"class1"</span>),(<span class="string">"HanMeiMei"</span>,<span class="number">87</span>,<span class="string">"class1"</span>),</span><br><span class="line">                           (<span class="string">"DaChui"</span>,<span class="number">65</span>,<span class="string">"class2"</span>),(<span class="string">"RuHua"</span>,<span class="number">55</span>,<span class="string">"class2"</span>)]) \</span><br><span class="line">    .toDF(<span class="string">"name"</span>,<span class="string">"score"</span>,<span class="string">"class"</span>)</span><br><span class="line"></span><br><span class="line">df.show()</span><br><span class="line">dforder = df.selectExpr(<span class="string">"name"</span>,<span class="string">"score"</span>,<span class="string">"class"</span>,</span><br><span class="line">         <span class="string">"row_number() over (partition by class order by score desc) as order"</span>)</span><br><span class="line"></span><br><span class="line">dforder.show()</span><br><span class="line">+---------+-----+------+</span><br><span class="line">|     name|score| <span class="class"><span class="keyword">class</span>|</span></span><br><span class="line"><span class="class">+---------+-----+------+</span></span><br><span class="line"><span class="class">|    <span class="title">LiLei</span>|   78|<span class="title">class1</span>|</span></span><br><span class="line"><span class="class">|<span class="title">HanMeiMei</span>|   87|<span class="title">class1</span>|</span></span><br><span class="line"><span class="class">|   <span class="title">DaChui</span>|   65|<span class="title">class2</span>|</span></span><br><span class="line"><span class="class">|    <span class="title">RuHua</span>|   55|<span class="title">class2</span>|</span></span><br><span class="line"><span class="class">+---------+-----+------+</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">+---------+-----+------+-----+</span></span><br><span class="line"><span class="class">|     <span class="title">name</span>|<span class="title">score</span>| <span class="title">class</span>|<span class="title">order</span>|</span></span><br><span class="line"><span class="class">+---------+-----+------+-----+</span></span><br><span class="line"><span class="class">|   <span class="title">DaChui</span>|   65|<span class="title">class2</span>|    1|</span></span><br><span class="line"><span class="class">|    <span class="title">RuHua</span>|   55|<span class="title">class2</span>|    2|</span></span><br><span class="line"><span class="class">|<span class="title">HanMeiMei</span>|   87|<span class="title">class1</span>|    1|</span></span><br><span class="line"><span class="class">|    <span class="title">LiLei</span>|   78|<span class="title">class1</span>|    2|</span></span><br><span class="line"><span class="class">+---------+-----+------+-----+</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">排序</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>df.sort(*col,**kwargs)</code></td>
+<td style="text-align:left">排序</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.orderBy(*col,**kwargs)</code></td>
+<td style="text-align:left">排序(用法同sort)</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">df.sort(df.age.desc()).show()</span><br><span class="line">df.sort(<span class="string">'age'</span>,ascending=<span class="literal">True</span>).show()</span><br><span class="line">df.sort(desc(<span class="string">'age'</span>),<span class="string">'name'</span>).show()</span><br><span class="line">df.sort([<span class="string">'age'</span>,<span class="string">'name'</span>],ascending=[<span class="number">0</span>,<span class="number">1</span>]).show()</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">筛选方法</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>df.filter(condition)</code></td>
+<td style="text-align:left">筛选</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>column.isin(*cols)</code></td>
+<td style="text-align:left"><code>in (...)</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>column.like(pattern)</code></td>
+<td style="text-align:left">SQL通配符匹配</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>column.rlike(pattern)</code></td>
+<td style="text-align:left">正则表达式匹配</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>column.startswith(pattern)</code></td>
+<td style="text-align:left">匹配开始</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>column.endswith(pattern)</code></td>
+<td style="text-align:left">匹配结尾</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>column.substr(start,length)</code></td>
+<td style="text-align:left">截取字符串</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>column.between(lower,upper)</code></td>
+<td style="text-align:left"><code>between ... and ...</code></td>
+</tr>
+<tr>
+<td style="text-align:left">column.where</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">df.filter(<span class="string">"age = 22"</span>).show()</span><br><span class="line">df.filter(df.age == <span class="number">22</span>).show()</span><br><span class="line">df.select(df[<span class="string">'age'</span>] == <span class="number">22</span>).show()</span><br><span class="line">df.select(df.name.isin(<span class="string">'Bill'</span>,<span class="string">'Elon'</span>)).show()</span><br><span class="line">df.filter(<span class="string">"name like Elon%"</span>).show()</span><br><span class="line">df.filter(df.name.rlike(<span class="string">"Musk$"</span>).show()</span><br><span class="line">          </span><br><span class="line">df.where(<span class="string">"gender='male' and age &gt; 15"</span>).show()</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">统计信息</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>df.describe()</code></td>
+<td style="text-align:left">描述性统计</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.count()</code></td>
+<td style="text-align:left">行数</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.approxQuantile(col,prob,relativeError)</code></td>
+<td style="text-align:left">百分位数</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.corr(col1,col2,method=None)</code></td>
+<td style="text-align:left">相关系数</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 异常值处理</span></span><br><span class="line">bounds = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> col <span class="keyword">in</span> df.columns:</span><br><span class="line">    quantiles = df.approxQuantile(col,[<span class="number">0.25</span>,<span class="number">0.75</span>],<span class="number">0.05</span>)</span><br><span class="line">    <span class="comment"># 第三个参数relativeError代表可接受的错误程度，越小精度越高</span></span><br><span class="line">    IQR = quantiles[<span class="number">1</span>] - quantiles[<span class="number">0</span>]</span><br><span class="line">    bounds[col] = [quantiles[<span class="number">0</span>]<span class="number">-1.5</span>*IQR, quantiles[<span class="number">1</span>]+<span class="number">1.5</span>*IQR]</span><br><span class="line">    <span class="comment"># bounds保存了每个特征的上下限</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">分组和聚合</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>df.groupBy(*cols)</code></td>
+<td style="text-align:left">分组，返回GroupedData</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>groupedData.count()</code></td>
+<td style="text-align:left">计数</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>groupedData.sum(*cols)</code></td>
+<td style="text-align:left">求和</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>groupedData.avg(*cols)</code></td>
+<td style="text-align:left">平均值</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>groupedData.mean(*cols)</code></td>
+<td style="text-align:left">平均值</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>groupedData.max(*cols)</code></td>
+<td style="text-align:left">最大值</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>groupedData.min(*cols)</code></td>
+<td style="text-align:left">最小值</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>groupedData.agg(*exprs)</code></td>
+<td style="text-align:left">应用表达式</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p> 聚合函数还包括 countDistinct, kurtosis, skewness, stddev, sumDistinct, variance 等</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">df.groupBy(<span class="string">'city'</span>).count().collect()</span><br><span class="line">df.groupBy(df.city).avg(<span class="string">'age'</span>).collect()</span><br><span class="line">df.groupBy(<span class="string">'city'</span>,df.age).count().collect()</span><br><span class="line">df.groupBy(<span class="string">'city'</span>).agg(&#123;<span class="string">'age'</span>:<span class="string">'mean'</span>&#125;).collect() <span class="comment"># 字典形式给出</span></span><br><span class="line">df.groupBy(<span class="string">'city'</span>).agg(&#123;<span class="string">'*'</span>:<span class="string">'count'</span>&#125;).collect() </span><br><span class="line">df.groupBy(<span class="string">'city'</span>).agg(F.mean(df.age)).collect() </span><br><span class="line"><span class="comment"># groupBy + collect_list</span></span><br><span class="line">df.groupBy(<span class="string">"gender"</span>).agg(F.expr(<span class="string">"avg(age)"</span>),F.expr(<span class="string">"collect_list(name)"</span>)).show()</span><br><span class="line">+------+--------+------------------+</span><br><span class="line">|gender|avg(age)|collect_list(name)|</span><br><span class="line">+------+--------+------------------+</span><br><span class="line">|  null|    <span class="number">16.0</span>|           [RuHua]|</span><br><span class="line">|female|    <span class="number">16.0</span>|       [HanMeiMei]|</span><br><span class="line">|  male|    <span class="number">16.0</span>|   [LiLei, DaChui]|</span><br><span class="line">+------+--------+------------------+</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">去重</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>df.distinct()</code></td>
+<td style="text-align:left">唯一值</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.dropDuplicates(subset=None)</code></td>
+<td style="text-align:left">删除重复项</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">添加、修改、删除列</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>df.withColumnRenamed(existing,new)</code></td>
+<td style="text-align:left">重命名</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.withColumn(colname,new)</code></td>
+<td style="text-align:left">修改列</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.drop(*cols)</code></td>
+<td style="text-align:left">删除列</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">df=df.withColumn(<span class="string">'age'</span>,df.age+<span class="number">1</span>)</span><br><span class="line">df=df.drop(<span class="string">'age'</span>)</span><br><span class="line">df=df.drop(df.age)</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">缺失值处理</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>df.na.fill(value,subset=None)</code></td>
+<td style="text-align:left">缺失值填充</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.na.drop(how=&#39;any&#39;,thresh=None,subset=None)</code></td>
+<td style="text-align:left">缺失值删除</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.na.replace(to_teplace,value,subset=None)</code></td>
+<td style="text-align:left">替换</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">df=df.na.fill(<span class="number">0</span>)</span><br><span class="line">df=df.na.fill(&#123;<span class="string">'age'</span>:<span class="number">50</span>,<span class="string">'name'</span>:<span class="string">'unknow'</span>&#125;)</span><br><span class="line">df=df.na.drop()</span><br><span class="line">df=df.na.replace([<span class="string">'Alice'</span>,<span class="string">'Bob'</span>],[<span class="string">'A'</span>,<span class="string">'B'</span>],<span class="string">'name'</span>)</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">分区和缓存</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>df.repartition(n)</code></td>
+<td style="text-align:left">将df拆分为10个分区</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.coalesce(n)</code></td>
+<td style="text-align:left">将df合并为n个分区</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>df.cache()</code></td>
+<td style="text-align:left">缓存</td>
+</tr>
+</tbody>
+</table>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/理解RDD/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -788,7 +1290,6 @@
 </table>
 <p><strong>文件系统读写</strong></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 读取</span></span><br><span class="line">rdd=sc.textFile(<span class="string">'hdfs://file_path'</span>)  <span class="comment"># 从hdfs集群读取</span></span><br><span class="line">rdd=sc.textFile(<span class="string">'file_path'</span>) </span><br><span class="line">rdd=sc.textFile(<span class="string">'file:///local_file_path'</span>) <span class="comment"># 从本地文件读取</span></span><br><span class="line"><span class="comment"># 保存</span></span><br><span class="line">rdd.saveAsTextFile(<span class="string">'hdfs://file_path'</span>)</span><br><span class="line">rdd.saveAsTextFile(<span class="string">'file_path'</span>) <span class="comment"># hdfs路径</span></span><br><span class="line">rdd.saveAsTextFile(<span class="string">'file:///local_file_path'</span>)</span><br></pre></td></tr></table></figure>
-
           
         
       
@@ -1221,164 +1722,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/过拟合欠拟合/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lee_yl">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lee_yl's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/过拟合欠拟合/" itemprop="url">过拟合</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-26T00:00:00+08:00">
-                2023-02-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/过拟合/" itemprop="url" rel="index">
-                    <span itemprop="name">过拟合</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本篇博客仅作为学习,如有侵权必删。</p>
-<h1 id="过拟合"><a href="#过拟合" class="headerlink" title="过拟合"></a>过拟合</h1><h1 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h1><blockquote>
-<p>过拟合：模型对于训练数拟合呈过当的情况，反映到评估指标上，就是模型在训练集上表现很好，测试集和新数据上表现较差。</p>
-<p>欠拟合：模型在训练和和预测时表现都不好的情况。</p>
-</blockquote>
-<p><img src="..\imgs\过拟合欠拟合.jpg" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/标准化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1491,6 +1834,164 @@
 <p>原因在于神经网络学习过程<strong>本质上是为了学习数据的分布</strong>，一旦训练数据与测试数据的分布不同，那么网络的泛化能力也大大降低；另一方面，一旦在mini-batch梯度下降训练的时候，每批训练数据的分布不相同，那么网络就要在每次迭代的时候去学习以适应不同的分布，这样将会大大降低网络的训练速度，这也正是为什么我们需要对所有训练数据做一个Normalization预处理的原因。</p>
 <h3 id="2、-BN的原理"><a href="#2、-BN的原理" class="headerlink" title="2、 BN的原理"></a>2、 BN的原理</h3><p>BN首先是把所有的样本的统计分布标准化，降低了batch内不同样本的差异性，然后又允许batch内的各个样本有各自的统计分布。</p>
 <p>BN是针对每一批数据，在网络的每一层输入之前增加归一化处理（均值为0，标准差为1），将所有批数据强制在统一的数据分布下，即对该层 的任意一个神经元（假设为第k维）x^(k) 采用如下公式:</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/过拟合欠拟合/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/过拟合欠拟合/" itemprop="url">过拟合</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-26T00:00:00+08:00">
+                2023-02-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/过拟合/" itemprop="url" rel="index">
+                    <span itemprop="name">过拟合</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本篇博客仅作为学习,如有侵权必删。</p>
+<h1 id="过拟合"><a href="#过拟合" class="headerlink" title="过拟合"></a>过拟合</h1><h1 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h1><blockquote>
+<p>过拟合：模型对于训练数拟合呈过当的情况，反映到评估指标上，就是模型在训练集上表现很好，测试集和新数据上表现较差。</p>
+<p>欠拟合：模型在训练和和预测时表现都不好的情况。</p>
+</blockquote>
+<p><img src="..\imgs\过拟合欠拟合.jpg" alt></p>
 
           
         
@@ -2544,200 +3045,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/熵/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lee_yl">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lee_yl's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/熵/" itemprop="url">熵</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-20T00:00:00+08:00">
-                2023-02-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/先导知识/" itemprop="url" rel="index">
-                    <span itemprop="name">先导知识</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/先导知识/熵/" itemprop="url" rel="index">
-                    <span itemprop="name">熵</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本篇博客仅作为学习,如有侵权必删。</p>
-<p><a href="https://mp.weixin.qq.com/s?__biz=MzU0NjgzMDIxMQ==&amp;mid=2247599777&amp;idx=2&amp;sn=982e734b8de12d67ae64476c66f704bc&amp;chksm=fb54a44dcc232d5ba3fbf8f40c75801b0728beffb1b63f053b0c76209bbf54e47655dd421b25&amp;scene=27" target="_blank" rel="noopener">详解机器学习中的熵、条件熵、相对熵、交叉熵</a></p>
-<h1 id="1-信息量："><a href="#1-信息量：" class="headerlink" title="1. 信息量："></a>1. 信息量：</h1><p>一个事件发生的概率越小，信息量越大，所以信息量应该为概率的<strong>减函数</strong>，对于相互独立的两个事有<em>p</em>(<em>xy</em>)=<em>p</em>(<em>x</em>)<em>p</em>(<em>y</em>)，对于这两个事件信息量应满足<em>h</em>(<em>xy</em>)=<em>h</em>(<em>x</em>)+<em>h</em>(<em>y</em>)，那么信息量应为对数函数：</p>
-<p>​    h(x) = -ln p(x)</p>
-<p>​    对于一个随机变量可以以不同的概率发生，那么通过<strong>信息量期望</strong>的方式衡量，即<strong>信息熵</strong>。 </p>
-<h1 id="2-熵"><a href="#2-熵" class="headerlink" title="2. 熵"></a>2. 熵</h1><blockquote>
-<p> 熵：信息不确定性度量（信息量与不确定性相关）。事件发生的概率越小则携带的信息越大。</p>
-</blockquote>
-<p>​    一个离散随机变量X的可能取值为X=x1,x2,…,xn，而对应的概率为pi=p(X=xi),则随机变量的熵定义为： </p>
-<p><img src="..\imgs\熵.jpg" alt></p>
-<p><img src="..\imgs\熵.jpg" style="zoom:100%"></p>
-<p>​    每个<em>xi</em>表示一种特征。 <em>H</em>(<em>X</em>)在每个<em>p</em>(<em>xi</em>) = 1/<em>N</em>是最大，<em>N</em>为信息的个数。在概率为1/<em>N</em>时信息是最不确定的。</p>
-<p>​    规定当p(xi)=0时，p(xi)log⁡(p(xi)=0</p>
-<p>【小思考：为何公式是这样子的？其实只需熵和概率P成反比，1/P , 但是有个量纲缺点：地震发生的概率很小（P = 1/百万)，则信息量为一百万。抛硬币概率1/2，则信息量为2。两者量纲差太大，取log之后，使得低范围的值稍微放大，高范围的值稍微放小。】</p>
-<h1 id="3-联合熵H-p-q"><a href="#3-联合熵H-p-q" class="headerlink" title="3. 联合熵H(p,q)"></a>3. 联合熵H(p,q)</h1><p>两个随机变量的p与q的联合分布形成的熵称为联合熵，记为<em>H</em>(p, q)。 </p>
-<p><img src="..\imgs\交叉熵.jpg" style="zoom:100%"></p>
-<h1 id="4-条件熵H-q-p"><a href="#4-条件熵H-q-p" class="headerlink" title="4. 条件熵H(q|p)"></a>4. 条件熵H(q|p)</h1><p><em>X</em>给定的条件下，<em>Y</em>的信息熵，即<em>H</em> (<em>Y</em> |X )。公式为：</p>
-<p><img src="..\imgs\条件熵.jpg" style="zoom:100%"></p>
-<p><strong>推导过程：</strong></p>
-<p><img src="..\imgs\条件熵推导过程.jpg" style="zoom:100%"></p>
-<h1 id="5-KL散度（相对熵）："><a href="#5-KL散度（相对熵）：" class="headerlink" title="5. KL散度（相对熵）："></a>5. KL散度（相对熵）：</h1><blockquote>
-<p> 交叉熵：两个概率分布之间的一个比较，如果两个分布越匹配，交叉熵就越低；如果两个概率分布完全比配，那么交叉熵就为 0。</p>
-</blockquote>
-<p>如果是两个随机变量P,Q，且其概率分布分别为p(x),q(x),则p相对q的相对熵为：</p>
-<p><img src="..\imgs\KL散度.jpg" style="zoom:100%"></p>
-<h1 id="6-几种熵之间的关系："><a href="#6-几种熵之间的关系：" class="headerlink" title="6. 几种熵之间的关系："></a>6. 几种熵之间的关系：</h1><p><img src="..\imgs\熵之间的关系.jpg" style="zoom:100%"></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2783,7 +3095,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

@@ -601,6 +601,195 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/熵/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/熵/" itemprop="url">熵</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-20T00:00:00+08:00">
+                2023-02-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/先导知识/" itemprop="url" rel="index">
+                    <span itemprop="name">先导知识</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/先导知识/熵/" itemprop="url" rel="index">
+                    <span itemprop="name">熵</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本篇博客仅作为学习,如有侵权必删。</p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzU0NjgzMDIxMQ==&amp;mid=2247599777&amp;idx=2&amp;sn=982e734b8de12d67ae64476c66f704bc&amp;chksm=fb54a44dcc232d5ba3fbf8f40c75801b0728beffb1b63f053b0c76209bbf54e47655dd421b25&amp;scene=27" target="_blank" rel="noopener">详解机器学习中的熵、条件熵、相对熵、交叉熵</a></p>
+<h1 id="1-信息量："><a href="#1-信息量：" class="headerlink" title="1. 信息量："></a>1. 信息量：</h1><p>一个事件发生的概率越小，信息量越大，所以信息量应该为概率的<strong>减函数</strong>，对于相互独立的两个事有<em>p</em>(<em>xy</em>)=<em>p</em>(<em>x</em>)<em>p</em>(<em>y</em>)，对于这两个事件信息量应满足<em>h</em>(<em>xy</em>)=<em>h</em>(<em>x</em>)+<em>h</em>(<em>y</em>)，那么信息量应为对数函数：</p>
+<p>​    h(x) = -ln p(x)</p>
+<p>​    对于一个随机变量可以以不同的概率发生，那么通过<strong>信息量期望</strong>的方式衡量，即<strong>信息熵</strong>。 </p>
+<h1 id="2-熵"><a href="#2-熵" class="headerlink" title="2. 熵"></a>2. 熵</h1><blockquote>
+<p> 熵：信息不确定性度量（信息量与不确定性相关）。事件发生的概率越小则携带的信息越大。</p>
+</blockquote>
+<p>​    一个离散随机变量X的可能取值为X=x1,x2,…,xn，而对应的概率为pi=p(X=xi),则随机变量的熵定义为： </p>
+<p><img src="..\imgs\熵.jpg" alt></p>
+<p><img src="..\imgs\熵.jpg" style="zoom:100%"></p>
+<p>​    每个<em>xi</em>表示一种特征。 <em>H</em>(<em>X</em>)在每个<em>p</em>(<em>xi</em>) = 1/<em>N</em>是最大，<em>N</em>为信息的个数。在概率为1/<em>N</em>时信息是最不确定的。</p>
+<p>​    规定当p(xi)=0时，p(xi)log⁡(p(xi)=0</p>
+<p>【小思考：为何公式是这样子的？其实只需熵和概率P成反比，1/P , 但是有个量纲缺点：地震发生的概率很小（P = 1/百万)，则信息量为一百万。抛硬币概率1/2，则信息量为2。两者量纲差太大，取log之后，使得低范围的值稍微放大，高范围的值稍微放小。】</p>
+<h1 id="3-联合熵H-p-q"><a href="#3-联合熵H-p-q" class="headerlink" title="3. 联合熵H(p,q)"></a>3. 联合熵H(p,q)</h1><p>两个随机变量的p与q的联合分布形成的熵称为联合熵，记为<em>H</em>(p, q)。 </p>
+<p><img src="..\imgs\交叉熵.jpg" style="zoom:100%"></p>
+<h1 id="4-条件熵H-q-p"><a href="#4-条件熵H-q-p" class="headerlink" title="4. 条件熵H(q|p)"></a>4. 条件熵H(q|p)</h1><p><em>X</em>给定的条件下，<em>Y</em>的信息熵，即<em>H</em> (<em>Y</em> |X )。公式为：</p>
+<p><img src="..\imgs\条件熵.jpg" style="zoom:100%"></p>
+<p><strong>推导过程：</strong></p>
+<p><img src="..\imgs\条件熵推导过程.jpg" style="zoom:100%"></p>
+<h1 id="5-KL散度（相对熵）："><a href="#5-KL散度（相对熵）：" class="headerlink" title="5. KL散度（相对熵）："></a>5. KL散度（相对熵）：</h1><blockquote>
+<p> 交叉熵：两个概率分布之间的一个比较，如果两个分布越匹配，交叉熵就越低；如果两个概率分布完全比配，那么交叉熵就为 0。</p>
+</blockquote>
+<p>如果是两个随机变量P,Q，且其概率分布分别为p(x),q(x),则p相对q的相对熵为：</p>
+<p><img src="..\imgs\KL散度.jpg" style="zoom:100%"></p>
+<h1 id="6-几种熵之间的关系："><a href="#6-几种熵之间的关系：" class="headerlink" title="6. 几种熵之间的关系："></a>6. 几种熵之间的关系：</h1><p><img src="..\imgs\熵之间的关系.jpg" style="zoom:100%"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/MYSQL/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2172,337 +2361,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/DFS/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lee_yl">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lee_yl's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/DFS/" itemprop="url">树的DFS</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-15T19:00:18+08:00">
-                2019-04-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/深度遍历DFS/" itemprop="url" rel="index">
-                    <span itemprop="name">深度遍历DFS</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="类型一：树的深度"><a href="#类型一：树的深度" class="headerlink" title="类型一：树的深度"></a>类型一：树的深度</h1><h2 id="题目1：二叉树的最大深度"><a href="#题目1：二叉树的最大深度" class="headerlink" title="题目1：二叉树的最大深度"></a>题目1：<a href="https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/" target="_blank" rel="noopener">二叉树的最大深度</a></h2><p><strong><big>题目描述</big></strong></p>
-<p>给定一个二叉树，找出其最大深度。<br>二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。<br><strong>说明 </strong>: 叶子节点是指没有子节点的节点。<br><strong>示例 </strong>：<br>给定二叉树 [3,9,20,null,null,15,7]，<br>    3<br>   / \<br>  9  20<br>    /  \<br>   15   7<br>返回它的最大深度 3 。</p>
-<p><strong><big>思路1：递归</big></strong></p>
-<p>&emsp;&emsp;<strong>边界：</strong> 一旦root == None则返回深度为0。否则进入递归子问题。<br>&emsp;&emsp;<strong>递归子问题：</strong><font color="red"> max(左树深度，右树深度）+ 1 </font></p>
-<p><strong><big>代码1</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(root)</span>:</span></span><br><span class="line">    <span class="comment">#边界</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="comment">#递归子问题</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        left = dfs(root.left)</span><br><span class="line">        right = dfs(root.right)</span><br><span class="line">        <span class="keyword">return</span> max(left,right)+<span class="number">1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        self.val = x</span><br><span class="line">        self.left = <span class="literal">None</span></span><br><span class="line">        self.right = <span class="literal">None</span></span><br><span class="line">root = TreeNode(<span class="number">1</span>)</span><br><span class="line">root.left = TreeNode(<span class="number">2</span>)</span><br><span class="line">root.right = TreeNode(<span class="number">3</span>)</span><br><span class="line">root.left.left = TreeNode(<span class="number">4</span>)</span><br><span class="line">root.left.left.right = TreeNode(<span class="number">5</span>)</span><br><span class="line">height = dfs(root)</span><br></pre></td></tr></table></figure>
-<p><strong><big>思路2：深度遍历DFS</big></strong></p>
-<p>&emsp;&emsp;<strong>边界：</strong>一旦root == None则记录深度大小tmp，判断是否大于res（结果）。否则进入递归子问题。<br>&emsp;&emsp;<strong>递归子问题：</strong>将当前深度tmp+1，传入左子树和右子树</p>
-<p><strong><big>代码2</big></strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span><span class="params">(object)</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, x)</span>:</span></span><br><span class="line">   		self.val = x</span><br><span class="line">       		self.left = <span class="literal">None</span></span><br><span class="line">       		self.right = <span class="literal">None</span></span><br><span class="line">root = TreeNode(<span class="number">1</span>)</span><br><span class="line">root.left = TreeNode(<span class="number">2</span>)</span><br><span class="line">root.right = TreeNode(<span class="number">3</span>)</span><br><span class="line">root.left.left = TreeNode(<span class="number">4</span>)</span><br><span class="line">root.left.left.right = TreeNode(<span class="number">5</span>)</span><br><span class="line"><span class="comment">#全局变量</span></span><br><span class="line">res = <span class="number">0</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(root,tmp)</span>:</span></span><br><span class="line">    	<span class="keyword">global</span> res</span><br><span class="line">     	<span class="comment">##边界</span></span><br><span class="line">     	<span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">        		res = max(res,tmp)</span><br><span class="line">   		<span class="keyword">return</span></span><br><span class="line">	<span class="comment">###递归子问题</span></span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">   		dfs(root.left,tmp+<span class="number">1</span>)</span><br><span class="line">   		dfs(root.right,tmp+<span class="number">1</span>)</span><br><span class="line">dfs(root,<span class="number">0</span>)</span><br><span class="line">print(res)</span><br></pre></td></tr></table></figure></p>
-<p><strong><big>代码3</big></strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">res = <span class="number">0</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(root,height)</span>:</span></span><br><span class="line">    <span class="keyword">global</span> res</span><br><span class="line">    <span class="keyword">if</span> root:</span><br><span class="line">    	<span class="keyword">if</span> <span class="keyword">not</span> root.left <span class="keyword">and</span> <span class="keyword">not</span> root.right:</span><br><span class="line">    		self.res = max(res,height)</span><br><span class="line">    	<span class="keyword">else</span>:</span><br><span class="line">    		dfs(root.left,height+<span class="number">1</span>)</span><br><span class="line">    		dfs(root.right,height+<span class="number">1</span>)</span><br><span class="line">dfs(root,<span class="number">1</span>)</span><br><span class="line">print(res)</span><br></pre></td></tr></table></figure></p>
-<h2 id="题目2：二叉树的最小深度"><a href="#题目2：二叉树的最小深度" class="headerlink" title="题目2：二叉树的最小深度"></a>题目2：<a href="https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/" target="_blank" rel="noopener">二叉树的最小深度</a></h2><p>给定一个二叉树，找出其最小深度。</p>
-<p>最小深度是从根节点到最近叶子节点的最短路径上的节点数量。</p>
-<p><strong>说明:</strong> 叶子节点是指没有子节点的节点。</p>
-<p><strong>示例:</strong></p>
-<p>给定二叉树 <code>[3,9,20,null,null,15,7]</code>,</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  3</span><br><span class="line"> / \</span><br><span class="line">9  20</span><br><span class="line">  /  \</span><br><span class="line"> 15   7</span><br></pre></td></tr></table></figure>
-<p>返回它的最小深度  2.</p>
-<p><strong><big>思路1：DFS</big></strong></p>
-<p>如果根节点没有左子树或右子树，则返回（ 1+左子树深度+右子树深度）</p>
-<p>如果根节点左右子树都有，则返回（1+min(左子树深度，右子树深度)</p>
-<p><strong><big>代码</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">minDepth</span><span class="params">(root)</span></span></span><br><span class="line"><span class="function">    <span class="title">if</span> <span class="title">not</span> <span class="title">root</span>:</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    left = self.minDepth(root.left)</span><br><span class="line">    right = self.minDepth(root.right)</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>+min(left,right) <span class="keyword">if</span> left <span class="keyword">and</span> right <span class="keyword">else</span> <span class="number">1</span> + left + right</span><br></pre></td></tr></table></figure>
-<p><strong><big>思路2：迭代</big></strong></p>
-<p>层次遍历，一旦有一层存在左右子树都没有，则返回height</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">minDepth</span><span class="params">(self, root)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    :type root: TreeNode</span></span><br><span class="line"><span class="string">    :rtype: int</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    prev,height=[root],<span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> prev:</span><br><span class="line">        cur=[]</span><br><span class="line">        <span class="keyword">while</span> prev:</span><br><span class="line">            node=prev.pop(<span class="number">0</span>)</span><br><span class="line">            <span class="keyword">if</span> node.left:</span><br><span class="line">                cur.append(node.left)</span><br><span class="line">            <span class="keyword">if</span> node.right:</span><br><span class="line">                cur.append(node.right)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> node.left <span class="keyword">and</span> <span class="keyword">not</span> node.right:</span><br><span class="line">                <span class="keyword">return</span> height </span><br><span class="line">        prev=cur</span><br><span class="line">        height+=<span class="number">1</span></span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> height</span><br></pre></td></tr></table></figure>
-<h2 id="题目3：平衡二叉树"><a href="#题目3：平衡二叉树" class="headerlink" title="题目3：平衡二叉树"></a>题目3：<a href="https://leetcode-cn.com/problems/balanced-binary-tree/" target="_blank" rel="noopener">平衡二叉树</a></h2><p><strong><big>题目描述</big></strong></p>
-<p>给定一个二叉树，判断它是否是高度平衡的二叉树。</p>
-<p>本题中，一棵高度平衡二叉树定义为：</p>
-<blockquote>
-<p>一个二叉树<em>每个节点</em> 的左右两个子树的高度差的绝对值不超过1。</p>
-</blockquote>
-<p><strong>示例 1:</strong></p>
-<p>给定二叉树 <code>[3,9,20,null,null,15,7]</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  3</span><br><span class="line"> / \</span><br><span class="line">9  20</span><br><span class="line">  /  \</span><br><span class="line"> 15   7</span><br></pre></td></tr></table></figure>
-<p>返回 <code>true</code> 。</p>
-<p> <strong>示例 2:</strong></p>
-<p>给定二叉树 <code>[1,2,2,3,3,null,null,4,4]</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">      1</span><br><span class="line">     / \</span><br><span class="line">    2   2</span><br><span class="line">   / \</span><br><span class="line">  3   3</span><br><span class="line"> / \</span><br><span class="line">4   4</span><br></pre></td></tr></table></figure>
-<p>返回 <code>false</code> 。</p>
-<p><strong><big>思路：DFS</big></strong></p>
-<p>【和求深度思想一样】</p>
-<p><strong><big>代码</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># class TreeNode(object):</span></span><br><span class="line"><span class="comment">#     def __init__(self, x):</span></span><br><span class="line"><span class="comment">#         self.val = x</span></span><br><span class="line"><span class="comment">#         self.left = None</span></span><br><span class="line"><span class="comment">#         self.right = None</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isBalanced</span><span class="params">(self, root)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type root: TreeNode</span></span><br><span class="line"><span class="string">        :rtype: bool</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(root)</span>:</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">            left=helper(root.left)</span><br><span class="line">            right=helper(root.right)</span><br><span class="line">            <span class="keyword">if</span> left==<span class="number">-1</span> <span class="keyword">or</span> right==<span class="number">-1</span> <span class="keyword">or</span> abs(left-right)&gt;<span class="number">1</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="number">-1</span></span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>+max(left,right)</span><br><span class="line">        res=helper(root)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span> <span class="keyword">if</span> res==<span class="number">-1</span> <span class="keyword">else</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
-<h2 id="题目4：找树左下角的值"><a href="#题目4：找树左下角的值" class="headerlink" title="题目4：找树左下角的值"></a>题目4：找树左下角的值</h2><p>给定一个二叉树，在树的最后一行找到最左边的值。</p>
-<p><strong>示例 1:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">输入:</span><br><span class="line"></span><br><span class="line">    2</span><br><span class="line">   / \</span><br><span class="line">  1   3</span><br><span class="line"></span><br><span class="line">输出:1</span><br></pre></td></tr></table></figure>
-<p><strong>示例 2:</strong> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">输入:</span><br><span class="line"></span><br><span class="line">        1</span><br><span class="line">       / \</span><br><span class="line">      2   3</span><br><span class="line">     /   / \</span><br><span class="line">    4   5   6</span><br><span class="line">       /</span><br><span class="line">      7</span><br><span class="line"></span><br><span class="line">输出:7</span><br></pre></td></tr></table></figure>
-<p><strong><big>思路1：DFS</big></strong></p>
-<p>维护一个最大深度 self.height 如果深度更新，则对应的值也更新。</p>
-<p>这里注意先更新右边再更新左边，这样最后的值将会是最左边的值，左边的值会把右边的覆盖掉，如果深度相同的话</p>
-<p><strong><big>代码1</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">leftValue</span><span class="params">(root)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(root,tmpheight)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> tmpheight &gt; self.height:</span><br><span class="line">            self.height = tmpheight</span><br><span class="line">        <span class="keyword">if</span> self.height &lt;= tmpheight <span class="keyword">and</span> <span class="keyword">not</span> root.left <span class="keyword">and</span> <span class="keyword">not</span> root.right:</span><br><span class="line">            self.res = root.val</span><br><span class="line">        dfs(root.right,tmpheight+<span class="number">1</span>)</span><br><span class="line">        dfs(root.left,tmpheight+<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    self.res = root.val</span><br><span class="line">    self.height = <span class="number">0</span></span><br><span class="line">    tmpheight = <span class="number">0</span></span><br><span class="line">    dfs(root,tmpheight)</span><br><span class="line">    <span class="keyword">return</span> self.res</span><br></pre></td></tr></table></figure>
-<p><strong><big>思路2：层次遍历</big></strong></p>
-<p><strong><big>代码2</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">leftValue</span><span class="params">(root)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    prev = [root]</span><br><span class="line">    <span class="keyword">while</span> prev:</span><br><span class="line">        node = prev.pop(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">if</span> node.right:</span><br><span class="line">            prev.append(node.right)</span><br><span class="line">        <span class="keyword">if</span> node.left:</span><br><span class="line">            prev.append(node.left)</span><br><span class="line">    <span class="keyword">return</span> node.val</span><br></pre></td></tr></table></figure>
-<h2 id="题目5：二叉树的右视图"><a href="#题目5：二叉树的右视图" class="headerlink" title="题目5：二叉树的右视图"></a>题目5：<a href="https://leetcode-cn.com/problems/binary-tree-right-side-view/" target="_blank" rel="noopener">二叉树的右视图</a></h2><p>给定一棵二叉树，想象自己站在它的右侧，按照从顶部到底部的顺序，返回从右侧所能看到的节点值。</p>
-<p><strong>示例:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输入: [1,2,3,null,5,null,4]</span><br><span class="line">输出: [1, 3, 4]</span><br><span class="line">解释:</span><br><span class="line"></span><br><span class="line">   1            &lt;---</span><br><span class="line"> /   \</span><br><span class="line">2     3         &lt;---</span><br><span class="line"> \     \</span><br><span class="line">  5     4       &lt;---</span><br></pre></td></tr></table></figure>
-<p><strong><big>思路1:DFS</big></strong><br><strong><big>代码1</big></strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">treeRight</span><span class="params">(root)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    res = [root.val]</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(root,height)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        <span class="keyword">if</span> len(res) &lt; height:</span><br><span class="line">            res.append(root.val)</span><br><span class="line">        dfs(root.right,height+<span class="number">1</span>)</span><br><span class="line">        dfs(root.left,height+<span class="number">1</span>)</span><br><span class="line">    dfs(root,<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure></p>
-<p><strong><big>思路2：层次遍历</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rightSideView</span><span class="params">(root)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    prev,res = [root],[root.val]</span><br><span class="line">    <span class="keyword">while</span> prev:</span><br><span class="line">        cur = []</span><br><span class="line">        <span class="keyword">while</span> prev:</span><br><span class="line">            node = prev.pop(<span class="number">0</span>)</span><br><span class="line">            <span class="keyword">if</span> node.right:</span><br><span class="line">                cur.append(node.right)</span><br><span class="line">            <span class="keyword">if</span> node.left:</span><br><span class="line">                cur.append(node.left)</span><br><span class="line">        <span class="keyword">if</span> cur:</span><br><span class="line">            res.append(cur[<span class="number">0</span>].val)</span><br><span class="line">        prev = cur</span><br><span class="line">    <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
-<h2 id="题目6：在每个树行中找最大值"><a href="#题目6：在每个树行中找最大值" class="headerlink" title="题目6：在每个树行中找最大值"></a>题目6：<a href="https://leetcode-cn.com/problems/find-largest-value-in-each-tree-row/" target="_blank" rel="noopener">在每个树行中找最大值</a></h2><p>您需要在二叉树的每一行中找到最大的值。</p>
-<p><strong>示例：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输入: </span><br><span class="line"></span><br><span class="line">          1</span><br><span class="line">         / \</span><br><span class="line">        3   2</span><br><span class="line">       / \   \  </span><br><span class="line">      5   3   9 </span><br><span class="line"></span><br><span class="line">输出: [1, 3, 9]</span><br></pre></td></tr></table></figure>
-<p><strong><big>思路1：层次遍历</big></strong><br><strong><big>代码1</big></strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">largestValues</span><span class="params">(root)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    res = [root.val]</span><br><span class="line">    prev = [root]</span><br><span class="line">    <span class="keyword">while</span> prev:</span><br><span class="line">        cur = []</span><br><span class="line">        <span class="keyword">while</span> prev:</span><br><span class="line">            node = prev.pop()</span><br><span class="line">            <span class="keyword">if</span> node.left:</span><br><span class="line">                cur.append(node.left)</span><br><span class="line">            <span class="keyword">if</span> node.right:</span><br><span class="line">                cur.append(node.right)</span><br><span class="line">        <span class="keyword">if</span> cur:</span><br><span class="line">            res.append(max([i.val <span class="keyword">for</span> i <span class="keyword">in</span> cur]))</span><br><span class="line">        prev = cur</span><br><span class="line">    <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure></p>
-<p><strong><big>思路2：DFS</big></strong><br><strong><big>代码2</big></strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">largestValues</span><span class="params">(root)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    res = [root.val]</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(root,height)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> root:</span><br><span class="line">            <span class="keyword">if</span> len(res) &lt;= height:</span><br><span class="line">                res.append(root.val)</span><br><span class="line">            <span class="keyword">if</span> len(res) &gt; height <span class="keyword">and</span> root.val &gt; res[height]:</span><br><span class="line">                res[height] = root.val</span><br><span class="line">            dfs(root.left,height + <span class="number">1</span>)</span><br><span class="line">            dfs(root.right,height+<span class="number">1</span>)</span><br><span class="line">    dfs(root,<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure></p>
-<hr>
-<h1 id="类型二：树的路径"><a href="#类型二：树的路径" class="headerlink" title="类型二：树的路径"></a>类型二：树的路径</h1><h2 id="题目1：二叉树的所有路径"><a href="#题目1：二叉树的所有路径" class="headerlink" title="题目1：二叉树的所有路径"></a>题目1：<a href="https://leetcode-cn.com/problems/binary-tree-paths/" target="_blank" rel="noopener">二叉树的所有路径</a></h2><p><strong><big>题目描述</big></strong></p>
-<p>给定一个二叉树，返回所有从根节点到叶子节点的路径。</p>
-<p><strong>说明:</strong> 叶子节点是指没有子节点的节点。</p>
-<p><strong>示例:</strong><br>输入:</p>
-<p>   1<br> /   \<br>2     3<br> \<br>  5</p>
-<p>输出: [“1-&gt;2-&gt;5”, “1-&gt;3”]</p>
-<p>解释: 所有根节点到叶子节点的路径为: 1-&gt;2-&gt;5, 1-&gt;3</p>
-<p><strong><big>思路：DFS</big></strong></p>
-<p>&emsp;&emsp;<strong>边界:</strong></p>
-<p>&emsp;&emsp;&emsp;&emsp;如果root==None，不管</p>
-<p>&emsp;&emsp;&emsp;&emsp;如果root.left和root.right同时为空，则将这条路径加入res数组中。</p>
-<p>&emsp;&emsp;<strong>递归子问题：</strong></p>
-<p>&emsp;&emsp;&emsp;&emsp;如果root.left或者root.right有一个不为空，继续dfs(root.left,path),dfs(root.right,path)</p>
-<p><strong><big>代码</big></strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,value)</span>:</span></span><br><span class="line">        self.val = value</span><br><span class="line">        self.left = <span class="literal">None</span></span><br><span class="line">        self.right = <span class="literal">None</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(root)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    res = []</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(root,path)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> root:</span><br><span class="line">            path = path + str(root.val) + <span class="string">'-&gt;'</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> root.left <span class="keyword">and</span> <span class="keyword">not</span> root.right:</span><br><span class="line">                res.append(path[:<span class="number">-2</span>])</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                dfs(root.left,path)</span><br><span class="line">                dfs(root.right,path)</span><br><span class="line">    dfs(root,<span class="string">''</span>)</span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line">root = Node(<span class="number">1</span>)</span><br><span class="line">root.left = Node(<span class="number">2</span>)</span><br><span class="line">root.right = Node(<span class="number">3</span>)</span><br><span class="line">root.left.left = Node(<span class="number">4</span>)</span><br><span class="line">test(root)</span><br></pre></td></tr></table></figure></p>
-<h2 id="题目2：路径总和"><a href="#题目2：路径总和" class="headerlink" title="题目2：路径总和"></a>题目2：<a href="https://leetcode-cn.com/problems/path-sum/" target="_blank" rel="noopener">路径总和</a></h2><p><strong><big>题目描述</big></strong></p>
-<p>给定一个二叉树和一个目标和，判断该树中是否存在根节点到叶子节点的路径，这条路径上所有节点值相加等于目标和。</p>
-<p><strong>说明:</strong> 叶子节点是指没有子节点的节点。</p>
-<p><strong>示例:</strong><br> 给定如下二叉树，以及目标和 <code>sum = 22</code>，<br>              5<br>             / \<br>            4   8<br>           /   / \<br>          11  13  4<br>         /  \      \<br>        7    2      1</p>
-<p>返回 <code>true</code>, 因为存在目标和为 22 的根节点到叶子节点的路径 <code>5-&gt;4-&gt;11-&gt;2</code>。</p>
-<p><strong><big>思路：DFS</big></strong></p>
-<p>查看每条路径和是否等于sum，</p>
-<p>递归边界：没有左子树也没有右子树时，判断是否等于sum。</p>
-<p>递归子问题：递归左子树，递归右子树</p>
-<p><strong><big>代码</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hasPathSum</span><span class="params">(root,sum)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(root,sum,tmpSum)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> root:</span><br><span class="line">            tmpSum += root.val</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> root.left <span class="keyword">and</span> <span class="keyword">not</span> root.right:</span><br><span class="line">                <span class="keyword">return</span> tmpSum == sum</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> dfs(root.left,sum,tmpSum) <span class="keyword">or</span> dfs(root.right,sum,tmpSum)</span><br><span class="line">    <span class="keyword">return</span> dfs(root,sum,<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
-<h2 id="题目3：路径总和II"><a href="#题目3：路径总和II" class="headerlink" title="题目3：路径总和II"></a>题目3：<a href="https://leetcode-cn.com/problems/path-sum-ii/submissions/" target="_blank" rel="noopener">路径总和II</a></h2><p>给定一个二叉树和一个目标和，找到所有从根节点到叶子节点路径总和等于给定目标和的路径。</p>
-<p><strong>说明:</strong> 叶子节点是指没有子节点的节点。</p>
-<p><strong>示例:</strong><br> 给定如下二叉树，以及目标和 <code>sum = 22</code>，<br>              5<br>             / \<br>            4   8<br>           /   / \<br>          11  13  4<br>         /  \    / \<br>        7    2  5   1<br>返回:<br>[<br>   [5,4,11,2],<br>   [5,8,4,5]<br>]</p>
-<p><strong><big>思路：DFS</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pathSum</span><span class="params">(root,sum)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    res = []</span><br><span class="line">    tmp = <span class="string">''</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(root,tmp,res)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> root:</span><br><span class="line">            tmp += str(root.val)+<span class="string">','</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> root.left <span class="keyword">and</span> <span class="keyword">not</span> root.right:</span><br><span class="line">                new = list(map(int,tmp.split(<span class="string">','</span>)[:<span class="number">-1</span>]))</span><br><span class="line">                newsum = <span class="number">0</span></span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> new:</span><br><span class="line">                    newsum += i</span><br><span class="line">                <span class="keyword">if</span> newsum == sum:</span><br><span class="line">                    res.append(new)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                dfs(root.left,tmp,res)</span><br><span class="line">                dfs(root.right,tmp,res)</span><br><span class="line">    dfs(root,tmp,res)</span><br><span class="line">    <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
-<h2 id="题目4：叶子相似的树"><a href="#题目4：叶子相似的树" class="headerlink" title="题目4：叶子相似的树"></a>题目4：<a href="https://leetcode-cn.com/problems/leaf-similar-trees/" target="_blank" rel="noopener">叶子相似的树</a></h2><p><strong><big>题目描述</big></strong></p>
-<p>请考虑一颗二叉树上所有的叶子，这些叶子的值按从左到右的顺序排列形成一个 <em>叶值序列</em> 。</p>
-<p><img src="E:\GitHub_learn\blog\source\imgs\tree.png" style="zoom:50%"></p>
-<p>举个例子，如上图所示，给定一颗叶值序列为 <code>(6, 7, 4, 9, 8)</code> 的树。</p>
-<p>如果有两颗二叉树的叶值序列是相同，那么我们就认为它们是 <em>叶相似</em> 的。</p>
-<p>如果给定的两个头结点分别为 <code>root1</code> 和 <code>root2</code> 的树是叶相似的，则返回 <code>true</code>；否则返回 <code>false</code> 。</p>
-<p><strong>提示：</strong></p>
-<ul>
-<li>给定的两颗树可能会有 <code>1</code> 到 <code>100</code> 个结点。</li>
-</ul>
-<p><strong><big>思路：DFS</big></strong></p>
-<p>&emsp;&emsp;思路和二叉树的所有路径一样，边界只有遇到叶子节点才将其加入res中。</p>
-<p><strong><big>代码:</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">leafsimilar</span><span class="params">(root1,root2)</span>:</span>    </span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> root1 <span class="keyword">and</span> <span class="keyword">not</span> root2:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root1 <span class="keyword">or</span> <span class="keyword">not</span> root2:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        leaf1 , leaf2 = [] , []</span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(root,leaf)</span>:</span></span><br><span class="line">            <span class="keyword">if</span> root:</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> root.left <span class="keyword">and</span> <span class="keyword">not</span> root.right:</span><br><span class="line">                    leaf.append(root.val)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    dfs(root.left,leaf)</span><br><span class="line">                    dfs(root.right,leaf)</span><br><span class="line">        dfs(root1,leaf1)</span><br><span class="line">        dfs(root2,leaf2)</span><br><span class="line">        <span class="keyword">return</span> leaf1 == leaf2</span><br></pre></td></tr></table></figure>
-<h2 id="题目5：求根到叶子节点数字之和"><a href="#题目5：求根到叶子节点数字之和" class="headerlink" title="题目5：求根到叶子节点数字之和"></a>题目5：<a href="https://leetcode-cn.com/problems/sum-root-to-leaf-numbers/" target="_blank" rel="noopener">求根到叶子节点数字之和</a></h2><p>给定一个二叉树，它的每个结点都存放一个 <code>0-9</code> 的数字，每条从根到叶子节点的路径都代表一个数字。</p>
-<p>例如，从根到叶子节点路径 <code>1-&gt;2-&gt;3</code> 代表数字 <code>123</code>。</p>
-<p>计算从根到叶子节点生成的所有数字之和。</p>
-<p><strong>说明:</strong> 叶子节点是指没有子节点的节点。</p>
-<p><strong>示例 1:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输入: [1,2,3]</span><br><span class="line">    1</span><br><span class="line">   / \</span><br><span class="line">  2   3</span><br><span class="line">输出: 25</span><br><span class="line">解释:</span><br><span class="line">从根到叶子节点路径 1-&gt;2 代表数字 12.</span><br><span class="line">从根到叶子节点路径 1-&gt;3 代表数字 13.</span><br><span class="line">因此，数字总和 = 12 + 13 = 25.</span><br></pre></td></tr></table></figure>
-<p><strong>示例 2:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">输入: [4,9,0,5,1]</span><br><span class="line">    4</span><br><span class="line">   / \</span><br><span class="line">  9   0</span><br><span class="line"> / \</span><br><span class="line">5   1</span><br><span class="line">输出: 1026</span><br><span class="line">解释:</span><br><span class="line">从根到叶子节点路径 4-&gt;9-&gt;5 代表数字 495.</span><br><span class="line">从根到叶子节点路径 4-&gt;9-&gt;1 代表数字 491.</span><br><span class="line">从根到叶子节点路径 4-&gt;0 代表数字 40.</span><br><span class="line">因此，数字总和 = 495 + 491 + 40 = 1026.</span><br></pre></td></tr></table></figure>
-<p><strong><big>思路：DFS</big></strong></p>
-<p><strong><big>代码</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sumNumbers</span><span class="params">(self, root: TreeNode)</span> -&gt; int:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    res = []</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(root,path)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> root:</span><br><span class="line">            path += str(root.val) </span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> root.left <span class="keyword">and</span> <span class="keyword">not</span> root.right:</span><br><span class="line">                res.append(int(path))</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            dfs(root.left,path)</span><br><span class="line">            dfs(root.right,path)</span><br><span class="line">    dfs(root,<span class="string">''</span>)</span><br><span class="line">    <span class="keyword">return</span> sum(res)</span><br></pre></td></tr></table></figure>
-<h2 id="题目6：节点与其祖先之间的最大差值"><a href="#题目6：节点与其祖先之间的最大差值" class="headerlink" title="题目6：节点与其祖先之间的最大差值"></a>题目6：<a href="https://leetcode-cn.com/problems/maximum-difference-between-node-and-ancestor/" target="_blank" rel="noopener">节点与其祖先之间的最大差值</a></h2><p>给定二叉树的根节点 <code>root</code>，找出存在于不同节点 <code>A</code> 和 <code>B</code> 之间的最大值 <code>V</code>，其中 <code>V = |A.val - B.val|</code>，且 <code>A</code> 是 <code>B</code> 的祖先。</p>
-<p>（如果 A 的任何子节点之一为 B，或者 A 的任何子节点是 B 的祖先，那么我们认为 A 是 B 的祖先）</p>
-<p><strong>示例：</strong></p>
-<p><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2019/04/12/2whqcep.jpg" alt="img"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输入：[8,3,10,1,6,null,14,null,null,4,7,13]</span><br><span class="line">输出：7</span><br><span class="line">解释： </span><br><span class="line">我们有大量的节点与其祖先的差值，其中一些如下：</span><br><span class="line">|8 - 3| = 5</span><br><span class="line">|3 - 7| = 4</span><br><span class="line">|8 - 1| = 7</span><br><span class="line">|10 - 13| = 3</span><br><span class="line">在所有可能的差值中，最大值 7 由 |8 - 1| = 7 得出。</span><br></pre></td></tr></table></figure>
-<p><strong><big>思路：DFS</big></strong></p>
-<p>​    找树的每条路径中的最小值和最大值。</p>
-<p><strong><big>代码</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.res = <span class="number">0</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">maxAncestorDiff</span><span class="params">(self, root: TreeNode)</span> -&gt; int:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        self.res = <span class="number">0</span></span><br><span class="line">        minV , maxV = <span class="number">9999999</span>,<span class="number">-9999999</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">findpath</span><span class="params">(root,minV,maxV)</span>:</span></span><br><span class="line">            <span class="keyword">if</span> root:</span><br><span class="line">                minV = min(minV,root.val)</span><br><span class="line">                maxV = max(maxV,root.val)</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> root.left <span class="keyword">and</span> <span class="keyword">not</span> root.right:</span><br><span class="line">                    self.res = max(self.res,abs(maxV-minV))</span><br><span class="line">                    <span class="keyword">return</span> </span><br><span class="line">                findpath(root.left,minV,maxV)</span><br><span class="line">                findpath(root.right,minV,maxV)</span><br><span class="line">        findpath(root,minV,maxV)</span><br><span class="line">        <span class="keyword">return</span> self.res</span><br></pre></td></tr></table></figure>
-<h1 id="类型三：二叉树类型"><a href="#类型三：二叉树类型" class="headerlink" title="类型三：二叉树类型"></a>类型三：二叉树类型</h1><h2 id="题目1：对称二叉树"><a href="#题目1：对称二叉树" class="headerlink" title="题目1：对称二叉树"></a>题目1：<a href="https://leetcode-cn.com/problems/symmetric-tree/" target="_blank" rel="noopener">对称二叉树</a></h2><p><strong><big>题目描述</big></strong></p>
-<p>给定一个二叉树，检查它是否是镜像对称的。</p>
-<p>例如，二叉树 <code>[1,2,2,3,4,4,3]</code> 是对称的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">    1</span><br><span class="line">   / \</span><br><span class="line">  2   2</span><br><span class="line"> / \ / \</span><br><span class="line">3  4 4  3</span><br></pre></td></tr></table></figure>
-<p>但是下面这个 <code>[1,2,2,null,3,null,3]</code> 则不是镜像对称的:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  1</span><br><span class="line"> / \</span><br><span class="line">2   2</span><br><span class="line"> \   \</span><br><span class="line"> 3    3</span><br></pre></td></tr></table></figure>
-<p><strong><big>思路1：DFS</big></strong></p>
-<p>先判断二叉树是否是平衡树，</p>
-<p>比如有两个节点left, right，</p>
-<p>需要比较left的左子节点的值和right的右子节点的值是否相等，</p>
-<p>同时还要比较left的右子节点的值和right的左子结点的值是否相等，</p>
-<p>以此类推比较完所有的左右两个节点。</p>
-<p><strong><big>代码1</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">isSymmetric</span><span class="params">(root)</span>:</span>    </span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(left,right)</span>:</span></span><br><span class="line">            <span class="comment">##判断是否是平衡树</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> left <span class="keyword">and</span> <span class="keyword">not</span> right:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            <span class="keyword">elif</span> (<span class="keyword">not</span> left <span class="keyword">and</span> right) <span class="keyword">or</span> (<span class="keyword">not</span> right <span class="keyword">and</span> left) <span class="keyword">or</span> left.val != right.val:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> dfs(left.left,right.right) <span class="keyword">and</span> dfs(left.right,right.left)</span><br><span class="line">        <span class="keyword">return</span> dfs(root.left,root.right)</span><br></pre></td></tr></table></figure>
-<p><strong><big>思路2：迭代</big></strong></p>
-<p>层次遍历，判断每层数据是否是对称的。</p>
-<p><strong><big>代码2</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">isSymmetric</span><span class="params">(root)</span>:</span> </span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    prev=[root]</span><br><span class="line">    <span class="keyword">while</span> prev:</span><br><span class="line">        cur=[]</span><br><span class="line">        <span class="keyword">while</span> prev:</span><br><span class="line">            node=prev.pop()</span><br><span class="line">            <span class="keyword">if</span> node:</span><br><span class="line">                cur.append(node.left)</span><br><span class="line">                cur.append(node.right)</span><br><span class="line">        prev=cur</span><br><span class="line">        <span class="keyword">if</span> len(cur)%<span class="number">2</span>==<span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        i=<span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> i&lt;len(cur)//<span class="number">2</span>:</span><br><span class="line">            <span class="keyword">if</span> cur[i] <span class="keyword">and</span> cur[~i]:</span><br><span class="line">                <span class="keyword">if</span> cur[i].val!=cur[~i].val:</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">elif</span> cur[i] <span class="keyword">or</span> cur[~i]:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            i+=<span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
-<h1 id="类型四：二叉树操作"><a href="#类型四：二叉树操作" class="headerlink" title="类型四：二叉树操作"></a>类型四：二叉树操作</h1><h2 id="题目1：在二叉树中分配硬币"><a href="#题目1：在二叉树中分配硬币" class="headerlink" title="题目1：在二叉树中分配硬币"></a>题目1：在二叉树中分配硬币</h2><p>给定一个有 <code>N</code> 个结点的二叉树的根结点 <code>root</code>，树中的每个结点上都对应有 <code>node.val</code> 枚硬币，并且总共有 <code>N</code> 枚硬币。</p>
-<p>在一次移动中，我们可以选择两个相邻的结点，然后将一枚硬币从其中一个结点移动到另一个结点。(移动可以是从父结点到子结点，或者从子结点移动到父结点。)。</p>
-<p>返回使每个结点上只有一枚硬币所需的移动次数。</p>
-<p><strong>示例 1：</strong></p>
-<p><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2019/01/19/tree1.png" style="zoom:30%"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：[3,0,0]</span><br><span class="line">输出：2</span><br><span class="line">解释：从树的根结点开始，我们将一枚硬币移到它的左子结点上，一枚硬币移到它的右子结点上。</span><br></pre></td></tr></table></figure>
-<p><strong>示例 2：</strong></p>
-<p><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2019/01/19/tree2.png" style="zoom:30%"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：[0,3,0]</span><br><span class="line">输出：3</span><br><span class="line">解释：从根结点的左子结点开始，我们将两枚硬币移到根结点上 [移动两次]。然后，我们把一枚硬币从根结点移到右子结点上。</span><br></pre></td></tr></table></figure>
-<p><strong>示例 3：</strong></p>
-<p><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2019/01/19/tree3.png" style="zoom:30%"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：[1,0,2]</span><br><span class="line">输出：2</span><br></pre></td></tr></table></figure>
-<p><strong>示例 4：</strong></p>
-<p><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2019/01/19/tree4.png" style="zoom:30%"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：[1,0,0,null,3]</span><br><span class="line">输出：4</span><br></pre></td></tr></table></figure>
-<p><strong>提示：</strong></p>
-<ol>
-<li><code>1&lt;= N &lt;= 100</code></li>
-<li><code>0 &lt;= node.val &lt;= N</code></li>
-</ol>
-<p><strong><big>思路：<a href="https://blog.csdn.net/qq_17550379/article/details/86588932" target="_blank" rel="noopener">DFS</a></big></strong></p>
-<p><img src="E:\GitHub_learn\blog\source\imgs\Snipaste_2019-04-18_12-23-17.png" style="zoom:50%"></p>
-<p><strong><big>代码：</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">distributeCoins</span><span class="params">(self, root)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type root: TreeNode</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        self.res = <span class="number">0</span></span><br><span class="line">        self.dfs(root)</span><br><span class="line">        <span class="keyword">return</span> self.res</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(self, root)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> root:</span><br><span class="line">            l, r = self.dfs(root.left), self.dfs(root.right)</span><br><span class="line">            self.res += abs(l) + abs(r)</span><br><span class="line">            <span class="keyword">return</span> l + r + root.val - <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2548,7 +2411,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

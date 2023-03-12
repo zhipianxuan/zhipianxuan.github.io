@@ -105,7 +105,7 @@
 <meta property="og:image" content="http://yoursite.com/imgs/rdd_8.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/rdd_10.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/rdd_11.jpg">
-<meta property="og:updated_time" content="2023-03-11T14:33:21.962Z">
+<meta property="og:updated_time" content="2023-03-12T13:58:01.615Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RDD">
 <meta name="twitter:description" content="本文仅做学习总结，如有侵权立删 一、理解RDD  RDD可以被抽象地理解为一个大的数组，但是这个数组是分布在集群上的。   二、RDD的生命周期创建—变换—动作（结束） 三、RDD依赖1、窄依赖（RDD）—–原地变换，不需要shuffle【即各个RDD之间不需要统计】  2、宽依赖（RDD）—–需要shuffle，与其他RDD交换资料，时间消耗长。  3、任务优化，如  四、RDD的基本操作RDD">
@@ -807,7 +807,6 @@
 </table>
 <p><strong>文件系统读写</strong></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 读取</span></span><br><span class="line">rdd=sc.textFile(<span class="string">'hdfs://file_path'</span>)  <span class="comment"># 从hdfs集群读取</span></span><br><span class="line">rdd=sc.textFile(<span class="string">'file_path'</span>) </span><br><span class="line">rdd=sc.textFile(<span class="string">'file:///local_file_path'</span>) <span class="comment"># 从本地文件读取</span></span><br><span class="line"><span class="comment"># 保存</span></span><br><span class="line">rdd.saveAsTextFile(<span class="string">'hdfs://file_path'</span>)</span><br><span class="line">rdd.saveAsTextFile(<span class="string">'file_path'</span>) <span class="comment"># hdfs路径</span></span><br><span class="line">rdd.saveAsTextFile(<span class="string">'file:///local_file_path'</span>)</span><br></pre></td></tr></table></figure>
-
       
     </div>
     
@@ -840,6 +839,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/DataFrame/" rel="prev" title="DataFrame">
+                DataFrame <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -916,7 +919,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
