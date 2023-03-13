@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Lee_yl&#39;s blog">
 <meta property="og:description" content="本文仅做学习总结，如有侵权立删 DataFrame一、Spark SQL Spark SQL用于对结构化数据进行处理，它提供了DataFrame的抽象，作为分布式平台数据查询引擎，可以在此组件上构建大数据仓库。 DataFrame是一个分布式数据集，在概念上类似于传统数据库的表结构，数据被组织成命名的列，DataFrame的数据源可以是结构化的数据文件，也可以是Hive中的表或外部数据库，也还可以">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2023-03-12T14:30:09.126Z">
+<meta property="og:updated_time" content="2023-03-12T14:37:43.269Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DataFrame">
 <meta name="twitter:description" content="本文仅做学习总结，如有侵权立删 DataFrame一、Spark SQL Spark SQL用于对结构化数据进行处理，它提供了DataFrame的抽象，作为分布式平台数据查询引擎，可以在此组件上构建大数据仓库。 DataFrame是一个分布式数据集，在概念上类似于传统数据库的表结构，数据被组织成命名的列，DataFrame的数据源可以是结构化的数据文件，也可以是Hive中的表或外部数据库，也还可以">
@@ -606,11 +606,11 @@
 <tbody>
 <tr>
 <td style="text-align:left"><code>df.distinct()</code></td>
-<td style="text-align:left">唯一值</td>
+<td style="text-align:left">唯一值（整行去重）</td>
 </tr>
 <tr>
 <td style="text-align:left"><code>df.dropDuplicates(subset=None)</code></td>
-<td style="text-align:left">删除重复项</td>
+<td style="text-align:left">删除重复项（可以指定字段）</td>
 </tr>
 </tbody>
 </table>
@@ -659,7 +659,7 @@
 </tr>
 </tbody>
 </table>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">df=df.na.fill(<span class="number">0</span>)</span><br><span class="line">df=df.na.fill(&#123;<span class="string">'age'</span>:<span class="number">50</span>,<span class="string">'name'</span>:<span class="string">'unknow'</span>&#125;)</span><br><span class="line">df=df.na.drop()</span><br><span class="line">df=df.na.replace([<span class="string">'Alice'</span>,<span class="string">'Bob'</span>],[<span class="string">'A'</span>,<span class="string">'B'</span>],<span class="string">'name'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">df=df.na.fill(<span class="number">0</span>)</span><br><span class="line">df=df.na.fill(&#123;<span class="string">'age'</span>:<span class="number">50</span>,<span class="string">'name'</span>:<span class="string">'unknow'</span>&#125;)</span><br><span class="line">df=df.na.drop()</span><br><span class="line">df = df.dropna() <span class="comment"># 跟上面那种方式是一样的</span></span><br><span class="line">df=df.na.replace([<span class="string">'Alice'</span>,<span class="string">'Bob'</span>],[<span class="string">'A'</span>,<span class="string">'B'</span>],<span class="string">'name'</span>)</span><br></pre></td></tr></table></figure>
 <table>
 <thead>
 <tr>
@@ -715,6 +715,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/窗口函数/" rel="prev" title="窗口函数">
+                窗口函数 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -791,7 +795,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

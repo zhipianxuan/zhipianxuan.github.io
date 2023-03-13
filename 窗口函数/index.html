@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文仅做学习总结，如有侵权立删 [TOC] 一、窗口函数的概念  能返回整个dataframe，也能进行聚合运算。Spark支持三种窗口函数：排名函数、解析函数和聚合函数。  例子：找到每年当中最冷那一天的温度 /  最冷那一天的日期。  groupBy实现   【每年当中最冷的那一天的温度】： 12a = gsod.groupby(&apos;year&apos;).agg(F.min(&apos;temp&apos;).alias(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="窗口函数">
+<meta property="og:url" content="http://yoursite.com/窗口函数/index.html">
+<meta property="og:site_name" content="Lee_yl&#39;s blog">
+<meta property="og:description" content="本文仅做学习总结，如有侵权立删 [TOC] 一、窗口函数的概念  能返回整个dataframe，也能进行聚合运算。Spark支持三种窗口函数：排名函数、解析函数和聚合函数。  例子：找到每年当中最冷那一天的温度 /  最冷那一天的日期。  groupBy实现   【每年当中最冷的那一天的温度】： 12a = gsod.groupby(&apos;year&apos;).agg(F.min(&apos;temp&apos;).alias(">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://ask.qcloudimg.com/http-save/yehe-7131597/hixjnsj96z.png?imageView2/2/w/1620">
+<meta property="og:image" content="https://ask.qcloudimg.com/http-save/yehe-7131597/qi0imvjt5y.png?imageView2/2/w/1620">
+<meta property="og:updated_time" content="2023-03-13T14:38:36.738Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="窗口函数">
+<meta name="twitter:description" content="本文仅做学习总结，如有侵权立删 [TOC] 一、窗口函数的概念  能返回整个dataframe，也能进行聚合运算。Spark支持三种窗口函数：排名函数、解析函数和聚合函数。  例子：找到每年当中最冷那一天的温度 /  最冷那一天的日期。  groupBy实现   【每年当中最冷的那一天的温度】： 12a = gsod.groupby(&apos;year&apos;).agg(F.min(&apos;temp&apos;).alias(">
+<meta name="twitter:image" content="https://ask.qcloudimg.com/http-save/yehe-7131597/hixjnsj96z.png?imageView2/2/w/1620">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/窗口函数/">
+
+
+
+
+
+  <title>窗口函数 | Lee_yl's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Lee_yl's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/窗口函数/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">窗口函数</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-13T00:00:00+08:00">
+                2023-03-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/" itemprop="url" rel="index">
+                    <span itemprop="name">大数据</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文仅做学习总结，如有侵权立删</p>
+<p>[TOC]</p>
+<h1 id="一、窗口函数的概念"><a href="#一、窗口函数的概念" class="headerlink" title="一、窗口函数的概念"></a>一、窗口函数的概念</h1><blockquote>
+<p> 能返回整个dataframe，也能进行聚合运算。Spark支持三种窗口函数：排名函数、解析函数和聚合函数。</p>
+</blockquote>
+<p>例子：找到每年当中最冷那一天的温度 /  最冷那一天的日期。</p>
+<ul>
+<li>groupBy实现 </li>
+</ul>
+<p>【每年当中最冷的那一天的温度】：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = gsod.groupby(<span class="string">'year'</span>).agg(F.min(<span class="string">'temp'</span>).alias(<span class="string">'temp'</span>))</span><br><span class="line">a.orderBy(<span class="string">'temp'</span>)</span><br></pre></td></tr></table></figure>
+<p>将上面的结果join回原来的dataframe得到【最冷那一天的日期】：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gsod.join(a, how = <span class="string">'left'</span>, on = [<span class="string">"year"</span>, <span class="string">"temp"</span>]).select(<span class="string">'year'</span>, <span class="string">'month'</span>, <span class="string">'day'</span>, <span class="string">'temp'</span>)</span><br></pre></td></tr></table></figure>
+<p>但是上面做法影响效率，left join！</p>
+<ul>
+<li>窗口函数的过程</li>
+</ul>
+<ol>
+<li>根据某个条件对数据进行分组，PartitionBy</li>
+<li>根据需求计算聚合函数</li>
+<li>将计算结果Join回一个大dataframe</li>
+</ol>
+<h1 id="二、窗口函数"><a href="#二、窗口函数" class="headerlink" title="二、窗口函数"></a>二、窗口函数</h1><p>对于一个数据集，<code>map</code> 是对每行进行操作，为每行得到一个结果；<code>reduce</code> 则是对多行进行操作，得到一个结果；而 <code>window</code> 函数则是对多行进行操作，得到多个结果（每行一个）。</p>
+<p>窗口函数是什么？来源于数据库，窗口函数是用与当前行<strong>有关</strong>的数据行参与计算。Mysql中：</p>
+<ul>
+<li>partition by：用于对全量数据表进行切分（与SQL中的groupby功能类似，但功能完全不同），直接体现的是前面窗口函数定义中的“有关”，即切分到同一组的即为有关，否则就是无关；</li>
+<li>order by：用于指定对partition后各组内的数据进行排序；</li>
+<li>rows between：用于对切分后的数据进一步限定“有关”行的数量，此种情景下即使partition后分到一组，也可能是跟当前行的计算无关。</li>
+</ul>
+<p><img src="https://ask.qcloudimg.com/http-save/yehe-7131597/hixjnsj96z.png?imageView2/2/w/1620" alt="img"></p>
+<p>需求：组内按分数排序。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.select($<span class="string">"uid"</span>, $<span class="string">"date"</span>, $<span class="string">"score"</span>, row_number().over(Window.partitionBy(<span class="string">"uid"</span>).orderBy($<span class="string">"score"</span>.desc)).<span class="keyword">as</span>(<span class="string">"rank"</span>))</span><br></pre></td></tr></table></figure>
+<p><img src="https://ask.qcloudimg.com/http-save/yehe-7131597/qi0imvjt5y.png?imageView2/2/w/1620" alt="img"></p>
+<h2 id="udf-窗口函数"><a href="#udf-窗口函数" class="headerlink" title="udf + 窗口函数"></a>udf + 窗口函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> Window</span><br><span class="line"></span><br><span class="line"><span class="meta">@pandas_udf("double")</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mean_udf</span><span class="params">(v: pd.Series)</span> -&gt; float:</span></span><br><span class="line">    <span class="keyword">return</span> v.mean()</span><br><span class="line"></span><br><span class="line">df = spark.createDataFrame(</span><br><span class="line">    [(<span class="number">1</span>, <span class="number">1.0</span>), (<span class="number">1</span>, <span class="number">2.0</span>), (<span class="number">2</span>, <span class="number">3.0</span>), (<span class="number">2</span>, <span class="number">5.0</span>), (<span class="number">2</span>, <span class="number">10.0</span>)], (<span class="string">"id"</span>, <span class="string">"v"</span>))</span><br><span class="line">w = Window.partitionBy(<span class="string">'id'</span>).orderBy(<span class="string">'v'</span>).rowsBetween(<span class="number">-1</span>, <span class="number">0</span>)</span><br><span class="line">df.withColumn(<span class="string">'mean_v'</span>, mean_udf(<span class="string">"v"</span>).over(w)).show()</span><br><span class="line"></span><br><span class="line">+---+----+------+</span><br><span class="line">| id|   v|mean_v|</span><br><span class="line">+---+----+------+</span><br><span class="line">|  <span class="number">1</span>| <span class="number">1.0</span>|   <span class="number">1.0</span>|</span><br><span class="line">|  <span class="number">1</span>| <span class="number">2.0</span>|   <span class="number">1.5</span>|</span><br><span class="line">|  <span class="number">2</span>| <span class="number">3.0</span>|   <span class="number">3.0</span>|</span><br><span class="line">|  <span class="number">2</span>| <span class="number">5.0</span>|   <span class="number">4.0</span>|</span><br><span class="line">|  <span class="number">2</span>|<span class="number">10.0</span>|   <span class="number">7.5</span>|</span><br><span class="line">+---+----+------+</span><br></pre></td></tr></table></figure>
+<h1 id="三、-同时groupby-两个key"><a href="#三、-同时groupby-两个key" class="headerlink" title="三、 同时groupby 两个key"></a>三、 同时groupby 两个key</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成首次付费时间(FirstPayDate), 首次付费当天的付费金额(FirstPayPrice), 总付费金额(AllPayPrice). 首次单天付费频次(FirstPayFreq), 总付费频次(AllPayFreq)</span></span><br><span class="line">w1 = Window.partitionBy(<span class="string">"OrderId"</span>).orderBy(col(<span class="string">"PayDate"</span>))</span><br><span class="line">w2 = Window.partitionBy(<span class="string">"OrderId"</span>)</span><br><span class="line">df_pay_data = df_order_all.filter((F.col(<span class="string">"OrderType"</span>) == <span class="number">0</span>) &amp; ((F.col(<span class="string">"IsPay"</span>) == <span class="number">1</span>)))\</span><br><span class="line">    .withColumnRenamed(<span class="string">"OrderTime"</span>, <span class="string">"PayTime"</span>) \</span><br><span class="line">    .withColumnRenamed(<span class="string">"OrderPrice"</span>, <span class="string">"PayPrice"</span>) \</span><br><span class="line">    .withColumn(<span class="string">"PayDate"</span>, date_trunc(<span class="string">'day'</span>, to_timestamp(F.col(<span class="string">"PayTime"</span>)/<span class="number">1000</span>)))\</span><br><span class="line">    .withColumn(<span class="string">"row"</span>,row_number().over(w1)) \</span><br><span class="line">    .withColumn(<span class="string">"AllPayPrice"</span>, sum(col(<span class="string">"PayPrice"</span>)).over(w2)) \</span><br><span class="line">    .withColumn(<span class="string">"FirstPayDate"</span>, min(col(<span class="string">"PayDate"</span>)).over(w2)) \</span><br><span class="line">    .withColumn(<span class="string">"FirstPayPrice"</span>, sum(col(<span class="string">"PayPrice"</span>)).over(w1)) \</span><br><span class="line">    .withColumn(<span class="string">"FirstPayFreq"</span>, count(col(<span class="string">"IsPay"</span>)).over(w1)) \</span><br><span class="line">    .withColumn(<span class="string">"AllPayFreq"</span>, count(col(<span class="string">"IsPay"</span>)).over(w2)) \</span><br><span class="line">    .where(col(<span class="string">"row"</span>) == <span class="number">1</span>).select(<span class="string">"AllPayPrice"</span>, <span class="string">"FirstPayPrice"</span>, <span class="string">"FirstPayDate"</span>,<span class="string">"OrderSourceId"</span>, <span class="string">"FirstPayFreq"</span>, <span class="string">"AllPayFreq"</span>)</span><br></pre></td></tr></table></figure>
+<p><a href="https://sparkbyexamples.com/pyspark/pyspark-select-first-row-of-each-group/" target="_blank" rel="noopener">https://sparkbyexamples.com/pyspark/pyspark-select-first-row-of-each-group/</a></p>
+<p><a href="https://stackoverflow.com/questions/45946349/python-spark-cumulative-sum-by-group-using-dataframe" target="_blank" rel="noopener">https://stackoverflow.com/questions/45946349/python-spark-cumulative-sum-by-group-using-dataframe</a> (相加)</p>
+<h1 id="四-groupby-sort-list"><a href="#四-groupby-sort-list" class="headerlink" title="四. groupby  + sort + list"></a>四. groupby  + sort + list</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">group_df = qds_com.groupby([<span class="string">'company'</span>]) \</span><br><span class="line">    .agg(F.sort_array(F.collect_list(F.struct(<span class="string">"features"</span>, <span class="string">"label"</span>, <span class="string">"samples_count"</span>))) \</span><br><span class="line">         .alias(<span class="string">"pair"</span>))</span><br></pre></td></tr></table></figure>
+<h1 id="五、求众数"><a href="#五、求众数" class="headerlink" title="五、求众数"></a>五、求众数</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df_com_cookie.groupBy([<span class="string">'company'</span>,<span class="string">'price'</span>]).agg(F.count(<span class="string">'price'</span>).alias(<span class="string">'count_price'</span>)).orderBy([<span class="string">'company'</span>,<span class="string">'count_price'</span>], ascending=<span class="literal">False</span>).drop_duplicates(subset=[<span class="string">'company'</span>]).show()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">window = Window.partitionBy([<span class="string">'a'</span>]).orderBy([<span class="string">'a'</span>])</span><br><span class="line">df.withColumn(<span class="string">'rank'</span>,F.rank().over(window)).filter(<span class="string">"rank = '1'"</span>).drop(<span class="string">'rank'</span>)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/DataFrame/" rel="next" title="DataFrame">
+                <i class="fa fa-chevron-left"></i> DataFrame
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Lee_yl</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、窗口函数的概念"><span class="nav-number">1.</span> <span class="nav-text">一、窗口函数的概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、窗口函数"><span class="nav-number">2.</span> <span class="nav-text">二、窗口函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#udf-窗口函数"><span class="nav-number">2.1.</span> <span class="nav-text">udf + 窗口函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、-同时groupby-两个key"><span class="nav-number">3.</span> <span class="nav-text">三、 同时groupby 两个key</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四-groupby-sort-list"><span class="nav-number">4.</span> <span class="nav-text">四. groupby  + sort + list</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、求众数"><span class="nav-number">5.</span> <span class="nav-text">五、求众数</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lee_yl</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

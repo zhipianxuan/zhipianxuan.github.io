@@ -105,7 +105,7 @@
 <meta property="og:image" content="http://yoursite.com/imgs/rdd_8.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/rdd_10.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/rdd_11.jpg">
-<meta property="og:updated_time" content="2023-03-12T13:58:01.615Z">
+<meta property="og:updated_time" content="2023-03-13T14:13:50.277Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RDD">
 <meta name="twitter:description" content="本文仅做学习总结，如有侵权立删 一、理解RDD  RDD可以被抽象地理解为一个大的数组，但是这个数组是分布在集群上的。   二、RDD的生命周期创建—变换—动作（结束） 三、RDD依赖1、窄依赖（RDD）—–原地变换，不需要shuffle【即各个RDD之间不需要统计】  2、宽依赖（RDD）—–需要shuffle，与其他RDD交换资料，时间消耗长。  3、任务优化，如  四、RDD的基本操作RDD">
@@ -617,6 +617,13 @@
 <h3 id="更好的解决方案：reduceByKey-非groupBykey"><a href="#更好的解决方案：reduceByKey-非groupBykey" class="headerlink" title="更好的解决方案：reduceByKey,非groupBykey"></a>更好的解决方案：reduceByKey,非groupBykey</h3><p>reduceByKey能够直接将资料根据key值聚合，减少多余的交换（shuffle）动作。</p>
 <p>避免使用groupbykey，如果数据量过大，会造成内存溢出。</p>
 </blockquote>
+<ol>
+<li><strong>spark中groupByKey 、aggregateByKey、reduceByKey 有什么区别？使用上需要注意什么？</strong></li>
+</ol>
+<p>（1）groupByKey()是对RDD中的所有数据做shuffle,根据不同的Key映射到不同的partition中再进行aggregate。</p>
+<p>（3） distinct()也是对RDD中的所有数据做shuffle进行aggregate后再去重。</p>
+<p>（2）aggregateByKey()是先对每个partition中的数据根据不同的Key进行aggregate，然后将结果进行shuffle，完成各个partition之间的aggregate。因此，和groupByKey()相比，运算量小了很多。</p>
+<p>（4）reduceByKey()也是先在单台机器中计算，再将结果进行shuffle，减小运算量 </p>
 <p><img src="..\imgs\rdd_11.jpg" alt></p>
 <table>
 <thead>
@@ -779,6 +786,31 @@
 </tr>
 </tbody>
 </table>
+<ol>
+<li><strong>cache后面能不能接其他算子,它是不是action操作？</strong></li>
+</ol>
+<p>Cache后可以接其他算子，但是接了算子之后，起不到缓存的作用，因为会重复出发cache。</p>
+<p>Cache不是action操作。</p>
+<ol>
+<li><strong>cache和pesist有什么区别？</strong> </li>
+</ol>
+<p>（1）cache和persist都是用于将一个RDD进行缓存的，这样在之后使用的过程中就不需要重新计算了，可以大大节省程序运行时间； </p>
+<p>（2）cache只有一个默认的缓存级别MEMORY_ONLY ，cache调用了persist，而persist可以根据情况设置其它的缓存级别； </p>
+<p>（3）executor执行的时候，默认60%做cache，40%做task操作，persist最根本的函数，最底层的函数 </p>
+<ol>
+<li><strong>Spark为什么要持久化，一般什么场景下要进行persist操作？</strong></li>
+</ol>
+<p>为什么要进行持久化？</p>
+<p>spark所有复杂一点的算法都会有persist身影,spark默认数据放在内存，spark很多内容都是放在内存的，非常适合高速迭代，1000个步骤</p>
+<p>只有第一个输入数据，中间不产生临时数据，但分布式系统风险很高，所以容易出错，就要容错，rdd出错或者分片可以根据血统算出来，如果没有对父rdd进行persist 或者cache的化，就需要重头做。</p>
+<p>以下场景会使用persist</p>
+<p>1）某个步骤计算非常耗时，需要进行persist持久化</p>
+<p>2）计算链条非常长，重新恢复要算很多步骤，很好使，persist</p>
+<p>3）checkpoint所在的rdd要持久化persist，</p>
+<p>lazy级别，框架发现有checnkpoint，checkpoint时单独触发一个job，需要重算一遍，checkpoint前</p>
+<p>要持久化，写个rdd.cache或者rdd.persist，将结果保存起来，再写checkpoint操作，这样执行起来会非常快，不需要重新计算rdd链条了。checkpoint之前一定会进行persist。</p>
+<p>4）shuffle之后为什么要persist，shuffle要进性网络传输，风险很大，数据丢失重来，恢复代价很大</p>
+<p>5）shuffle之前进行persist，框架默认将数据持久化到磁盘，这个是框架自动做的。</p>
 <table>
 <thead>
 <tr>
@@ -919,7 +951,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
