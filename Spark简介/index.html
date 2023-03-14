@@ -96,10 +96,11 @@
 <meta property="og:image" content="http://yoursite.com/imgs/Spark代码执行流程.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/Master和Worker关系.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/Driver和Executor关系.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/Spark的worker理解.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/DAG流程.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/Hadoop%E5%92%8Cspark%E5%8C%BA%E5%88%AB.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/Spark环境1.jpg">
-<meta property="og:updated_time" content="2023-03-11T11:00:24.503Z">
+<meta property="og:updated_time" content="2023-03-14T14:15:52.177Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spark简介">
 <meta name="twitter:description" content="本文仅做学习总结，如有侵权立删 https://blog.csdn.net/weixin_42331985/article/details/124126019 https://zhuanlan.zhihu.com/p/396809439 https://blog.csdn.net/czz1141979570/article/details/105877261/ [TOC] Spark生态架构图Sp">
@@ -469,6 +470,10 @@
 <p><img src="..\imgs\Driver和Executor关系.jpg" alt></p>
 <p> Master和Worker是Spark的守护进程，即Spark在特定模式下正常运行所必须的进程。Driver和Executor是临时程序，当有具体任务提交到Spark集群才会开启的程序。</p>
 <p><a href="https://blog.csdn.net/nicole_33/article/details/122520395" target="_blank" rel="noopener">了解 Spark中的master、worker和Driver、Executor</a></p>
+<p><img src="..\imgs\Spark的worker理解.jpg" alt></p>
+<blockquote>
+<p>每个Worker上存在一个或者多个ExecutorBackend 进程。每个进程包含一个Executor对象，该对象持有一个线程池，每个线程可以执行一个task。<br>每个application包含一个 driver 和多个 executors，每个 executor里面运行的tasks都属于同一个application。<br>每个Worker上存在一个或者多个ExecutorBackend 进程。<br>每个进程包含一个Executor对象，该对象持有一个线程池，每个线程可以执行一个task</p>
+</blockquote>
 <h2 id="4-DAGScheduler具体流程"><a href="#4-DAGScheduler具体流程" class="headerlink" title="4. DAGScheduler具体流程"></a>4. DAGScheduler具体流程</h2><p>DAG负责的是将RDD中的数据依赖划分为不同可以并行的宽依赖task， 这些不同的task集合统称为stage，最后将这些stage推送给TaskScheduler进行调度，DAG的具体划分过程如下所示：</p>
 <p><img src="..\imgs\DAG流程.jpg" alt></p>
 <blockquote>
@@ -603,8 +608,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/概率论1/" rel="next" title="概率论">
-                <i class="fa fa-chevron-left"></i> 概率论
+              <a href="/标准化/" rel="next" title="标准化">
+                <i class="fa fa-chevron-left"></i> 标准化
               </a>
             
           </div>
@@ -692,7 +697,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
