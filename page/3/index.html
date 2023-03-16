@@ -229,6 +229,218 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/DFS平常使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/DFS平常使用/" itemprop="url">图的DFS</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-16T20:53:45+08:00">
+                2019-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/深度遍历DFS/" itemprop="url" rel="index">
+                    <span itemprop="name">深度遍历DFS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="类型一：邻接表"><a href="#类型一：邻接表" class="headerlink" title="类型一：邻接表"></a>类型一：邻接表</h1><h2 id="题目一：员工的重要性"><a href="#题目一：员工的重要性" class="headerlink" title="题目一：员工的重要性"></a>题目一：<a href="https://leetcode-cn.com/problems/employee-importance/" target="_blank" rel="noopener">员工的重要性</a></h2><p><strong><big>题目描述</big></strong></p>
+<p>给定一个保存员工信息的数据结构，它包含了员工<strong>唯一的id</strong>，<strong>重要度</strong> 和 <strong>直系下属的id</strong>。</p>
+<p>比如，员工1是员工2的领导，员工2是员工3的领导。他们相应的重要度为15, 10, 5。那么员工1的数据结构是[1, 15, [2]]，员工2的数据结构是[2, 10, [3]]，员工3的数据结构是[3, 5, []]。注意虽然员工3也是员工1的一个下属，但是由于<strong>并不是直系</strong>下属，因此没有体现在员工1的数据结构中。</p>
+<p>现在输入一个公司的所有员工信息，以及单个员工id，返回这个员工和他所有下属的重要度之和。</p>
+<p><strong>示例 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入: [[1, 5, [2, 3]], [2, 3, []], [3, 3, []]], 1</span><br><span class="line">输出: 11</span><br><span class="line">解释:</span><br><span class="line">员工1自身的重要度是5，他有两个直系下属2和3，而且2和3的重要度均为3。因此员工1的总重要度是 5 + 3 + 3 = 11。</span><br></pre></td></tr></table></figure>
+<p><strong>注意:</strong></p>
+<ol>
+<li>一个员工最多有一个<strong>直系</strong>领导，但是可以有多个<strong>直系</strong>下属</li>
+<li>员工数量不超过2000。</li>
+</ol>
+<p><strong><big>思路：DFS</big></strong></p>
+<p>&emsp;&emsp;【注意点：应使用局部变量（weight）记录结果，不能使用全局变量】</p>
+<p><strong><big>代码：</big></strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string"># Employee info</span></span><br><span class="line"><span class="string">class Employee(object):</span></span><br><span class="line"><span class="string">    def __init__(self, id, importance, subordinates):</span></span><br><span class="line"><span class="string">        self.id = id</span></span><br><span class="line"><span class="string">        self.importance = importance</span></span><br><span class="line"><span class="string">        self.subordinates = subordinates</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getImportance</span><span class="params">(self, employees, id)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type employees: Employee</span></span><br><span class="line"><span class="string">        :type id: int</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> employees:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="comment">##局部变量</span></span><br><span class="line">        weight = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> employees:</span><br><span class="line">            <span class="keyword">if</span> item.id == id:</span><br><span class="line">                weight += item.importance</span><br><span class="line">                <span class="keyword">for</span> j <span class="keyword">in</span> item.subordinates:</span><br><span class="line">                    weight += self.getImportance(employees, j)</span><br><span class="line">        <span class="keyword">return</span> weight</span><br></pre></td></tr></table></figure>
+<h2 id="题目二：钥匙和房间"><a href="#题目二：钥匙和房间" class="headerlink" title="题目二：钥匙和房间"></a>题目二：钥匙和房间</h2><p>有 <code>N</code> 个房间，开始时你位于 <code>0</code> 号房间。每个房间有不同的号码：<code>0，1，2，...，N-1</code>，并且房间里可能有一些钥匙能使你进入下一个房间。</p>
+<p>在形式上，对于每个房间 <code>i</code> 都有一个钥匙列表 <code>rooms[i]</code>，每个钥匙 <code>rooms[i][j]</code> 由 <code>[0,1，...，N-1]</code> 中的一个整数表示，其中 <code>N = rooms.length</code>。 钥匙 <code>rooms[i][j] = v</code> 可以打开编号为 <code>v</code> 的房间。</p>
+<p>最初，除 <code>0</code> 号房间外的其余所有房间都被锁住。</p>
+<p>你可以自由地在房间之间来回走动。</p>
+<p>如果能进入每个房间返回 <code>true</code>，否则返回 <code>false</code>。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">输入: [[1],[2],[3],[]]</span><br><span class="line">输出: true</span><br><span class="line">解释:  </span><br><span class="line">我们从 0 号房间开始，拿到钥匙 1。</span><br><span class="line">之后我们去 1 号房间，拿到钥匙 2。</span><br><span class="line">然后我们去 2 号房间，拿到钥匙 3。</span><br><span class="line">最后我们去了 3 号房间。</span><br><span class="line">由于我们能够进入每个房间，我们返回 true。</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：[[1,3],[3,0,1],[2],[0]]</span><br><span class="line">输出：false</span><br><span class="line">解释：我们不能进入 2 号房间。</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ol>
+<li><code>1 &lt;= rooms.length &lt;= 1000</code></li>
+<li><code>0 &lt;= rooms[i].length &lt;= 1000</code></li>
+<li>所有房间中的钥匙数量总计不超过 <code>3000</code>。</li>
+</ol>
+<p><strong><big>思路：DFS</big></strong></p>
+<p>每个房间找钥匙，找到则到下一个钥匙对应的房间DFS。采用一个visited列表存储是否到达过这个房间，最后如果所有房间都达到过则返回True。</p>
+<p><strong><big>代码</big></strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">canVisitAllRooms</span><span class="params">(rooms)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> rooms:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    n = len(rooms)</span><br><span class="line">    visited = [<span class="literal">False</span>] * n </span><br><span class="line">    visited[<span class="number">0</span>] = <span class="literal">True</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(rooms,keys,visited)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> key <span class="keyword">in</span> keys:</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> visited[key]:</span><br><span class="line">                visited[key] = <span class="literal">True</span></span><br><span class="line">                dfs(rooms,rooms[key],visited)</span><br><span class="line">    dfs(rooms,rooms[<span class="number">0</span>],visited)</span><br><span class="line">    <span class="keyword">return</span> all(visited)</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="类型二：DAG拓扑排序"><a href="#类型二：DAG拓扑排序" class="headerlink" title="类型二：DAG拓扑排序"></a>类型二：DAG拓扑排序</h1><h2 id="题目一：课程安排207"><a href="#题目一：课程安排207" class="headerlink" title="题目一：课程安排207"></a>题目一：课程安排207</h2><h2 id="题目二：课程安排210"><a href="#题目二：课程安排210" class="headerlink" title="题目二：课程安排210"></a>题目二：课程安排210</h2><p>现在你总共有 <em>n</em> 门课需要选，记为 <code>0</code> 到 <code>n-1</code>。</p>
+<p>在选修某些课程之前需要一些先修课程。 例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示他们: <code>[0,1]</code></p>
+<p>给定课程总量以及它们的先决条件，返回你为了学完所有课程所安排的学习顺序。</p>
+<p>可能会有多个正确的顺序，你只要返回一种就可以了。如果不可能完成所有课程，返回一个空数组。</p>
+<p><strong>示例 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: 2, [[1,0]] </span><br><span class="line">输出: [0,1]</span><br><span class="line">解释: 总共有 2 门课程。要学习课程 1，你需要先完成课程 0。因此，正确的课程顺序为 [0,1] 。</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入: 4, [[1,0],[2,0],[3,1],[3,2]]</span><br><span class="line">输出: [0,1,2,3] or [0,2,1,3]</span><br><span class="line">解释: 总共有 4 门课程。要学习课程 3，你应该先完成课程 1 和课程 2。并且课程 1 和课程 2 都应该排在课程 0 之后。</span><br><span class="line">     因此，一个正确的课程顺序是 [0,1,2,3] 。另一个正确的排序是 [0,2,1,3] 。</span><br></pre></td></tr></table></figure>
+<p><strong>说明:</strong></p>
+<ol>
+<li>输入的先决条件是由<strong>边缘列表</strong>表示的图形，而不是邻接矩阵。详情请参见<a href="http://blog.csdn.net/woaidapaopao/article/details/51732947" target="_blank" rel="noopener">图的表示法</a>。</li>
+<li>你可以假定输入的先决条件中没有重复的边。</li>
+</ol>
+<p><strong>提示:</strong></p>
+<ol>
+<li>这个问题相当于查找一个循环是否存在于有向图中。如果存在循环，则不存在拓扑排序，因此不可能选取所有课程进行学习。</li>
+<li><a href="https://www.coursera.org/specializations/algorithms" target="_blank" rel="noopener">通过 DFS 进行拓扑排序</a> - 一个关于Coursera的精彩视频教程（21分钟），介绍拓扑排序的基本概念。</li>
+<li>拓扑排序也可以通过 <a href="https://baike.baidu.com/item/%E5%AE%BD%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/5224802?fr=aladdin&amp;fromid=2148012&amp;fromtitle=%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2" target="_blank" rel="noopener">BFS</a> 完成。</li>
+</ol>
+<p><strong><big>思路：DFS</big></strong></p>
+<p>　　1、建立图</p>
+<p>　　2、循环n次，每次是遍历一个节点是否已经visited且合法地加入path中了，如果False不合法则直接返回【】。</p>
+<p>　　3、遍历一个节点时会将其后面的所有子节点都处理掉。</p>
+<p><strong><big>代码</big></strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">findPath</span><span class="params">(n,arr)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    graph = defaultdict(list)</span><br><span class="line">    <span class="keyword">for</span> u , v <span class="keyword">in</span> arr:</span><br><span class="line">        graph[v].append(u)</span><br><span class="line">    <span class="comment"># 0为Unkown，1为visiting，2为visited</span></span><br><span class="line">    path = []</span><br><span class="line">    visited = [<span class="number">0</span>] * n</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> DFS(graph,visited,path,i):</span><br><span class="line">            <span class="keyword">return</span> []</span><br><span class="line">    <span class="keyword">return</span> path[::<span class="number">-1</span>]</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">DFS</span><span class="params">(graph,visited,path,i)</span>:</span></span><br><span class="line">    <span class="comment">####i节点：其正在遍历，但它的子节点的子节点也是它，表示产生了有环，则return FALSE</span></span><br><span class="line">    <span class="keyword">if</span> visited[i] == <span class="number">1</span>: <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="comment">####i节点 ：已经遍历过，后面已经没有节点了，return true</span></span><br><span class="line">    <span class="keyword">elif</span> visited[i] == <span class="number">2</span>:<span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="comment">####表示正在遍历i节点</span></span><br><span class="line">    visited[i] = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> graph[i]:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> DFS(graph,visited,path,j):</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    path.append(i)</span><br><span class="line">    visited[i] = <span class="number">2</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">n = <span class="number">5</span></span><br><span class="line">arr = [[<span class="number">1</span>,<span class="number">0</span>],[<span class="number">2</span>,<span class="number">0</span>],[<span class="number">3</span>,<span class="number">1</span>],[<span class="number">3</span>,<span class="number">2</span>],[<span class="number">4</span>,<span class="number">0</span>]]</span><br><span class="line">print(findPath(n,arr))</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/深二维矩阵DFS/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1043,7 +1255,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">24</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
