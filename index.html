@@ -229,6 +229,297 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/7.Spark处理不同的数据类型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/7.Spark处理不同的数据类型/" itemprop="url">7. 处理不同的数据类型</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-18T00:00:00+08:00">
+                2023-03-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/" itemprop="url" rel="index">
+                    <span itemprop="name">大数据</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本文仅做学习总结，如有侵权立删</p>
+<h1 id="一、处理不同的数据类型"><a href="#一、处理不同的数据类型" class="headerlink" title="一、处理不同的数据类型"></a>一、处理不同的数据类型</h1><h2 id="1-数据类型"><a href="#1-数据类型" class="headerlink" title="1. 数据类型"></a>1. 数据类型</h2><ul>
+<li>布尔型</li>
+<li>数值型</li>
+<li>字符串型</li>
+<li>日期和时间戳类型</li>
+<li>空值处理</li>
+<li>复杂类型</li>
+<li>自定义函数</li>
+</ul>
+<h2 id="2-处理布尔类型"><a href="#2-处理布尔类型" class="headerlink" title="2. 处理布尔类型"></a>2. 处理布尔类型</h2><p>（1）and、or、true 和false</p>
+<p>（2）&amp;、|、1、0</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pyspark.functions <span class="keyword">as</span> F</span><br><span class="line">filter1 = F.col(<span class="string">'aa'</span>) &gt; <span class="number">600</span></span><br><span class="line">filter2 = F.col(<span class="string">'bb'</span>) &gt; <span class="number">2</span></span><br><span class="line">df.where(filter1 &amp; filter2).where(F.col(<span class="string">'cc'</span>).isin(<span class="string">"DOT"</span>)).show()</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：创建布尔表达式时注意空值处理！！！</p>
+<p>将df.where(F.col(‘a’) != ‘hello’)改写成df.where (F.col(‘a’).eqNullSafe(“hello”))可以保证空值安全。</p>
+</blockquote>
+<h2 id="3-处理数值类型"><a href="#3-处理数值类型" class="headerlink" title="3. 处理数值类型"></a>3. 处理数值类型</h2><ul>
+<li>pow：平方</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 例子</span></span><br><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> pow</span><br><span class="line">f = pow(F.col(<span class="string">'a'</span>) * F.col(<span class="string">'b'</span>), <span class="number">2</span>) + <span class="number">5</span>  <span class="comment"># (a * b)^2 + 5</span></span><br><span class="line">df.select(f.alias(<span class="string">'c'</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># selectExpr</span></span><br><span class="line">df.selectExpr(<span class="string">'a'</span>, <span class="string">'pow(F.col('</span>a<span class="string">') * F.col('</span><span class="string">b'), 2) + 5'</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>round：向上取整，bround：向下取整</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># from pyspark.sql.functions import lit, round, bround</span></span><br><span class="line">df.select(round(lit(<span class="string">"2.5"</span>)), bround(lit(<span class="string">"2.5"</span>)))</span><br></pre></td></tr></table></figure>
+<ul>
+<li>corr：计算两列的相关性</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> corr</span><br><span class="line">df.stat.corr(<span class="string">'a'</span>, <span class="string">'b'</span>)</span><br><span class="line">df.select(corr(<span class="string">'a'</span>, <span class="string">'b'</span>))</span><br></pre></td></tr></table></figure>
+<ul>
+<li>describe：计算一列或一组列的汇总统计信息，可以用describe来实现。</li>
+<li>count：计数</li>
+<li>mean：平均值</li>
+<li>stddev_pop：标准差</li>
+<li>min：最小值</li>
+<li><p>max：最大值</p>
+</li>
+<li><p>StatFunctions包中封装了许多可使用的统计函数</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">quantileProbs = [<span class="number">0.5</span>]</span><br><span class="line">relError = <span class="number">0.05</span></span><br><span class="line">df.stat.approxQuantile(<span class="string">'a'</span>, quantileProbs, relError)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>monotonically_increasing_id函数：从0开始，为每行添加一个唯一的ID。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> monotonically_increasing_id</span><br><span class="line">df.select(monotonically_increasing_id())</span><br></pre></td></tr></table></figure>
+<h2 id="4-处理字符串类型"><a href="#4-处理字符串类型" class="headerlink" title="4. 处理字符串类型"></a>4. 处理字符串类型</h2><ul>
+<li>initcap：将给定字符串中空格分隔的每个单词首字母大写。</li>
+<li>lower：全部小写</li>
+<li>upper：全部大写</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> initcap</span><br><span class="line">df.select(initcap(F.col(<span class="string">'aaa'</span>))， lower(F.col(<span class="string">'bbb'</span>)), upper(F.col(<span class="string">'ccc'</span>)))</span><br></pre></td></tr></table></figure>
+<ul>
+<li>lpad：从左边对字符串使用指定的字符进行填充。</li>
+<li>ltrim：从左边对字符串使用指定的字符进行删除空格。</li>
+<li>rpad: 从右边对字符串使用指定的字符进行填充。</li>
+<li>trim：从右边对字符串使用指定的字符进行删除空格。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> lit, ltrim, rtim, rpad, lpad, trim</span><br><span class="line">df.select(ltrim(lit(<span class="string">"    HELLO    "</span>)).alias(<span class="string">"ltrim"</span>),  </span><br><span class="line">		  rtrim(lit(<span class="string">"    HELLO    "</span>)).alias(<span class="string">"rtrim"</span>),</span><br><span class="line">		  trim(lit(<span class="string">"    HELLO    "</span>)).alias(<span class="string">"trim"</span>),</span><br><span class="line">		  lpad(lit(<span class="string">"HELLO"</span>, <span class="number">3</span>, <span class="string">" "</span>)).alias(<span class="string">"lpad"</span>),</span><br><span class="line">		  rpad(lit(<span class="string">"HELLO"</span>, <span class="number">10</span>, <span class="string">" "</span>)).alias(<span class="string">"rpad"</span>)</span><br><span class="line">)</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">ltrim: "HELLO     "</span></span><br><span class="line"><span class="string">rtrim："     HELLO"</span></span><br><span class="line"><span class="string">trim:"HELLO"</span></span><br><span class="line"><span class="string">lpad："HEL"</span></span><br><span class="line"><span class="string">rpad: "HELLO     "</span></span><br><span class="line"><span class="string">注意 lpad或rpad输入的数值小于字符串长度，它将从字符串的右侧删除字符</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+<h2 id="5、正则表达式"><a href="#5、正则表达式" class="headerlink" title="5、正则表达式"></a>5、正则表达式</h2><ul>
+<li>regexp_extract（列名，正则表达式，第几个）：提取值</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> regexp_extract</span><br><span class="line">regex_string = <span class="string">"BLACK|WHITE|RED|GREEN|BLUE"</span></span><br><span class="line">df.select(regexp_extract(F.col(<span class="string">'a'</span>, regex_string, <span class="number">1</span>))) <span class="comment"># 将列名为a的字段中出现包含在正则表达式的第一个单词取出来。</span></span><br><span class="line"><span class="comment"># 如 df['a'] = "WHITE HANGING HEA", 结果为WHITE</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>regexp_replace：替换值</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> regexp_replace</span><br><span class="line">regex_string = <span class="string">"BLACK|WHITE|RED|GREEN|BLUE"</span>  <span class="comment"># |在正则中表示或的意思</span></span><br><span class="line">df.select(</span><br><span class="line">	regexp_replace(F.col(<span class="string">'a'</span>), regex_string, <span class="string">'color'</span>).alias(<span class="string">'color_clean'</span>),</span><br><span class="line">) <span class="comment"># 将字段a中包含regex_string这些字段换成color。</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>translate：替换，将给定字符串替换掉所有出现的某字符串。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> translate</span><br><span class="line">df.select(translate(F.col(<span class="string">'a'</span>), <span class="string">'LEET'</span>, <span class="string">'1337'</span>)) <span class="comment"># L替换成1， E替换成3， T替换成7.</span></span><br><span class="line"><span class="comment"># 所以WHITE 会被替换成WHI73.</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>instr：是否存在（类似contains)</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> instr</span><br><span class="line">containsBlack = instr(F.col(<span class="string">'a'</span>), <span class="string">'BLACK'</span>) &gt;= <span class="number">1</span></span><br><span class="line">df.withColumn(<span class="string">'b'</span>, containsBlack)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>locate(substr, str, pos=1)：在位置 pos 之后定位字符串列中第一次出现 substr 的位置。<ul>
+<li>该位置不是基于零的，而是基于 1 的索引。如果在 str 中找不到 substr，则返回 0。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">df = spark.createDataFrame([(<span class="string">'abcd'</span>,)], [<span class="string">'s'</span>,])</span><br><span class="line">df.select(locate(<span class="string">'b'</span>, df.s, <span class="number">1</span>).alias(<span class="string">'s'</span>)).collect()</span><br><span class="line">[Row(s=<span class="number">2</span>)]</span><br></pre></td></tr></table></figure>
+<h2 id="6、处理日期和时间戳类型"><a href="#6、处理日期和时间戳类型" class="headerlink" title="6、处理日期和时间戳类型"></a>6、处理日期和时间戳类型</h2><p><a href="https://zhuanlan.zhihu.com/p/450636026" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/450636026</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> functions <span class="keyword">as</span> F</span><br></pre></td></tr></table></figure>
+<h3 id="（1）-示例数据"><a href="#（1）-示例数据" class="headerlink" title="（1） 示例数据"></a>（1） 示例数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">data=[[<span class="string">"1"</span>,<span class="string">"2020-02-01"</span>],[<span class="string">"2"</span>,<span class="string">"2019-03-01"</span>],[<span class="string">"3"</span>,<span class="string">"2021-03-01"</span>]]</span><br><span class="line">df=spark.createDataFrame(data, [<span class="string">"id"</span>,<span class="string">"time"</span>])</span><br><span class="line">df.show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+---+----------+</span><br><span class="line">| id|      time|</span><br><span class="line">+---+----------+</span><br><span class="line">|  <span class="number">1</span>|<span class="number">2020</span><span class="number">-02</span><span class="number">-01</span>|</span><br><span class="line">|  <span class="number">2</span>|<span class="number">2019</span><span class="number">-03</span><span class="number">-01</span>|</span><br><span class="line">|  <span class="number">3</span>|<span class="number">2021</span><span class="number">-03</span><span class="number">-01</span>|</span><br><span class="line">+---+----------+</span><br></pre></td></tr></table></figure>
+<h3 id="（2）-日期"><a href="#（2）-日期" class="headerlink" title="（2）. 日期"></a>（2）. 日期</h3><h4 id="2-1-当前日期-current-date"><a href="#2-1-当前日期-current-date" class="headerlink" title="2.1 当前日期 current_date()"></a>2.1 当前日期 <code>current_date()</code></h4><ul>
+<li>获取当前系统日期。默认情况下，数据将以<code>yyyy-dd-mm</code>格式返回。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">df.select(F.current_date().alias(<span class="string">"current_date"</span>)).show(<span class="number">1</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+------------+</span><br><span class="line">|current_date|</span><br><span class="line">+------------+</span><br><span class="line">|  <span class="number">2021</span><span class="number">-12</span><span class="number">-28</span>|</span><br><span class="line">+------------+</span><br><span class="line">only showing top <span class="number">1</span> row</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-日期格式-date-format"><a href="#2-2-日期格式-date-format" class="headerlink" title="2.2 日期格式 date_format()"></a>2.2 日期格式 <code>date_format()</code></h4><ul>
+<li>解析日期并转换<code>yyyy-dd-mm</code>为<code>MM-dd-yyyy</code>格式。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">df.select(F.col(<span class="string">"time"</span>), </span><br><span class="line">    F.date_format(F.col(<span class="string">"time"</span>), <span class="string">"MM-dd-yyyy"</span>).alias(<span class="string">"date_format"</span>)).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+----------+-----------+</span><br><span class="line">|      time|date_format|</span><br><span class="line">+----------+-----------+</span><br><span class="line">|<span class="number">2020</span><span class="number">-02</span><span class="number">-01</span>| <span class="number">02</span><span class="number">-01</span><span class="number">-2020</span>|</span><br><span class="line">|<span class="number">2019</span><span class="number">-03</span><span class="number">-01</span>| <span class="number">03</span><span class="number">-01</span><span class="number">-2019</span>|</span><br><span class="line">|<span class="number">2021</span><span class="number">-03</span><span class="number">-01</span>| <span class="number">03</span><span class="number">-01</span><span class="number">-2021</span>|</span><br><span class="line">+----------+-----------+</span><br></pre></td></tr></table></figure>
+<h4 id="2-3-使用to-date-将日期格式字符串yyyy-MM-dd转换为DateType-yyyy-MM-dd"><a href="#2-3-使用to-date-将日期格式字符串yyyy-MM-dd转换为DateType-yyyy-MM-dd" class="headerlink" title="2.3 使用to_date()将日期格式字符串yyyy-MM-dd转换为DateType yyyy-MM-dd"></a>2.3 使用<code>to_date()</code>将日期格式字符串<code>yyyy-MM-dd</code>转换为<code>DateType yyyy-MM-dd</code></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">df.select(F.col(<span class="string">"time"</span>), </span><br><span class="line">    F.to_date(F.col(<span class="string">"time"</span>), <span class="string">"yyy-MM-dd"</span>).alias(<span class="string">"to_date"</span>)).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+----------+----------+</span><br><span class="line">|      time|   to_date|</span><br><span class="line">+----------+----------+</span><br><span class="line">|<span class="number">2020</span><span class="number">-02</span><span class="number">-01</span>|<span class="number">2020</span><span class="number">-02</span><span class="number">-01</span>|</span><br><span class="line">|<span class="number">2019</span><span class="number">-03</span><span class="number">-01</span>|<span class="number">2019</span><span class="number">-03</span><span class="number">-01</span>|</span><br><span class="line">|<span class="number">2021</span><span class="number">-03</span><span class="number">-01</span>|<span class="number">2021</span><span class="number">-03</span><span class="number">-01</span>|</span><br><span class="line">+----------+----------+</span><br></pre></td></tr></table></figure>
+<h4 id="2-4-两个日期之间的日差datediff"><a href="#2-4-两个日期之间的日差datediff" class="headerlink" title="2.4 两个日期之间的日差datediff()"></a>2.4 两个日期之间的日差<code>datediff()</code></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">df.select(F.col(<span class="string">"time"</span>), </span><br><span class="line">    F.datediff(F.current_date(), F.col(<span class="string">"time"</span>)).alias(<span class="string">"datediff"</span>)  </span><br><span class="line">).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+----------+--------+</span><br><span class="line">|      time|datediff|</span><br><span class="line">+----------+--------+</span><br><span class="line">|<span class="number">2020</span><span class="number">-02</span><span class="number">-01</span>|     <span class="number">696</span>|</span><br><span class="line">|<span class="number">2019</span><span class="number">-03</span><span class="number">-01</span>|    <span class="number">1033</span>|</span><br><span class="line">|<span class="number">2021</span><span class="number">-03</span><span class="number">-01</span>|     <span class="number">302</span>|</span><br><span class="line">+----------+--------+</span><br></pre></td></tr></table></figure>
+<h4 id="2-5-两个日期之间的月份months-between"><a href="#2-5-两个日期之间的月份months-between" class="headerlink" title="2.5 两个日期之间的月份months_between()"></a>2.5 两个日期之间的月份<code>months_between()</code></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">df.select(F.col(<span class="string">"time"</span>), </span><br><span class="line">    F.months_between(F.current_date(),F.col(<span class="string">"time"</span>)).alias(<span class="string">"months_between"</span>)  </span><br><span class="line">).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+----------+--------------+</span><br><span class="line">|      time|months_between|</span><br><span class="line">+----------+--------------+</span><br><span class="line">|<span class="number">2020</span><span class="number">-02</span><span class="number">-01</span>|   <span class="number">22.87096774</span>|</span><br><span class="line">|<span class="number">2019</span><span class="number">-03</span><span class="number">-01</span>|   <span class="number">33.87096774</span>|</span><br><span class="line">|<span class="number">2021</span><span class="number">-03</span><span class="number">-01</span>|    <span class="number">9.87096774</span>|</span><br><span class="line">+----------+--------------+</span><br></pre></td></tr></table></figure>
+<h4 id="2-6-截断指定单位的日期trunc"><a href="#2-6-截断指定单位的日期trunc" class="headerlink" title="2.6 截断指定单位的日期trunc()"></a>2.6 截断指定单位的日期<code>trunc()</code></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">df.select(F.col(<span class="string">"time"</span>), </span><br><span class="line">    F.trunc(F.col(<span class="string">"time"</span>),<span class="string">"Month"</span>).alias(<span class="string">"Month_Trunc"</span>), </span><br><span class="line">    F.trunc(F.col(<span class="string">"time"</span>),<span class="string">"Year"</span>).alias(<span class="string">"Month_Year"</span>), </span><br><span class="line">    F.trunc(F.col(<span class="string">"time"</span>),<span class="string">"Month"</span>).alias(<span class="string">"Month_Trunc"</span>)).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+----------+-----------+----------+-----------+</span><br><span class="line">|      time|Month_Trunc|Month_Year|Month_Trunc|</span><br><span class="line">+----------+-----------+----------+-----------+</span><br><span class="line">|<span class="number">2020</span><span class="number">-02</span><span class="number">-01</span>| <span class="number">2020</span><span class="number">-02</span><span class="number">-01</span>|<span class="number">2020</span><span class="number">-01</span><span class="number">-01</span>| <span class="number">2020</span><span class="number">-02</span><span class="number">-01</span>|</span><br><span class="line">|<span class="number">2019</span><span class="number">-03</span><span class="number">-01</span>| <span class="number">2019</span><span class="number">-03</span><span class="number">-01</span>|<span class="number">2019</span><span class="number">-01</span><span class="number">-01</span>| <span class="number">2019</span><span class="number">-03</span><span class="number">-01</span>|</span><br><span class="line">|<span class="number">2021</span><span class="number">-03</span><span class="number">-01</span>| <span class="number">2021</span><span class="number">-03</span><span class="number">-01</span>|<span class="number">2021</span><span class="number">-01</span><span class="number">-01</span>| <span class="number">2021</span><span class="number">-03</span><span class="number">-01</span>|</span><br><span class="line">+----------+-----------+----------+-----------+</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># pyspark.sql.functions.date_trunc(format, timestamp)</span></span><br><span class="line"><span class="comment"># 返回截断为格式指定单位的时间戳。</span></span><br><span class="line"><span class="comment"># 2.3.0 版中的新函数。</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>df = spark.createDataFrame([(<span class="string">'1997-02-28 05:02:11'</span>,)], [<span class="string">'t'</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>df.select(date_trunc(<span class="string">'year'</span>, df.t).alias(<span class="string">'year'</span>)).collect()</span><br><span class="line">[Row(year=datetime.datetime(<span class="number">1997</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>))]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>df.select(date_trunc(<span class="string">'mon'</span>, df.t).alias(<span class="string">'month'</span>)).collect()</span><br><span class="line">[Row(month=datetime.datetime(<span class="number">1997</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>))]</span><br></pre></td></tr></table></figure>
+<h4 id="2-7-月、日加减法"><a href="#2-7-月、日加减法" class="headerlink" title="2.7 月、日加减法"></a>2.7 月、日加减法</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">df.select(F.col(<span class="string">"time"</span>), </span><br><span class="line">    F.add_months(F.col(<span class="string">"time"</span>),<span class="number">3</span>).alias(<span class="string">"add_months"</span>), </span><br><span class="line">    F.add_months(F.col(<span class="string">"time"</span>),<span class="number">-3</span>).alias(<span class="string">"sub_months"</span>), </span><br><span class="line">    F.date_add(F.col(<span class="string">"time"</span>),<span class="number">4</span>).alias(<span class="string">"date_add"</span>), </span><br><span class="line">    F.date_sub(F.col(<span class="string">"time"</span>),<span class="number">4</span>).alias(<span class="string">"date_sub"</span>) </span><br><span class="line">).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+----------+----------+----------+----------+----------+</span><br><span class="line">|      time|add_months|sub_months|  date_add|  date_sub|</span><br><span class="line">+----------+----------+----------+----------+----------+</span><br><span class="line">|<span class="number">2020</span><span class="number">-02</span><span class="number">-01</span>|<span class="number">2020</span><span class="number">-05</span><span class="number">-01</span>|<span class="number">2019</span><span class="number">-11</span><span class="number">-01</span>|<span class="number">2020</span><span class="number">-02</span><span class="number">-05</span>|<span class="number">2020</span><span class="number">-01</span><span class="number">-28</span>|</span><br><span class="line">|<span class="number">2019</span><span class="number">-03</span><span class="number">-01</span>|<span class="number">2019</span><span class="number">-06</span><span class="number">-01</span>|<span class="number">2018</span><span class="number">-12</span><span class="number">-01</span>|<span class="number">2019</span><span class="number">-03</span><span class="number">-05</span>|<span class="number">2019</span><span class="number">-02</span><span class="number">-25</span>|</span><br><span class="line">|<span class="number">2021</span><span class="number">-03</span><span class="number">-01</span>|<span class="number">2021</span><span class="number">-06</span><span class="number">-01</span>|<span class="number">2020</span><span class="number">-12</span><span class="number">-01</span>|<span class="number">2021</span><span class="number">-03</span><span class="number">-05</span>|<span class="number">2021</span><span class="number">-02</span><span class="number">-25</span>|</span><br><span class="line">+----------+----------+----------+----------+----------+</span><br></pre></td></tr></table></figure>
+<h4 id="2-8-年、月、下一天、一年中第几个星期"><a href="#2-8-年、月、下一天、一年中第几个星期" class="headerlink" title="2.8 年、月、下一天、一年中第几个星期"></a>2.8 年、月、下一天、一年中第几个星期</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">df.select(F.col(<span class="string">"time"</span>), </span><br><span class="line">     F.year(F.col(<span class="string">"time"</span>)).alias(<span class="string">"year"</span>), </span><br><span class="line">     F.month(F.col(<span class="string">"time"</span>)).alias(<span class="string">"month"</span>), </span><br><span class="line">     F.next_day(F.col(<span class="string">"time"</span>),<span class="string">"Sunday"</span>).alias(<span class="string">"next_day"</span>), </span><br><span class="line">     F.weekofyear(F.col(<span class="string">"time"</span>)).alias(<span class="string">"weekofyear"</span>) </span><br><span class="line">).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+----------+----+-----+----------+----------+</span><br><span class="line">|      time|year|month|  next_day|weekofyear|</span><br><span class="line">+----------+----+-----+----------+----------+</span><br><span class="line">|<span class="number">2020</span><span class="number">-02</span><span class="number">-01</span>|<span class="number">2020</span>|    <span class="number">2</span>|<span class="number">2020</span><span class="number">-02</span><span class="number">-02</span>|         <span class="number">5</span>|</span><br><span class="line">|<span class="number">2019</span><span class="number">-03</span><span class="number">-01</span>|<span class="number">2019</span>|    <span class="number">3</span>|<span class="number">2019</span><span class="number">-03</span><span class="number">-03</span>|         <span class="number">9</span>|</span><br><span class="line">|<span class="number">2021</span><span class="number">-03</span><span class="number">-01</span>|<span class="number">2021</span>|    <span class="number">3</span>|<span class="number">2021</span><span class="number">-03</span><span class="number">-07</span>|         <span class="number">9</span>|</span><br><span class="line">+----------+----+-----+----------+----------+</span><br></pre></td></tr></table></figure>
+<h4 id="2-9-星期几、月日、年日"><a href="#2-9-星期几、月日、年日" class="headerlink" title="2.9 星期几、月日、年日"></a>2.9 星期几、月日、年日</h4><ul>
+<li>查询星期几</li>
+<li>一个月中的第几天</li>
+<li>一年中的第几天</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">df.select(F.col(<span class="string">"time"</span>),  </span><br><span class="line">     F.dayofweek(F.col(<span class="string">"time"</span>)).alias(<span class="string">"dayofweek"</span>), </span><br><span class="line">     F.dayofmonth(F.col(<span class="string">"time"</span>)).alias(<span class="string">"dayofmonth"</span>), </span><br><span class="line">     F.dayofyear(F.col(<span class="string">"time"</span>)).alias(<span class="string">"dayofyear"</span>), </span><br><span class="line">).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+----------+---------+----------+---------+</span><br><span class="line">|      time|dayofweek|dayofmonth|dayofyear|</span><br><span class="line">+----------+---------+----------+---------+</span><br><span class="line">|<span class="number">2020</span><span class="number">-02</span><span class="number">-01</span>|        <span class="number">7</span>|         <span class="number">1</span>|       <span class="number">32</span>|</span><br><span class="line">|<span class="number">2019</span><span class="number">-03</span><span class="number">-01</span>|        <span class="number">6</span>|         <span class="number">1</span>|       <span class="number">60</span>|</span><br><span class="line">|<span class="number">2021</span><span class="number">-03</span><span class="number">-01</span>|        <span class="number">2</span>|         <span class="number">1</span>|       <span class="number">60</span>|</span><br><span class="line">+----------+---------+----------+---------+</span><br></pre></td></tr></table></figure>
+<h3 id="（3）-时间"><a href="#（3）-时间" class="headerlink" title="（3）. 时间"></a>（3）. 时间</h3><h4 id="3-1-创建一个测试数据"><a href="#3-1-创建一个测试数据" class="headerlink" title="3.1 创建一个测试数据"></a>3.1 创建一个测试数据</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">data=[</span><br><span class="line">    [<span class="string">"1"</span>,<span class="string">"02-01-2020 11 01 19 06"</span>],</span><br><span class="line">    [<span class="string">"2"</span>,<span class="string">"03-01-2019 12 01 19 406"</span>],</span><br><span class="line">    [<span class="string">"3"</span>,<span class="string">"03-01-2021 12 01 19 406"</span>]]</span><br><span class="line">df2=spark.createDataFrame(data,[<span class="string">"id"</span>,<span class="string">"time"</span>])</span><br><span class="line">df2.show(truncate=<span class="literal">False</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+---+-----------------------+</span><br><span class="line">|id |time                   |</span><br><span class="line">+---+-----------------------+</span><br><span class="line">|<span class="number">1</span>  |<span class="number">02</span><span class="number">-01</span><span class="number">-2020</span> <span class="number">11</span> <span class="number">01</span> <span class="number">19</span> <span class="number">06</span> |</span><br><span class="line">|<span class="number">2</span>  |<span class="number">03</span><span class="number">-01</span><span class="number">-2019</span> <span class="number">12</span> <span class="number">01</span> <span class="number">19</span> <span class="number">406</span>|</span><br><span class="line">|<span class="number">3</span>  |<span class="number">03</span><span class="number">-01</span><span class="number">-2021</span> <span class="number">12</span> <span class="number">01</span> <span class="number">19</span> <span class="number">406</span>|</span><br><span class="line">+---+-----------------------+</span><br></pre></td></tr></table></figure>
+<h4 id="3-2-以-spark-默认格式yyyy-MM-dd-HH-mm-ss返回当前时间戳"><a href="#3-2-以-spark-默认格式yyyy-MM-dd-HH-mm-ss返回当前时间戳" class="headerlink" title="3.2 以 spark 默认格式yyyy-MM-dd HH:mm:ss返回当前时间戳"></a>3.2 以 spark 默认格式<code>yyyy-MM-dd HH:mm:ss</code>返回当前时间戳</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">df2.select(F.current_timestamp().alias(<span class="string">"current_timestamp"</span>)).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+--------------------+</span><br><span class="line">|   current_timestamp|</span><br><span class="line">+--------------------+</span><br><span class="line">|<span class="number">2021</span><span class="number">-12</span><span class="number">-28</span> <span class="number">09</span>:<span class="number">31</span>:...|</span><br><span class="line">|<span class="number">2021</span><span class="number">-12</span><span class="number">-28</span> <span class="number">09</span>:<span class="number">31</span>:...|</span><br><span class="line">|<span class="number">2021</span><span class="number">-12</span><span class="number">-28</span> <span class="number">09</span>:<span class="number">31</span>:...|</span><br><span class="line">+--------------------+</span><br></pre></td></tr></table></figure>
+<h4 id="3-3-将字符串时间戳转换为时间戳类型格式-to-timestamp"><a href="#3-3-将字符串时间戳转换为时间戳类型格式-to-timestamp" class="headerlink" title="3.3 将字符串时间戳转换为时间戳类型格式 to_timestamp()"></a>3.3 将字符串时间戳转换为时间戳类型格式 <code>to_timestamp()</code></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">df2.select(F.col(<span class="string">"time"</span>), </span><br><span class="line">    F.to_timestamp(F.col(<span class="string">"time"</span>), <span class="string">"MM-dd-yyyy HH mm ss SSS"</span>).alias(<span class="string">"to_timestamp"</span>) </span><br><span class="line">    ).show(truncate=<span class="literal">False</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+-----------------------+-----------------------+</span><br><span class="line">|time                   |to_timestamp           |</span><br><span class="line">+-----------------------+-----------------------+</span><br><span class="line">|<span class="number">02</span><span class="number">-01</span><span class="number">-2020</span> <span class="number">11</span> <span class="number">01</span> <span class="number">19</span> <span class="number">06</span> |<span class="number">2020</span><span class="number">-02</span><span class="number">-01</span> <span class="number">11</span>:<span class="number">01</span>:<span class="number">19.06</span> |</span><br><span class="line">|<span class="number">03</span><span class="number">-01</span><span class="number">-2019</span> <span class="number">12</span> <span class="number">01</span> <span class="number">19</span> <span class="number">406</span>|<span class="number">2019</span><span class="number">-03</span><span class="number">-01</span> <span class="number">12</span>:<span class="number">01</span>:<span class="number">19.406</span>|</span><br><span class="line">|<span class="number">03</span><span class="number">-01</span><span class="number">-2021</span> <span class="number">12</span> <span class="number">01</span> <span class="number">19</span> <span class="number">406</span>|<span class="number">2021</span><span class="number">-03</span><span class="number">-01</span> <span class="number">12</span>:<span class="number">01</span>:<span class="number">19.406</span>|</span><br><span class="line">+-----------------------+-----------------------+</span><br></pre></td></tr></table></figure>
+<h4 id="3-4-获取小时、分钟、秒"><a href="#3-4-获取小时、分钟、秒" class="headerlink" title="3.4 获取小时、分钟、秒"></a>3.4 获取<code>小时</code>、<code>分钟</code>、<code>秒</code></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 数据</span></span><br><span class="line">data=[</span><br><span class="line">    [<span class="string">"1"</span>,<span class="string">"2020-02-01 11:01:19.06"</span>],</span><br><span class="line">    [<span class="string">"2"</span>,<span class="string">"2019-03-01 12:01:19.406"</span>],</span><br><span class="line">    [<span class="string">"3"</span>,<span class="string">"2021-03-01 12:01:19.406"</span>]]</span><br><span class="line">df3=spark.createDataFrame(data,[<span class="string">"id"</span>,<span class="string">"time"</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 提取小时、分钟、秒</span></span><br><span class="line">df3.select(</span><br><span class="line">    F.col(<span class="string">"time"</span>), </span><br><span class="line">    F.hour(F.col(<span class="string">"time"</span>)).alias(<span class="string">"hour"</span>), </span><br><span class="line">    F.minute(F.col(<span class="string">"time"</span>)).alias(<span class="string">"minute"</span>),</span><br><span class="line">    F.second(F.col(<span class="string">"time"</span>)).alias(<span class="string">"second"</span>) </span><br><span class="line">    ).show(truncate=<span class="literal">False</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+-----------------------+----+------+------+</span><br><span class="line">|time                   |hour|minute|second|</span><br><span class="line">+-----------------------+----+------+------+</span><br><span class="line">|<span class="number">2020</span><span class="number">-02</span><span class="number">-01</span> <span class="number">11</span>:<span class="number">01</span>:<span class="number">19.06</span> |<span class="number">11</span>  |<span class="number">1</span>     |<span class="number">19</span>    |</span><br><span class="line">|<span class="number">2019</span><span class="number">-03</span><span class="number">-01</span> <span class="number">12</span>:<span class="number">01</span>:<span class="number">19.406</span>|<span class="number">12</span>  |<span class="number">1</span>     |<span class="number">19</span>    |</span><br><span class="line">|<span class="number">2021</span><span class="number">-03</span><span class="number">-01</span> <span class="number">12</span>:<span class="number">01</span>:<span class="number">19.406</span>|<span class="number">12</span>  |<span class="number">1</span>     |<span class="number">19</span>    |</span><br><span class="line">+-----------------------+----+------+------+</span><br></pre></td></tr></table></figure>
+<h2 id="7-处理数据中的空值"><a href="#7-处理数据中的空值" class="headerlink" title="7. 处理数据中的空值"></a>7. 处理数据中的空值</h2><h2 id="8-复杂类型"><a href="#8-复杂类型" class="headerlink" title="8. 复杂类型"></a>8. 复杂类型</h2><ul>
+<li>结构体: struct</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> struct</span><br><span class="line">df1 = df.select(struct(<span class="string">'a'</span>, <span class="string">'b'</span>).alias(<span class="string">'c'</span>))</span><br><span class="line"><span class="comment"># 可以通过"."来访问或列方法getField来实现：</span></span><br><span class="line">df1.select(<span class="string">"c.a"</span>)</span><br><span class="line">df1.select(F.col(<span class="string">"c"</span>).getField(<span class="string">"a"</span>))</span><br><span class="line"><span class="comment"># 可以通过 ".*"来查询结构体中所哟就值</span></span><br><span class="line">df1.select(<span class="string">"c.*"</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>数组<ul>
+<li>split：指定分隔符</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> split</span><br><span class="line">df.select(split(F.col(<span class="string">"a"</span>), <span class="string">"\t"</span>)) </span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">列名：split(a,)</span></span><br><span class="line"><span class="string">结果：[WHITE, HANGING, ...]</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line">df.select(split(F.col(<span class="string">"a"</span>), <span class="string">"\t"</span>).alias(<span class="string">"array_col"</span>)) </span><br><span class="line">.selectExpr(<span class="string">"array_col[0]"</span>)</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">结果</span></span><br><span class="line"><span class="string">列名：array_col[0]</span></span><br><span class="line"><span class="string">结果：WHITE</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+<p>​    数组长度</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> size</span><br><span class="line">df.select(size(split(F.col(<span class="string">"a"</span>), <span class="string">"\t"</span>)))</span><br></pre></td></tr></table></figure>
+<pre><code>array_contains：数组是否包含某个值
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> array_contains</span><br><span class="line">df.select(array_contains(split(F.col(<span class="string">"a"</span>), <span class="string">"\t"</span>), <span class="string">"WHITE"</span>))</span><br><span class="line"><span class="comment"># 结果为true</span></span><br></pre></td></tr></table></figure>
+<p>​    explode：一行拆分成多行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> explode, split</span><br><span class="line"></span><br><span class="line">df = df.withColumn(<span class="string">"sub_str"</span>, explode(split(df[<span class="string">"str_col"</span>], <span class="string">"_"</span>))) </span><br><span class="line"><span class="comment"># 将str_col按-拆分成list，list中的每一个元素成为sub_str,与原行中的其他列一起组成新的行</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">eg:</span></span><br><span class="line"><span class="string">"hello world","other column"</span></span><br><span class="line"><span class="string">split ===&gt; ["hello", "world"], "other column"</span></span><br><span class="line"><span class="string">explode ===&gt; </span></span><br><span class="line"><span class="string">		"hello", "other column"; </span></span><br><span class="line"><span class="string">		"world", "other column"</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>Map</p>
+<ul>
+<li>create_map：键值对</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> explode, split</span><br><span class="line">df.select(create_map(F.col(<span class="string">"a"</span>), F.col(<span class="string">"b"</span>)).alias(<span class="string">"c_map"</span>))</span><br></pre></td></tr></table></figure>
+<p>​    根据key值取value</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> explode, split</span><br><span class="line">df.select(create_map(F.col(<span class="string">"a"</span>), F.col(<span class="string">"b"</span>)).alias(<span class="string">"c_map"</span>))\</span><br><span class="line">.selectExpt(<span class="string">"c_map['WHILE METAL LANTERN']"</span>)</span><br></pre></td></tr></table></figure>
+<p>​    展开map类型，将其转换成列:explode</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df.select(create_map(F.col(<span class="string">"a"</span>), F.col(<span class="string">"b"</span>)).alias(<span class="string">"c_map"</span>))\</span><br><span class="line">.selectExpt(<span class="string">"explod('c_map')"</span>)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="8、处理Json类型"><a href="#8、处理Json类型" class="headerlink" title="8、处理Json类型"></a>8、处理Json类型</h2><h3 id="（1）创建一个Json类型的列："><a href="#（1）创建一个Json类型的列：" class="headerlink" title="（1）创建一个Json类型的列："></a>（1）创建一个Json类型的列：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">jsonDF = spark.range(<span class="number">1</span>).selectExpr(<span class="string">"""</span></span><br><span class="line"><span class="string">	'&#123;</span></span><br><span class="line"><span class="string">        "a": &#123;</span></span><br><span class="line"><span class="string">            "aa": [1,2,3]</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">	&#125;' as jsonString</span></span><br><span class="line"><span class="string">"""</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="2-get-json-object：查询JSON对象"><a href="#2-get-json-object：查询JSON对象" class="headerlink" title="(2) get_json_object：查询JSON对象"></a>(2) get_json_object：查询JSON对象</h3><p>若此查询的JSON对象仅有一层嵌套，则可使用json_tuple</p>
+<h3 id="3）to-json：将StructType转换成JSON字符串"><a href="#3）to-json：将StructType转换成JSON字符串" class="headerlink" title="(3）to_json：将StructType转换成JSON字符串"></a>(3）to_json：将StructType转换成JSON字符串</h3><h3 id="4-from-json：解析JSON数据，需指定模式"><a href="#4-from-json：解析JSON数据，需指定模式" class="headerlink" title="(4) from_json：解析JSON数据，需指定模式"></a>(4) from_json：解析JSON数据，需指定模式</h3>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/Spark的Join/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1987,7 +2278,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/Spark简介/" itemprop="url">Spark简介</a></h1>
+                <a class="post-title-link" href="/Spark简介/" itemprop="url">1.Spark简介</a></h1>
         
 
         <div class="post-meta">
@@ -2357,7 +2648,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/过拟合欠拟合/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/正则化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Lee_yl">
@@ -2376,7 +2667,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/过拟合欠拟合/" itemprop="url">过拟合</a></h1>
+                <a class="post-title-link" href="/正则化/" itemprop="url">正则化</a></h1>
         
 
         <div class="post-meta">
@@ -2422,8 +2713,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/过拟合/" itemprop="url" rel="index">
-                    <span itemprop="name">过拟合</span>
+                  <a href="/categories/机器学习/正则化/" itemprop="url" rel="index">
+                    <span itemprop="name">正则化</span>
                   </a>
                 </span>
 
@@ -2462,171 +2753,56 @@
         
           
             <p>本篇博客仅作为学习,如有侵权必删。</p>
-<h1 id="过拟合"><a href="#过拟合" class="headerlink" title="过拟合"></a>过拟合</h1><h1 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h1><blockquote>
-<p>过拟合：模型对于训练数拟合呈过当的情况，反映到评估指标上，就是模型在训练集上表现很好，测试集和新数据上表现较差。</p>
-<p>欠拟合：模型在训练和和预测时表现都不好的情况。</p>
+<h1 id="正则化-惩罚项"><a href="#正则化-惩罚项" class="headerlink" title="正则化/惩罚项"></a>正则化/惩罚项</h1><h2 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h2><blockquote>
+<p> <strong>（1）范数：</strong><img src="..\imgs\范数.jpg" alt></p>
+<p><strong>（2）方差和偏差：</strong></p>
+<p>Error = Bias + Variance</p>
+<ul>
+<li>Error反映的是整个模型的准确度，</li>
+<li>Bias反映的是模型在样本上的输出与真实值之间的误差，即模型本身的精准度，</li>
+<li>Variance反映的是模型每一次输出结果与模型输出期望之间的误差（描述的是样本上训练的模型在测试集上的表现。），即模型的稳定性。</li>
+<li>欠拟合是高bias，过拟合是高variance。</li>
+</ul>
 </blockquote>
-<p><img src="..\imgs\过拟合欠拟合.jpg" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/标准化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lee_yl">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lee_yl's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/标准化/" itemprop="url">标准化</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-26T00:00:00+08:00">
-                2023-02-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/标准化/" itemprop="url" rel="index">
-                    <span itemprop="name">标准化</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本篇博客仅作为学习,如有侵权必删。</p>
-<h2 id="一、BN批标准化"><a href="#一、BN批标准化" class="headerlink" title="一、BN批标准化"></a>一、BN批标准化</h2><h3 id="1、BN的基本动机"><a href="#1、BN的基本动机" class="headerlink" title="1、BN的基本动机"></a>1、BN的基本动机</h3><ol>
-<li><strong>（初始数据分布一致）</strong>神经网络训练过程的本质是学习数据分布，如果训练数据与测试数据的分布      不同将大大降低网络的泛化能力，因此我们需要在训练开始前对所有输入数据进行归一化处理。</li>
-<li><strong>（中间数据分布一致）</strong>然而随着网络训练的进行，每个隐层的参数变化使得后一层的输入发生变      化，从而每一批训练数据的分布也随之改变，致使网络在每次迭代中都需要拟合 不同的数据分布，增大训练的复杂度以及过拟合的风险。</li>
-</ol>
-<p>原因在于神经网络学习过程<strong>本质上是为了学习数据的分布</strong>，一旦训练数据与测试数据的分布不同，那么网络的泛化能力也大大降低；另一方面，一旦在mini-batch梯度下降训练的时候，每批训练数据的分布不相同，那么网络就要在每次迭代的时候去学习以适应不同的分布，这样将会大大降低网络的训练速度，这也正是为什么我们需要对所有训练数据做一个Normalization预处理的原因。</p>
-<h3 id="2、-BN的原理"><a href="#2、-BN的原理" class="headerlink" title="2、 BN的原理"></a>2、 BN的原理</h3><p>BN首先是把所有的样本的统计分布标准化，降低了batch内不同样本的差异性，然后又允许batch内的各个样本有各自的统计分布。</p>
-<p>BN是针对每一批数据，在网络的每一层输入之前增加归一化处理（均值为0，标准差为1），将所有批数据强制在统一的数据分布下，即对该层 的任意一个神经元（假设为第k维）x^(k) 采用如下公式:</p>
+<blockquote>
+<p><strong>（3）正则化的目的</strong>：减少模型参数大小或者参数数量，缓解过拟合。</p>
+<p>正则化的作用是给模型加一个先验，lasso(l1)认为模型是拉普拉斯分布，ridge(l2)认为是高斯分布，正则项对应参数的协方差，协方差越小，这个模型的variance越小，泛化 能力越强，也就抵抗了过拟合。</p>
+<p><strong>（4）正则化通用形式：</strong></p>
+<p>​        Loss_with_regularization = loss(w,x) + λf(w)</p>
+<ul>
+<li>正则化恒为非负</li>
+<li>f(w)不能为负数，若其为负数，Loss(w,x)+λf(x)本来尽可能想让其变小，那f(x)为负数，f(x)绝对值会越学越大。</li>
+</ul>
+<p><strong>(5) 正则化方法：</strong>L1正则、L2正则、Dropout正则</p>
+</blockquote>
+<h2 id="二、-从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】"><a href="#二、-从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】" class="headerlink" title="二、 从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】"></a>二、 从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】</h2><p><strong>过拟合就是模型在学习训练样本时将噪声异常值也学习得非常好，使得模型参数过多，模型较复杂，给参数加上一个先验约束，可降低过拟合。</strong></p>
+<p> <img src="..\imgs\正则化1.jpg" alt></p>
+<h2 id="三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；"><a href="#三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；" class="headerlink" title="三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；"></a>三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；</h2><p><strong>区别</strong>：L1假设参数服从拉普拉斯分布，L2则符合高斯分布；</p>
+<p>L1范数更容易产生稀疏的权重，L2范数更容易产生分散的权重。</p>
+<p><strong>原因</strong>：（L1稀疏的原因，L2不稀疏的原因）【几何、公式两个角度】</p>
+<p><strong>场景</strong>：具有高维的数据特征时采用L1正则效果好一点。因为L1具有稀疏性。</p>
+<h2 id="四、解释L1范数更容易产生稀疏的权重，L2不的原因："><a href="#四、解释L1范数更容易产生稀疏的权重，L2不的原因：" class="headerlink" title="四、解释L1范数更容易产生稀疏的权重，L2不的原因："></a>四、解释L1范数更容易产生稀疏的权重，L2不的原因：</h2><h3 id="（1）几何角度"><a href="#（1）几何角度" class="headerlink" title="（1）几何角度"></a>（1）几何角度</h3><p>L2正则项约束后的解空间是圆形，L1正则项约束后的解空间是多方形，L1易在角点发生交点，从而产生稀疏解。</p>
+<blockquote>
+<p>绿色等高线代表未施加正则化的代价函数，菱形和圆形分别代表L1和L2正则化约束，L1-ball 与L2-ball的不同就在于L1在和每个坐标轴相交的地方都有“角”出现，而目标函数的”等高线”除非位置摆得非常好，大部分时候都会在角的地方相交。注意到在角的位置就会产生稀疏性。相比之下，L2-ball 就没有这样的性质，因为没有角，所以第一次相交的地方出现在具有稀疏性的位置的概率就变得非常小</p>
+</blockquote>
+<p><img src="..\imgs\L1正则解释.jpg" alt></p>
+<h3 id="（2）公式角度：（拉格朗日求导）"><a href="#（2）公式角度：（拉格朗日求导）" class="headerlink" title="（2）公式角度：（拉格朗日求导）"></a>（2）公式角度：（拉格朗日求导）</h3><blockquote>
+<p>深度学习花书7.1节（202页左右）。带L1正则化的最优参数w=sign(w<em>) max{|w</em>|- a/H , 0}，其中w代表未正则化的目标函数的最优参数，H代表海森矩阵，a是正则化系数，只要a足够大，w就会在更大区间范围内使w变为0，而带L2正则化的最优参数w=H/(H+a)▪w,只要w不为0，w也不为0.</p>
+</blockquote>
+<p><strong>1、稀疏性的约束：</strong></p>
+<p><img src="..\imgs\正则公式1.jpg" alt></p>
+<p>​    L1范数和L0范数可以实现稀疏，L1因具有比L0更好的优化求解特性而被广泛应用。</p>
+<p><strong>2、不好求解，松弛为L1，L2：</strong></p>
+<p><img src="..\imgs\正则公式2.jpg" alt></p>
+<p><strong>3、拉格朗日</strong></p>
+<p><img src="..\imgs\正则公式3.jpg" alt></p>
+<h3 id="（3）贝叶斯先验"><a href="#（3）贝叶斯先验" class="headerlink" title="（3）贝叶斯先验"></a>（3）贝叶斯先验</h3><blockquote>
+<p>L1正则化相当于对模型参数w引入了拉普拉斯先验，L2正则化相当于引入了高斯先验，而拉普拉斯先验使参数为0的可能性更大。</p>
+</blockquote>
+<p><strong>L1正则化可通过假设权重w的先验分布为拉普拉斯分布，由最大后验概率估计导出。</strong></p>
+<p><strong>L2正则化可通过假设权重w的先验分布为高斯分布，由最大后验概率估计导出。</strong></p>
+<p><strong>详细解释：</strong> <a href="https://blog.csdn.net/m0_38045485/article/details/82147817" target="_blank" rel="noopener">https://blog.csdn.net/m0_38045485/article/details/82147817</a></p>
+<p><img src="..\imgs\正则公式4.jpg" alt></p>
 
           
         
@@ -2856,7 +3032,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/正则化/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/过拟合欠拟合/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Lee_yl">
@@ -2875,7 +3051,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/正则化/" itemprop="url">正则化</a></h1>
+                <a class="post-title-link" href="/过拟合欠拟合/" itemprop="url">过拟合</a></h1>
         
 
         <div class="post-meta">
@@ -2921,8 +3097,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/正则化/" itemprop="url" rel="index">
-                    <span itemprop="name">正则化</span>
+                  <a href="/categories/机器学习/过拟合/" itemprop="url" rel="index">
+                    <span itemprop="name">过拟合</span>
                   </a>
                 </span>
 
@@ -2961,56 +3137,11 @@
         
           
             <p>本篇博客仅作为学习,如有侵权必删。</p>
-<h1 id="正则化-惩罚项"><a href="#正则化-惩罚项" class="headerlink" title="正则化/惩罚项"></a>正则化/惩罚项</h1><h2 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h2><blockquote>
-<p> <strong>（1）范数：</strong><img src="..\imgs\范数.jpg" alt></p>
-<p><strong>（2）方差和偏差：</strong></p>
-<p>Error = Bias + Variance</p>
-<ul>
-<li>Error反映的是整个模型的准确度，</li>
-<li>Bias反映的是模型在样本上的输出与真实值之间的误差，即模型本身的精准度，</li>
-<li>Variance反映的是模型每一次输出结果与模型输出期望之间的误差（描述的是样本上训练的模型在测试集上的表现。），即模型的稳定性。</li>
-<li>欠拟合是高bias，过拟合是高variance。</li>
-</ul>
+<h1 id="过拟合"><a href="#过拟合" class="headerlink" title="过拟合"></a>过拟合</h1><h1 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h1><blockquote>
+<p>过拟合：模型对于训练数拟合呈过当的情况，反映到评估指标上，就是模型在训练集上表现很好，测试集和新数据上表现较差。</p>
+<p>欠拟合：模型在训练和和预测时表现都不好的情况。</p>
 </blockquote>
-<blockquote>
-<p><strong>（3）正则化的目的</strong>：减少模型参数大小或者参数数量，缓解过拟合。</p>
-<p>正则化的作用是给模型加一个先验，lasso(l1)认为模型是拉普拉斯分布，ridge(l2)认为是高斯分布，正则项对应参数的协方差，协方差越小，这个模型的variance越小，泛化 能力越强，也就抵抗了过拟合。</p>
-<p><strong>（4）正则化通用形式：</strong></p>
-<p>​        Loss_with_regularization = loss(w,x) + λf(w)</p>
-<ul>
-<li>正则化恒为非负</li>
-<li>f(w)不能为负数，若其为负数，Loss(w,x)+λf(x)本来尽可能想让其变小，那f(x)为负数，f(x)绝对值会越学越大。</li>
-</ul>
-<p><strong>(5) 正则化方法：</strong>L1正则、L2正则、Dropout正则</p>
-</blockquote>
-<h2 id="二、-从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】"><a href="#二、-从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】" class="headerlink" title="二、 从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】"></a>二、 从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】</h2><p><strong>过拟合就是模型在学习训练样本时将噪声异常值也学习得非常好，使得模型参数过多，模型较复杂，给参数加上一个先验约束，可降低过拟合。</strong></p>
-<p> <img src="..\imgs\正则化1.jpg" alt></p>
-<h2 id="三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；"><a href="#三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；" class="headerlink" title="三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；"></a>三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；</h2><p><strong>区别</strong>：L1假设参数服从拉普拉斯分布，L2则符合高斯分布；</p>
-<p>L1范数更容易产生稀疏的权重，L2范数更容易产生分散的权重。</p>
-<p><strong>原因</strong>：（L1稀疏的原因，L2不稀疏的原因）【几何、公式两个角度】</p>
-<p><strong>场景</strong>：具有高维的数据特征时采用L1正则效果好一点。因为L1具有稀疏性。</p>
-<h2 id="四、解释L1范数更容易产生稀疏的权重，L2不的原因："><a href="#四、解释L1范数更容易产生稀疏的权重，L2不的原因：" class="headerlink" title="四、解释L1范数更容易产生稀疏的权重，L2不的原因："></a>四、解释L1范数更容易产生稀疏的权重，L2不的原因：</h2><h3 id="（1）几何角度"><a href="#（1）几何角度" class="headerlink" title="（1）几何角度"></a>（1）几何角度</h3><p>L2正则项约束后的解空间是圆形，L1正则项约束后的解空间是多方形，L1易在角点发生交点，从而产生稀疏解。</p>
-<blockquote>
-<p>绿色等高线代表未施加正则化的代价函数，菱形和圆形分别代表L1和L2正则化约束，L1-ball 与L2-ball的不同就在于L1在和每个坐标轴相交的地方都有“角”出现，而目标函数的”等高线”除非位置摆得非常好，大部分时候都会在角的地方相交。注意到在角的位置就会产生稀疏性。相比之下，L2-ball 就没有这样的性质，因为没有角，所以第一次相交的地方出现在具有稀疏性的位置的概率就变得非常小</p>
-</blockquote>
-<p><img src="..\imgs\L1正则解释.jpg" alt></p>
-<h3 id="（2）公式角度：（拉格朗日求导）"><a href="#（2）公式角度：（拉格朗日求导）" class="headerlink" title="（2）公式角度：（拉格朗日求导）"></a>（2）公式角度：（拉格朗日求导）</h3><blockquote>
-<p>深度学习花书7.1节（202页左右）。带L1正则化的最优参数w=sign(w<em>) max{|w</em>|- a/H , 0}，其中w代表未正则化的目标函数的最优参数，H代表海森矩阵，a是正则化系数，只要a足够大，w就会在更大区间范围内使w变为0，而带L2正则化的最优参数w=H/(H+a)▪w,只要w不为0，w也不为0.</p>
-</blockquote>
-<p><strong>1、稀疏性的约束：</strong></p>
-<p><img src="..\imgs\正则公式1.jpg" alt></p>
-<p>​    L1范数和L0范数可以实现稀疏，L1因具有比L0更好的优化求解特性而被广泛应用。</p>
-<p><strong>2、不好求解，松弛为L1，L2：</strong></p>
-<p><img src="..\imgs\正则公式2.jpg" alt></p>
-<p><strong>3、拉格朗日</strong></p>
-<p><img src="..\imgs\正则公式3.jpg" alt></p>
-<h3 id="（3）贝叶斯先验"><a href="#（3）贝叶斯先验" class="headerlink" title="（3）贝叶斯先验"></a>（3）贝叶斯先验</h3><blockquote>
-<p>L1正则化相当于对模型参数w引入了拉普拉斯先验，L2正则化相当于引入了高斯先验，而拉普拉斯先验使参数为0的可能性更大。</p>
-</blockquote>
-<p><strong>L1正则化可通过假设权重w的先验分布为拉普拉斯分布，由最大后验概率估计导出。</strong></p>
-<p><strong>L2正则化可通过假设权重w的先验分布为高斯分布，由最大后验概率估计导出。</strong></p>
-<p><strong>详细解释：</strong> <a href="https://blog.csdn.net/m0_38045485/article/details/82147817" target="_blank" rel="noopener">https://blog.csdn.net/m0_38045485/article/details/82147817</a></p>
-<p><img src="..\imgs\正则公式4.jpg" alt></p>
+<p><img src="..\imgs\过拟合欠拟合.jpg" alt></p>
 
           
         
@@ -3096,7 +3227,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3107,7 +3238,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">24</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
