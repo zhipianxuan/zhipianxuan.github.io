@@ -294,8 +294,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/大数据/spark/" itemprop="url" rel="index">
-                    <span itemprop="name">spark</span>
+                  <a href="/categories/大数据/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
                   </a>
                 </span>
 
@@ -383,6 +383,22 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a.join(b, a[<span class="string">'id'</span>]==b[<span class="string">'id'</span>]).drop(a.id)</span><br></pre></td></tr></table></figure>
 <p>方法3：在连接前重命名列,采用withColumnRenamed</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = a.withColumnRenamed(<span class="string">'id1'</span>, F.col(<span class="string">'id'</span>))</span><br><span class="line">a.join(b, a.id1=b.id)</span><br></pre></td></tr></table></figure>
+<h1 id="四、Spark如何执行连接"><a href="#四、Spark如何执行连接" class="headerlink" title="四、Spark如何执行连接"></a>四、Spark如何执行连接</h1><p><strong>两个核心模块</strong>：点对点通信模式和逐点计算模式</p>
+<ul>
+<li><p>大表和大表的连接</p>
+<ul>
+<li>shuffle join ：每个节点都与所有其他节点进行通信，并根据哪个节点具有某些键来共享数据。由于网络会因通信量而阻塞，所以这种方式很耗时，特殊是如果数据没有合理分区的情况下。</li>
+</ul>
+</li>
+<li><p>大表与小表连接</p>
+<ul>
+<li><p>broadcast join：当表的大小足够小以便能够放入单个节点内存中且还有空闲空间的时候，可优化join。</p>
+<p>把数据量较小的DataFrame复制到集群中的所有工作节点上，只需在开始时执行一次，然后让每个工作节点独立执行作业，而无需等待其他工作节点，也无需与其他工作节点通信。</p>
+<p><img src="..\imgs\Spark_broadcast.jpg" alt></p>
+</li>
+</ul>
+</li>
+</ul>
 
           
         
@@ -877,8 +893,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/大数据/spark/" itemprop="url" rel="index">
-                    <span itemprop="name">spark</span>
+                  <a href="/categories/大数据/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
                   </a>
                 </span>
 
@@ -1379,8 +1395,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/大数据/spark/" itemprop="url" rel="index">
-                    <span itemprop="name">spark</span>
+                  <a href="/categories/大数据/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
                   </a>
                 </span>
 
@@ -2341,6 +2357,164 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/过拟合欠拟合/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/过拟合欠拟合/" itemprop="url">过拟合</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-26T00:00:00+08:00">
+                2023-02-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/过拟合/" itemprop="url" rel="index">
+                    <span itemprop="name">过拟合</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本篇博客仅作为学习,如有侵权必删。</p>
+<h1 id="过拟合"><a href="#过拟合" class="headerlink" title="过拟合"></a>过拟合</h1><h1 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h1><blockquote>
+<p>过拟合：模型对于训练数拟合呈过当的情况，反映到评估指标上，就是模型在训练集上表现很好，测试集和新数据上表现较差。</p>
+<p>欠拟合：模型在训练和和预测时表现都不好的情况。</p>
+</blockquote>
+<p><img src="..\imgs\过拟合欠拟合.jpg" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/标准化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2453,209 +2627,6 @@
 <p>原因在于神经网络学习过程<strong>本质上是为了学习数据的分布</strong>，一旦训练数据与测试数据的分布不同，那么网络的泛化能力也大大降低；另一方面，一旦在mini-batch梯度下降训练的时候，每批训练数据的分布不相同，那么网络就要在每次迭代的时候去学习以适应不同的分布，这样将会大大降低网络的训练速度，这也正是为什么我们需要对所有训练数据做一个Normalization预处理的原因。</p>
 <h3 id="2、-BN的原理"><a href="#2、-BN的原理" class="headerlink" title="2、 BN的原理"></a>2、 BN的原理</h3><p>BN首先是把所有的样本的统计分布标准化，降低了batch内不同样本的差异性，然后又允许batch内的各个样本有各自的统计分布。</p>
 <p>BN是针对每一批数据，在网络的每一层输入之前增加归一化处理（均值为0，标准差为1），将所有批数据强制在统一的数据分布下，即对该层 的任意一个神经元（假设为第k维）x^(k) 采用如下公式:</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/正则化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lee_yl">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lee_yl's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/正则化/" itemprop="url">正则化</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-26T00:00:00+08:00">
-                2023-02-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/正则化/" itemprop="url" rel="index">
-                    <span itemprop="name">正则化</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本篇博客仅作为学习,如有侵权必删。</p>
-<h1 id="正则化-惩罚项"><a href="#正则化-惩罚项" class="headerlink" title="正则化/惩罚项"></a>正则化/惩罚项</h1><h2 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h2><blockquote>
-<p> <strong>（1）范数：</strong><img src="..\imgs\范数.jpg" alt></p>
-<p><strong>（2）方差和偏差：</strong></p>
-<p>Error = Bias + Variance</p>
-<ul>
-<li>Error反映的是整个模型的准确度，</li>
-<li>Bias反映的是模型在样本上的输出与真实值之间的误差，即模型本身的精准度，</li>
-<li>Variance反映的是模型每一次输出结果与模型输出期望之间的误差（描述的是样本上训练的模型在测试集上的表现。），即模型的稳定性。</li>
-<li>欠拟合是高bias，过拟合是高variance。</li>
-</ul>
-</blockquote>
-<blockquote>
-<p><strong>（3）正则化的目的</strong>：减少模型参数大小或者参数数量，缓解过拟合。</p>
-<p>正则化的作用是给模型加一个先验，lasso(l1)认为模型是拉普拉斯分布，ridge(l2)认为是高斯分布，正则项对应参数的协方差，协方差越小，这个模型的variance越小，泛化 能力越强，也就抵抗了过拟合。</p>
-<p><strong>（4）正则化通用形式：</strong></p>
-<p>​        Loss_with_regularization = loss(w,x) + λf(w)</p>
-<ul>
-<li>正则化恒为非负</li>
-<li>f(w)不能为负数，若其为负数，Loss(w,x)+λf(x)本来尽可能想让其变小，那f(x)为负数，f(x)绝对值会越学越大。</li>
-</ul>
-<p><strong>(5) 正则化方法：</strong>L1正则、L2正则、Dropout正则</p>
-</blockquote>
-<h2 id="二、-从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】"><a href="#二、-从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】" class="headerlink" title="二、 从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】"></a>二、 从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】</h2><p><strong>过拟合就是模型在学习训练样本时将噪声异常值也学习得非常好，使得模型参数过多，模型较复杂，给参数加上一个先验约束，可降低过拟合。</strong></p>
-<p> <img src="..\imgs\正则化1.jpg" alt></p>
-<h2 id="三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；"><a href="#三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；" class="headerlink" title="三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；"></a>三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；</h2><p><strong>区别</strong>：L1假设参数服从拉普拉斯分布，L2则符合高斯分布；</p>
-<p>L1范数更容易产生稀疏的权重，L2范数更容易产生分散的权重。</p>
-<p><strong>原因</strong>：（L1稀疏的原因，L2不稀疏的原因）【几何、公式两个角度】</p>
-<p><strong>场景</strong>：具有高维的数据特征时采用L1正则效果好一点。因为L1具有稀疏性。</p>
-<h2 id="四、解释L1范数更容易产生稀疏的权重，L2不的原因："><a href="#四、解释L1范数更容易产生稀疏的权重，L2不的原因：" class="headerlink" title="四、解释L1范数更容易产生稀疏的权重，L2不的原因："></a>四、解释L1范数更容易产生稀疏的权重，L2不的原因：</h2><h3 id="（1）几何角度"><a href="#（1）几何角度" class="headerlink" title="（1）几何角度"></a>（1）几何角度</h3><p>L2正则项约束后的解空间是圆形，L1正则项约束后的解空间是多方形，L1易在角点发生交点，从而产生稀疏解。</p>
-<blockquote>
-<p>绿色等高线代表未施加正则化的代价函数，菱形和圆形分别代表L1和L2正则化约束，L1-ball 与L2-ball的不同就在于L1在和每个坐标轴相交的地方都有“角”出现，而目标函数的”等高线”除非位置摆得非常好，大部分时候都会在角的地方相交。注意到在角的位置就会产生稀疏性。相比之下，L2-ball 就没有这样的性质，因为没有角，所以第一次相交的地方出现在具有稀疏性的位置的概率就变得非常小</p>
-</blockquote>
-<p><img src="..\imgs\L1正则解释.jpg" alt></p>
-<h3 id="（2）公式角度：（拉格朗日求导）"><a href="#（2）公式角度：（拉格朗日求导）" class="headerlink" title="（2）公式角度：（拉格朗日求导）"></a>（2）公式角度：（拉格朗日求导）</h3><blockquote>
-<p>深度学习花书7.1节（202页左右）。带L1正则化的最优参数w=sign(w<em>) max{|w</em>|- a/H , 0}，其中w代表未正则化的目标函数的最优参数，H代表海森矩阵，a是正则化系数，只要a足够大，w就会在更大区间范围内使w变为0，而带L2正则化的最优参数w=H/(H+a)▪w,只要w不为0，w也不为0.</p>
-</blockquote>
-<p><strong>1、稀疏性的约束：</strong></p>
-<p><img src="..\imgs\正则公式1.jpg" alt></p>
-<p>​    L1范数和L0范数可以实现稀疏，L1因具有比L0更好的优化求解特性而被广泛应用。</p>
-<p><strong>2、不好求解，松弛为L1，L2：</strong></p>
-<p><img src="..\imgs\正则公式2.jpg" alt></p>
-<p><strong>3、拉格朗日</strong></p>
-<p><img src="..\imgs\正则公式3.jpg" alt></p>
-<h3 id="（3）贝叶斯先验"><a href="#（3）贝叶斯先验" class="headerlink" title="（3）贝叶斯先验"></a>（3）贝叶斯先验</h3><blockquote>
-<p>L1正则化相当于对模型参数w引入了拉普拉斯先验，L2正则化相当于引入了高斯先验，而拉普拉斯先验使参数为0的可能性更大。</p>
-</blockquote>
-<p><strong>L1正则化可通过假设权重w的先验分布为拉普拉斯分布，由最大后验概率估计导出。</strong></p>
-<p><strong>L2正则化可通过假设权重w的先验分布为高斯分布，由最大后验概率估计导出。</strong></p>
-<p><strong>详细解释：</strong> <a href="https://blog.csdn.net/m0_38045485/article/details/82147817" target="_blank" rel="noopener">https://blog.csdn.net/m0_38045485/article/details/82147817</a></p>
-<p><img src="..\imgs\正则公式4.jpg" alt></p>
 
           
         
@@ -2885,7 +2856,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/过拟合欠拟合/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/正则化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Lee_yl">
@@ -2904,7 +2875,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/过拟合欠拟合/" itemprop="url">过拟合</a></h1>
+                <a class="post-title-link" href="/正则化/" itemprop="url">正则化</a></h1>
         
 
         <div class="post-meta">
@@ -2950,8 +2921,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/过拟合/" itemprop="url" rel="index">
-                    <span itemprop="name">过拟合</span>
+                  <a href="/categories/机器学习/正则化/" itemprop="url" rel="index">
+                    <span itemprop="name">正则化</span>
                   </a>
                 </span>
 
@@ -2990,11 +2961,56 @@
         
           
             <p>本篇博客仅作为学习,如有侵权必删。</p>
-<h1 id="过拟合"><a href="#过拟合" class="headerlink" title="过拟合"></a>过拟合</h1><h1 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h1><blockquote>
-<p>过拟合：模型对于训练数拟合呈过当的情况，反映到评估指标上，就是模型在训练集上表现很好，测试集和新数据上表现较差。</p>
-<p>欠拟合：模型在训练和和预测时表现都不好的情况。</p>
+<h1 id="正则化-惩罚项"><a href="#正则化-惩罚项" class="headerlink" title="正则化/惩罚项"></a>正则化/惩罚项</h1><h2 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h2><blockquote>
+<p> <strong>（1）范数：</strong><img src="..\imgs\范数.jpg" alt></p>
+<p><strong>（2）方差和偏差：</strong></p>
+<p>Error = Bias + Variance</p>
+<ul>
+<li>Error反映的是整个模型的准确度，</li>
+<li>Bias反映的是模型在样本上的输出与真实值之间的误差，即模型本身的精准度，</li>
+<li>Variance反映的是模型每一次输出结果与模型输出期望之间的误差（描述的是样本上训练的模型在测试集上的表现。），即模型的稳定性。</li>
+<li>欠拟合是高bias，过拟合是高variance。</li>
+</ul>
 </blockquote>
-<p><img src="..\imgs\过拟合欠拟合.jpg" alt></p>
+<blockquote>
+<p><strong>（3）正则化的目的</strong>：减少模型参数大小或者参数数量，缓解过拟合。</p>
+<p>正则化的作用是给模型加一个先验，lasso(l1)认为模型是拉普拉斯分布，ridge(l2)认为是高斯分布，正则项对应参数的协方差，协方差越小，这个模型的variance越小，泛化 能力越强，也就抵抗了过拟合。</p>
+<p><strong>（4）正则化通用形式：</strong></p>
+<p>​        Loss_with_regularization = loss(w,x) + λf(w)</p>
+<ul>
+<li>正则化恒为非负</li>
+<li>f(w)不能为负数，若其为负数，Loss(w,x)+λf(x)本来尽可能想让其变小，那f(x)为负数，f(x)绝对值会越学越大。</li>
+</ul>
+<p><strong>(5) 正则化方法：</strong>L1正则、L2正则、Dropout正则</p>
+</blockquote>
+<h2 id="二、-从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】"><a href="#二、-从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】" class="headerlink" title="二、 从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】"></a>二、 从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】</h2><p><strong>过拟合就是模型在学习训练样本时将噪声异常值也学习得非常好，使得模型参数过多，模型较复杂，给参数加上一个先验约束，可降低过拟合。</strong></p>
+<p> <img src="..\imgs\正则化1.jpg" alt></p>
+<h2 id="三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；"><a href="#三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；" class="headerlink" title="三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；"></a>三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；</h2><p><strong>区别</strong>：L1假设参数服从拉普拉斯分布，L2则符合高斯分布；</p>
+<p>L1范数更容易产生稀疏的权重，L2范数更容易产生分散的权重。</p>
+<p><strong>原因</strong>：（L1稀疏的原因，L2不稀疏的原因）【几何、公式两个角度】</p>
+<p><strong>场景</strong>：具有高维的数据特征时采用L1正则效果好一点。因为L1具有稀疏性。</p>
+<h2 id="四、解释L1范数更容易产生稀疏的权重，L2不的原因："><a href="#四、解释L1范数更容易产生稀疏的权重，L2不的原因：" class="headerlink" title="四、解释L1范数更容易产生稀疏的权重，L2不的原因："></a>四、解释L1范数更容易产生稀疏的权重，L2不的原因：</h2><h3 id="（1）几何角度"><a href="#（1）几何角度" class="headerlink" title="（1）几何角度"></a>（1）几何角度</h3><p>L2正则项约束后的解空间是圆形，L1正则项约束后的解空间是多方形，L1易在角点发生交点，从而产生稀疏解。</p>
+<blockquote>
+<p>绿色等高线代表未施加正则化的代价函数，菱形和圆形分别代表L1和L2正则化约束，L1-ball 与L2-ball的不同就在于L1在和每个坐标轴相交的地方都有“角”出现，而目标函数的”等高线”除非位置摆得非常好，大部分时候都会在角的地方相交。注意到在角的位置就会产生稀疏性。相比之下，L2-ball 就没有这样的性质，因为没有角，所以第一次相交的地方出现在具有稀疏性的位置的概率就变得非常小</p>
+</blockquote>
+<p><img src="..\imgs\L1正则解释.jpg" alt></p>
+<h3 id="（2）公式角度：（拉格朗日求导）"><a href="#（2）公式角度：（拉格朗日求导）" class="headerlink" title="（2）公式角度：（拉格朗日求导）"></a>（2）公式角度：（拉格朗日求导）</h3><blockquote>
+<p>深度学习花书7.1节（202页左右）。带L1正则化的最优参数w=sign(w<em>) max{|w</em>|- a/H , 0}，其中w代表未正则化的目标函数的最优参数，H代表海森矩阵，a是正则化系数，只要a足够大，w就会在更大区间范围内使w变为0，而带L2正则化的最优参数w=H/(H+a)▪w,只要w不为0，w也不为0.</p>
+</blockquote>
+<p><strong>1、稀疏性的约束：</strong></p>
+<p><img src="..\imgs\正则公式1.jpg" alt></p>
+<p>​    L1范数和L0范数可以实现稀疏，L1因具有比L0更好的优化求解特性而被广泛应用。</p>
+<p><strong>2、不好求解，松弛为L1，L2：</strong></p>
+<p><img src="..\imgs\正则公式2.jpg" alt></p>
+<p><strong>3、拉格朗日</strong></p>
+<p><img src="..\imgs\正则公式3.jpg" alt></p>
+<h3 id="（3）贝叶斯先验"><a href="#（3）贝叶斯先验" class="headerlink" title="（3）贝叶斯先验"></a>（3）贝叶斯先验</h3><blockquote>
+<p>L1正则化相当于对模型参数w引入了拉普拉斯先验，L2正则化相当于引入了高斯先验，而拉普拉斯先验使参数为0的可能性更大。</p>
+</blockquote>
+<p><strong>L1正则化可通过假设权重w的先验分布为拉普拉斯分布，由最大后验概率估计导出。</strong></p>
+<p><strong>L2正则化可通过假设权重w的先验分布为高斯分布，由最大后验概率估计导出。</strong></p>
+<p><strong>详细解释：</strong> <a href="https://blog.csdn.net/m0_38045485/article/details/82147817" target="_blank" rel="noopener">https://blog.csdn.net/m0_38045485/article/details/82147817</a></p>
+<p><img src="..\imgs\正则公式4.jpg" alt></p>
 
           
         
