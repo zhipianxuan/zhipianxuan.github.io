@@ -229,6 +229,574 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Spark-聚合操作/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Spark-聚合操作/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-19T18:21:37+08:00">
+                2023-03-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>title: 8. 聚合操作<br>date: 2023-03-19<br>tags:<br>categories: </p>
+<ul>
+<li>大数据</li>
+<li>Spark</li>
+</ul>
+<p>本文仅做学习总结，如有侵权立删</p>
+<p>[TOC]</p>
+<h1 id="一、分组类型"><a href="#一、分组类型" class="headerlink" title="一、分组类型"></a>一、分组类型</h1><p><strong>！！！注意null值，如果不过滤空值，则可能会得到不正确的结果。尤其是grouping set、rollup和cube！</strong></p>
+<ul>
+<li><p>group by：指定一个或多个key和一个或多个聚合函数，对列进行转换操作</p>
+</li>
+<li><p>window：跟group by类似功能， 但能保留当前行</p>
+</li>
+<li>grouping set：SQL中的用法</li>
+<li><p>rollup：跟groupby类似功能，并会针对指定的多个key进行分级分组汇总。</p>
+</li>
+<li><p>cube：跟rollup相同功能。</p>
+</li>
+</ul>
+<h1 id="二、聚合函数"><a href="#二、聚合函数" class="headerlink" title="二、聚合函数"></a>二、聚合函数</h1><ul>
+<li>count：统计个数</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 可用expr表达式来处理聚合函数</span></span><br><span class="line">df.groupBy(<span class="string">"a"</span>).agg(</span><br><span class="line">	count(<span class="string">"aa"</span>).alias(<span class="string">"aa"</span>),</span><br><span class="line">	expr(<span class="string">"count(aa)"</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>countDistinct：去重统计</p>
+</li>
+<li><p>approx_count_distinct：近似统计个数, pyspark.sql.functions.approx_count_distinct(col, rsd=None)</p>
+<ul>
+<li>允许的最大相对标准偏差(默认 = 0.05)。对于 rsd <code>count_distinct()</code> 效率更高</li>
+<li>对于大数据即，某种精度的近似值可以接受，但比countDistinct（）耗时更少，数据越大，效率提升越明显。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>df.agg(approx_count_distinct(df.age).alias(<span class="string">'distinct_ages'</span>)).collect()</span><br><span class="line">[Row(distinct_ages=<span class="number">2</span>)]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>first和last：</p>
+</li>
+<li><p>min和max</p>
+</li>
+<li><p>sum</p>
+</li>
+<li><p>sumDistinct</p>
+</li>
+<li><p>avg</p>
+</li>
+<li><p>variance和stddev：方差和标准差</p>
+<ul>
+<li>var_samp：样本方差</li>
+<li>var_pop：总体方差</li>
+</ul>
+</li>
+<li><p>skewness和kurtosis：偏度和峰度</p>
+</li>
+<li><p>cov和corr：协方差和相关性</p>
+<ul>
+<li>covar_samp：样本协方差</li>
+<li>covar_pop：总体协方差</li>
+</ul>
+</li>
+<li><p>collect_list和collect_set：聚合成一个list或者set</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.agg(F.collect_set(<span class="string">"a"</span>), F.collect_list(<span class="string">"a"</span>))</span><br></pre></td></tr></table></figure>
+<ul>
+<li>用户自定义聚合函数：UDAF：仅在Scala和Java中使用</li>
+</ul>
+<h1 id="三、例子"><a href="#三、例子" class="headerlink" title="三、例子"></a>三、例子</h1><h2 id="创建数据"><a href="#创建数据" class="headerlink" title="创建数据"></a>创建数据</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> functions <span class="keyword">as</span> F</span><br><span class="line">data = [</span><br><span class="line">    (<span class="string">"James"</span>, <span class="string">"Sales"</span>, <span class="number">3000</span>, <span class="string">'2020'</span>),</span><br><span class="line">    (<span class="string">"Michael"</span>, <span class="string">"Sales"</span>, <span class="number">4600</span>, <span class="string">'2020'</span>),</span><br><span class="line">    (<span class="string">"Robert"</span>, <span class="string">"Sales"</span>, <span class="number">4100</span>, <span class="string">'2020'</span>),</span><br><span class="line">    (<span class="string">"Maria"</span>, <span class="string">"Finance"</span>, <span class="number">3000</span>, <span class="string">'2020'</span>),</span><br><span class="line">    (<span class="string">"James"</span>, <span class="string">"Sales"</span>, <span class="number">3000</span>, <span class="string">'2019'</span>),</span><br><span class="line">    (<span class="string">"Scott"</span>, <span class="string">"Finance"</span>, <span class="number">3300</span>, <span class="string">'2020'</span>),</span><br><span class="line">    (<span class="string">"Jen"</span>, <span class="string">"Finance"</span>, <span class="number">3900</span>, <span class="string">'2020'</span>),</span><br><span class="line">    (<span class="string">"Jeff"</span>, <span class="string">"Marketing"</span>, <span class="number">3000</span>, <span class="string">'2020'</span>),</span><br><span class="line">    (<span class="string">"Kumar"</span>, <span class="string">"Marketing"</span>, <span class="number">2000</span>, <span class="string">'2020'</span>),</span><br><span class="line">    (<span class="string">"Saif"</span>, <span class="string">"Sales"</span>, <span class="number">4100</span>, <span class="string">'2020'</span>)</span><br><span class="line">]</span><br><span class="line">schema = [<span class="string">"employee_name"</span>, <span class="string">"department"</span>, <span class="string">"salary"</span>, <span class="string">'year'</span>]</span><br><span class="line">  </span><br><span class="line">df = spark.createDataFrame(data=data, schema=schema)</span><br><span class="line">df.printSchema()</span><br><span class="line">df.show(truncate=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">root</span><br><span class="line"> |-- employee_name: string (nullable = true)</span><br><span class="line"> |-- department: string (nullable = true)</span><br><span class="line"> |-- salary: long (nullable = true)</span><br><span class="line"> |-- year: string (nullable = true)</span><br><span class="line"></span><br><span class="line">+-------------+----------+------+----+</span><br><span class="line">|employee_name|department|salary|year|</span><br><span class="line">+-------------+----------+------+----+</span><br><span class="line">|James        |Sales     |<span class="number">3000</span>  |<span class="number">2020</span>|</span><br><span class="line">|Michael      |Sales     |<span class="number">4600</span>  |<span class="number">2020</span>|</span><br><span class="line">|Robert       |Sales     |<span class="number">4100</span>  |<span class="number">2020</span>|</span><br><span class="line">|Maria        |Finance   |<span class="number">3000</span>  |<span class="number">2020</span>|</span><br><span class="line">|James        |Sales     |<span class="number">3000</span>  |<span class="number">2019</span>|</span><br><span class="line">|Scott        |Finance   |<span class="number">3300</span>  |<span class="number">2020</span>|</span><br><span class="line">|Jen          |Finance   |<span class="number">3900</span>  |<span class="number">2020</span>|</span><br><span class="line">|Jeff         |Marketing |<span class="number">3000</span>  |<span class="number">2020</span>|</span><br><span class="line">|Kumar        |Marketing |<span class="number">2000</span>  |<span class="number">2020</span>|</span><br><span class="line">|Saif         |Sales     |<span class="number">4100</span>  |<span class="number">2020</span>|</span><br><span class="line">+-------------+----------+------+----+</span><br></pre></td></tr></table></figure>
+<h2 id="1、group-by：分组"><a href="#1、group-by：分组" class="headerlink" title="1、group by：分组"></a>1、group by：分组</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 按照department, year计算工资之和。</span></span><br><span class="line">df.groupBy(<span class="string">'department'</span>, <span class="string">'year'</span>).agg(</span><br><span class="line">    F.sum(<span class="string">'salary'</span>).alias(<span class="string">'salary'</span>)</span><br><span class="line">).orderBy(<span class="string">'department'</span>, <span class="string">'year'</span>).show()</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+----------+----+------+</span><br><span class="line">|department|year|salary|</span><br><span class="line">+----------+----+------+</span><br><span class="line">|   Finance|2020| 10200|</span><br><span class="line">| Marketing|2020|  5000|</span><br><span class="line">|     Sales|2019|  3000|</span><br><span class="line">|     Sales|2020| 15800|</span><br><span class="line">+----------+----+------+</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>pivot：透视转换</strong></li>
+</ul>
+<p>使用pivot函数进行透视，透视过程中可以提供第二个参数来明确指定使用哪些数据项<br>注意：pivot只能跟在groupby之后</p>
+<blockquote>
+<p> <strong>利用pivot实现行转列</strong><br>pivot的第一个参数指定原数据列，第二个参数指定要新生成的数据列</p>
+</blockquote>
+<p><img src="..\imgs\Spark_pivot1.jpg" alt></p>
+<p><img src="..\imgs\Spark_pivot.jpg" alt></p>
+<h2 id="2-rollup：分级分组"><a href="#2-rollup：分级分组" class="headerlink" title="2. rollup：分级分组"></a>2. rollup：分级分组</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">- 先按照 `department`、`employee_name`、`year`分组；</span></span><br><span class="line"><span class="string">- 然后按照`department`、`employee_name`分组；</span></span><br><span class="line"><span class="string">- 然后再按照 `department` 分组；</span></span><br><span class="line"><span class="string">- 最后进行全表分组。</span></span><br><span class="line"><span class="string">- 后面接聚合函数，此处使用的是`sum`。</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line">df.rollup(<span class="string">'department'</span>, <span class="string">'employee_name'</span>, <span class="string">'year'</span>).agg(</span><br><span class="line">    F.sum(<span class="string">'salary'</span>).alias(<span class="string">'salary'</span>)</span><br><span class="line">).orderBy(<span class="string">'department'</span>, <span class="string">'employee_name'</span>, <span class="string">'year'</span>).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+----------+-------------+----+------+</span><br><span class="line">|department|employee_name|year|salary|</span><br><span class="line">+----------+-------------+----+------+</span><br><span class="line">|      null|         null|null| <span class="number">34000</span>|</span><br><span class="line">|   Finance|         null|null| <span class="number">10200</span>|</span><br><span class="line">|   Finance|          Jen|null|  <span class="number">3900</span>|</span><br><span class="line">|   Finance|          Jen|<span class="number">2020</span>|  <span class="number">3900</span>|</span><br><span class="line">|   Finance|        Maria|null|  <span class="number">3000</span>|</span><br><span class="line">|   Finance|        Maria|<span class="number">2020</span>|  <span class="number">3000</span>|</span><br><span class="line">|   Finance|        Scott|null|  <span class="number">3300</span>|</span><br><span class="line">|   Finance|        Scott|<span class="number">2020</span>|  <span class="number">3300</span>|</span><br><span class="line">| Marketing|         null|null|  <span class="number">5000</span>|</span><br><span class="line">| Marketing|         Jeff|null|  <span class="number">3000</span>|</span><br><span class="line">| Marketing|         Jeff|<span class="number">2020</span>|  <span class="number">3000</span>|</span><br><span class="line">| Marketing|        Kumar|null|  <span class="number">2000</span>|</span><br><span class="line">| Marketing|        Kumar|<span class="number">2020</span>|  <span class="number">2000</span>|</span><br><span class="line">|     Sales|         null|null| <span class="number">18800</span>|</span><br><span class="line">|     Sales|        James|null|  <span class="number">6000</span>|</span><br><span class="line">|     Sales|        James|<span class="number">2019</span>|  <span class="number">3000</span>|</span><br><span class="line">|     Sales|        James|<span class="number">2020</span>|  <span class="number">3000</span>|</span><br><span class="line">|     Sales|      Michael|null|  <span class="number">4600</span>|</span><br><span class="line">|     Sales|      Michael|<span class="number">2020</span>|  <span class="number">4600</span>|</span><br><span class="line">|     Sales|       Robert|null|  <span class="number">4100</span>|</span><br><span class="line">+----------+-------------+----+------+</span><br><span class="line">only showing top <span class="number">20</span> rows</span><br></pre></td></tr></table></figure>
+<h2 id="3-cube：分级分组，比rollup组合的维度更全。"><a href="#3-cube：分级分组，比rollup组合的维度更全。" class="headerlink" title="3. cube：分级分组，比rollup组合的维度更全。"></a>3. <code>cube</code>：分级分组，比rollup组合的维度更全。</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">1. cube` 先按照`department、employee_name、year`分组；</span></span><br><span class="line"><span class="string">2. 然后按照`(department, employee_name)`、`(department, year)`、`(year, employee_name)`分组；</span></span><br><span class="line"><span class="string">3. 然后按照`department`、`employee_name`、`year`分别分组；</span></span><br><span class="line"><span class="string">4. 最后进行全表分组。</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line">df.cube(<span class="string">'department'</span>, <span class="string">'employee_name'</span>, <span class="string">'year'</span>).agg(</span><br><span class="line">    F.sum(<span class="string">'salary'</span>).alias(<span class="string">'salary'</span>)</span><br><span class="line">).orderBy(<span class="string">'department'</span>, <span class="string">'employee_name'</span>, <span class="string">'year'</span>).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+----------+-------------+----+------+</span><br><span class="line">|department|employee_name|year|salary|</span><br><span class="line">+----------+-------------+----+------+</span><br><span class="line">|      null|         null|null| <span class="number">34000</span>|</span><br><span class="line">|      null|         null|<span class="number">2019</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|         null|<span class="number">2020</span>| <span class="number">31000</span>|</span><br><span class="line">|      null|        James|null|  <span class="number">6000</span>|</span><br><span class="line">|      null|        James|<span class="number">2019</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|        James|<span class="number">2020</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|         Jeff|null|  <span class="number">3000</span>|</span><br><span class="line">|      null|         Jeff|<span class="number">2020</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|          Jen|null|  <span class="number">3900</span>|</span><br><span class="line">|      null|          Jen|<span class="number">2020</span>|  <span class="number">3900</span>|</span><br><span class="line">|      null|        Kumar|null|  <span class="number">2000</span>|</span><br><span class="line">|      null|        Kumar|<span class="number">2020</span>|  <span class="number">2000</span>|</span><br><span class="line">|      null|        Maria|null|  <span class="number">3000</span>|</span><br><span class="line">|      null|        Maria|<span class="number">2020</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|      Michael|null|  <span class="number">4600</span>|</span><br><span class="line">|      null|      Michael|<span class="number">2020</span>|  <span class="number">4600</span>|</span><br><span class="line">|      null|       Robert|null|  <span class="number">4100</span>|</span><br><span class="line">|      null|       Robert|<span class="number">2020</span>|  <span class="number">4100</span>|</span><br><span class="line">|      null|         Saif|null|  <span class="number">4100</span>|</span><br><span class="line">|      null|         Saif|<span class="number">2020</span>|  <span class="number">4100</span>|</span><br><span class="line">+----------+-------------+----+------+</span><br><span class="line">only showing top <span class="number">20</span> rows</span><br></pre></td></tr></table></figure>
+<h3 id="3-1-grouping"><a href="#3-1-grouping" class="headerlink" title="3.1 grouping"></a>3.1 <code>grouping</code></h3><p>指示 <code>GROUP BY</code> 列表中的指定列是否聚合，在结果集中返回 1 表示聚合或 0 表示未聚合。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">df.cube(<span class="string">"department"</span>).agg(</span><br><span class="line">    F.grouping(<span class="string">"department"</span>).alias(<span class="string">'department'</span>), </span><br><span class="line">    F.sum(<span class="string">"salary"</span>).alias(<span class="string">'salary'</span>)</span><br><span class="line">).orderBy(<span class="string">"salary"</span>).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+----------+----------+------+</span><br><span class="line">|department|department|salary|</span><br><span class="line">+----------+----------+------+</span><br><span class="line">| Marketing|         <span class="number">0</span>|  <span class="number">5000</span>|</span><br><span class="line">|   Finance|         <span class="number">0</span>| <span class="number">10200</span>|</span><br><span class="line">|     Sales|         <span class="number">0</span>| <span class="number">18800</span>|</span><br><span class="line">|      null|         <span class="number">1</span>| <span class="number">34000</span>|</span><br><span class="line">+----------+----------+------+</span><br></pre></td></tr></table></figure>
+<h3 id="3-2-grouping-id-帮助轻松找到自己想要的信息。"><a href="#3-2-grouping-id-帮助轻松找到自己想要的信息。" class="headerlink" title="3.2 grouping_id: 帮助轻松找到自己想要的信息。"></a>3.2 <code>grouping_id</code>: 帮助轻松找到自己想要的信息。</h3><p>返回分组级别</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">df.cube(<span class="string">'department'</span>, <span class="string">'employee_name'</span>, <span class="string">'year'</span>).agg(</span><br><span class="line">    F.grouping_id().alias(<span class="string">'group_level'</span>), </span><br><span class="line">    F.sum(<span class="string">'salary'</span>).alias(<span class="string">'salary'</span>)</span><br><span class="line">).orderBy(F.desc(<span class="string">'group_level'</span>)).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+----------+-------------+----+-----------+------+</span><br><span class="line">|department|employee_name|year|group_level|salary|</span><br><span class="line">+----------+-------------+----+-----------+------+</span><br><span class="line">|      null|         null|null|          <span class="number">7</span>| <span class="number">34000</span>|</span><br><span class="line">|      null|         null|<span class="number">2020</span>|          <span class="number">6</span>| <span class="number">31000</span>|</span><br><span class="line">|      null|         null|<span class="number">2019</span>|          <span class="number">6</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|         Jeff|null|          <span class="number">5</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|      Michael|null|          <span class="number">5</span>|  <span class="number">4600</span>|</span><br><span class="line">|      null|        James|null|          <span class="number">5</span>|  <span class="number">6000</span>|</span><br><span class="line">|      null|        Kumar|null|          <span class="number">5</span>|  <span class="number">2000</span>|</span><br><span class="line">|      null|        Maria|null|          <span class="number">5</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|         Saif|null|          <span class="number">5</span>|  <span class="number">4100</span>|</span><br><span class="line">|      null|       Robert|null|          <span class="number">5</span>|  <span class="number">4100</span>|</span><br><span class="line">|      null|        Scott|null|          <span class="number">5</span>|  <span class="number">3300</span>|</span><br><span class="line">|      null|          Jen|null|          <span class="number">5</span>|  <span class="number">3900</span>|</span><br><span class="line">|      null|      Michael|<span class="number">2020</span>|          <span class="number">4</span>|  <span class="number">4600</span>|</span><br><span class="line">|      null|       Robert|<span class="number">2020</span>|          <span class="number">4</span>|  <span class="number">4100</span>|</span><br><span class="line">|      null|        Kumar|<span class="number">2020</span>|          <span class="number">4</span>|  <span class="number">2000</span>|</span><br><span class="line">|      null|        James|<span class="number">2019</span>|          <span class="number">4</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|         Saif|<span class="number">2020</span>|          <span class="number">4</span>|  <span class="number">4100</span>|</span><br><span class="line">|      null|        James|<span class="number">2020</span>|          <span class="number">4</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|        Maria|<span class="number">2020</span>|          <span class="number">4</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|        Scott|<span class="number">2020</span>|          <span class="number">4</span>|  <span class="number">3300</span>|</span><br><span class="line">+----------+-------------+----+-----------+------+</span><br><span class="line">only showing top <span class="number">20</span> rows</span><br></pre></td></tr></table></figure>
+<h2 id="4、grouping-set：分组集，跨多个组的聚合操作，仅SQL"><a href="#4、grouping-set：分组集，跨多个组的聚合操作，仅SQL" class="headerlink" title="4、grouping set：分组集，跨多个组的聚合操作，仅SQL"></a>4、grouping set：分组集，跨多个组的聚合操作，仅SQL</h2><p>希望获得所有用户的各种股票的数量</p>
+<p>sql: </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> CustomerId, stockCode, <span class="keyword">sum</span>(Quantity) <span class="keyword">FROM</span> dfNoNull</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> CustomerId, stockCode</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> CustomerId <span class="keyword">DESC</span>, stockCode <span class="keyword">DESC</span></span><br></pre></td></tr></table></figure>
+<p>grouping set也可以实现完全相同的操作：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> CustomerId, stockCode, <span class="keyword">sum</span>(Quantity) <span class="keyword">FROM</span> dfNoNull</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> CustomerId, stockCode </span><br><span class="line"><span class="keyword">GROUPING</span> <span class="keyword">SETS</span> ((CustomerId, stockCode))</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> CustomerId <span class="keyword">DESC</span>, stockCode <span class="keyword">DESC</span></span><br></pre></td></tr></table></figure>
+<p>如果想不区分客户和股票来统计股票总数</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> CustomerId, stockCode, <span class="keyword">sum</span>(Quantity) <span class="keyword">FROM</span> dfNoNull</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> CustomerId, stockCode </span><br><span class="line"><span class="keyword">GROUPING</span> <span class="keyword">SETS</span> ((CustomerId, stockCode), ())</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> CustomerId <span class="keyword">DESC</span>, stockCode <span class="keyword">DESC</span></span><br></pre></td></tr></table></figure>
+<h1 id="四、窗口函数"><a href="#四、窗口函数" class="headerlink" title="四、窗口函数"></a>四、窗口函数</h1><h2 id="1-概念："><a href="#1-概念：" class="headerlink" title="1. 概念："></a>1. 概念：</h2><blockquote>
+<p> 能返回整个dataframe，也能进行聚合运算。</p>
+</blockquote>
+<blockquote>
+<p> 对于一个数据集，</p>
+<ul>
+<li><p><code>map</code> 是对每行进行操作，为每行得到一个结果；</p>
+</li>
+<li><p><code>reduce</code> 则是对多行进行操作，得到一个结果；</p>
+</li>
+<li><p><code>window</code> 函数则是对多行进行操作，得到多个结果（每行一个）。</p>
+</li>
+</ul>
+<p>窗口函数使用时由“窗口函数”和over从句组成；</p>
+<p>其中，over从句分为三部分：</p>
+<ul>
+<li>分组（partition by）、</li>
+<li>排序（order by）、</li>
+<li>frame选取（rangeBetween 和 rowsBetween）。</li>
+</ul>
+</blockquote>
+<p>Window函数分类为三种：</p>
+<ul>
+<li>排名函数 <code>ranking functions</code>包括:<ul>
+<li>row_number()</li>
+<li>rank()</li>
+<li>dense_rank()</li>
+<li>percent_rank()</li>
+<li>ntile()</li>
+</ul>
+</li>
+<li>解析函数 <code>analytic functions</code>包括:<ul>
+<li>cume_dist()</li>
+<li>lag()</li>
+<li>lead()</li>
+</ul>
+</li>
+<li>聚合函数 <code>aggregate functions</code>包括:<ul>
+<li>sum()</li>
+<li>first()</li>
+<li>last()</li>
+<li>max()</li>
+<li>min()</li>
+<li>mean()</li>
+<li>stddev()</li>
+</ul>
+</li>
+</ul>
+<p>例子：找到每年当中最冷那一天的温度 /  最冷那一天的日期。</p>
+<ul>
+<li>窗口函数的过程</li>
+</ul>
+<ol>
+<li>根据某个条件对数据进行分组，PartitionBy</li>
+<li>根据需求计算聚合函数</li>
+<li>将计算结果Join回一个大dataframe</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.window <span class="keyword">import</span> Window</span><br><span class="line">each_year = Window.partitionBy(<span class="string">"year"</span>)</span><br><span class="line">gsod.withColumn(<span class="string">'min_temp'</span>,F.min(<span class="string">"temp"</span>).over(each_year))\</span><br><span class="line">.where(<span class="string">"temp=min_temp"</span>)\</span><br><span class="line">.select(<span class="string">"year"</span>, <span class="string">"month"</span>, <span class="string">"day"</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="2-三种函数的例子"><a href="#2-三种函数的例子" class="headerlink" title="2.三种函数的例子"></a>2.三种函数的例子</h2><h3 id="（1）创建一个-PySpark-DataFrame"><a href="#（1）创建一个-PySpark-DataFrame" class="headerlink" title="（1）创建一个 PySpark DataFrame"></a>（1）创建一个 PySpark DataFrame</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.window <span class="keyword">import</span> Window</span><br><span class="line"><span class="keyword">import</span> pyspark.sql.functions <span class="keyword">as</span> F</span><br><span class="line">employee_salary = [</span><br><span class="line">    (<span class="string">"Ali"</span>, <span class="string">"Sales"</span>, <span class="number">8000</span>),</span><br><span class="line">    (<span class="string">"Bob"</span>, <span class="string">"Sales"</span>, <span class="number">7000</span>),</span><br><span class="line">    (<span class="string">"Cindy"</span>, <span class="string">"Sales"</span>, <span class="number">7500</span>),</span><br><span class="line">    (<span class="string">"Davd"</span>, <span class="string">"Finance"</span>, <span class="number">10000</span>),</span><br><span class="line">    (<span class="string">"Elena"</span>, <span class="string">"Sales"</span>, <span class="number">8000</span>),</span><br><span class="line">    (<span class="string">"Fancy"</span>, <span class="string">"Finance"</span>, <span class="number">12000</span>),</span><br><span class="line">    (<span class="string">"George"</span>, <span class="string">"Finance"</span>, <span class="number">11000</span>),</span><br><span class="line">    (<span class="string">"Haffman"</span>, <span class="string">"Marketing"</span>, <span class="number">7000</span>),</span><br><span class="line">    (<span class="string">"Ilaja"</span>, <span class="string">"Marketing"</span>, <span class="number">8000</span>),</span><br><span class="line">    (<span class="string">"Joey"</span>, <span class="string">"Sales"</span>, <span class="number">9000</span>)]</span><br><span class="line"> </span><br><span class="line">columns= [<span class="string">"name"</span>, <span class="string">"department"</span>, <span class="string">"salary"</span>]</span><br><span class="line">df = spark.createDataFrame(data = employee_salary, schema = columns)</span><br><span class="line">df.show(truncate=<span class="literal">False</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+-------+----------+------+</span><br><span class="line">|name   |department|salary|</span><br><span class="line">+-------+----------+------+</span><br><span class="line">|Ali    |Sales     |<span class="number">8000</span>  |</span><br><span class="line">|Bob    |Sales     |<span class="number">7000</span>  |</span><br><span class="line">|Cindy  |Sales     |<span class="number">7500</span>  |</span><br><span class="line">|Davd   |Finance   |<span class="number">10000</span> |</span><br><span class="line">|Elena  |Sales     |<span class="number">8000</span>  |</span><br><span class="line">|Fancy  |Finance   |<span class="number">12000</span> |</span><br><span class="line">|George |Finance   |<span class="number">11000</span> |</span><br><span class="line">|Haffman|Marketing |<span class="number">7000</span>  |</span><br><span class="line">|Ilaja  |Marketing |<span class="number">8000</span>  |</span><br><span class="line">|Joey   |Sales     |<span class="number">9000</span>  |</span><br><span class="line">+-------+----------+------+</span><br></pre></td></tr></table></figure>
+<h3 id="（2）排名函数-ranking-functions"><a href="#（2）排名函数-ranking-functions" class="headerlink" title="（2）排名函数 ranking functions"></a>（2）排名函数 <code>ranking functions</code></h3><h4 id="2-1-row-number"><a href="#2-1-row-number" class="headerlink" title="2.1 row_number()"></a>2.1 <code>row_number()</code></h4><p><code>row_number()</code> 窗口函数用于给出从1开始到每个窗口分区的结果的连续行号。 与 <code>groupBy</code> 不同 <code>Window</code> 以 <code>partitionBy</code> 作为分组条件，<code>orderBy</code> 对 <code>Window</code> 分组内的数据进行排序。</p>
+<p><strong>同分数不并列。</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 以 department 字段进行分组，以 salary 倒序排序</span></span><br><span class="line"><span class="comment"># 按照部门对薪水排名，薪水最低的为第一名</span></span><br><span class="line">windowSpec = Window.partitionBy(<span class="string">"department"</span>).orderBy(F.asc(<span class="string">"salary"</span>))</span><br><span class="line"><span class="comment"># 分组内增加 row_number</span></span><br><span class="line">df_part = df.withColumn(</span><br><span class="line">    <span class="string">"row_number"</span>, </span><br><span class="line">    F.row_number().over(windowSpec)</span><br><span class="line">)</span><br><span class="line">print(df_part.toPandas().to_markdown())</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">|    | name    | department   |   salary |   row_number |</span><br><span class="line">|---:|:--------|:-------------|---------:|-------------:|</span><br><span class="line">|  <span class="number">0</span> | Bob     | Sales        |     <span class="number">7000</span> |            <span class="number">1</span> |</span><br><span class="line">|  <span class="number">1</span> | Cindy   | Sales        |     <span class="number">7500</span> |            <span class="number">2</span> |</span><br><span class="line">|  <span class="number">2</span> | Ali     | Sales        |     <span class="number">8000</span> |            <span class="number">3</span> |</span><br><span class="line">|  <span class="number">3</span> | Elena   | Sales        |     <span class="number">8000</span> |            <span class="number">4</span> |</span><br><span class="line">|  <span class="number">4</span> | Joey    | Sales        |     <span class="number">9000</span> |            <span class="number">5</span> |</span><br><span class="line">|  <span class="number">5</span> | Davd    | Finance      |    <span class="number">10000</span> |            <span class="number">1</span> |</span><br><span class="line">|  <span class="number">6</span> | George  | Finance      |    <span class="number">11000</span> |            <span class="number">2</span> |</span><br><span class="line">|  <span class="number">7</span> | Fancy   | Finance      |    <span class="number">12000</span> |            <span class="number">3</span> |</span><br><span class="line">|  <span class="number">8</span> | Haffman | Marketing    |     <span class="number">7000</span> |            <span class="number">1</span> |</span><br><span class="line">|  <span class="number">9</span> | Ilaja   | Marketing    |     <span class="number">8000</span> |            <span class="number">2</span> |</span><br></pre></td></tr></table></figure>
+<p>观察上面的数据，发现同样的薪水会有不同的排名（都是8000的薪水，有的第二有的第三），这是因为<code>row_number()</code>是按照行来给定序号，其不关注实际数值的大小。由此我们可以引申出另一个用于给出排序数的函数rank。</p>
+<h5 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h5><ul>
+<li>选取本部门工资收入第N高的记录</li>
+<li>（思考）选取某日第N笔交易记录</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">print(df_part.where(F.col(<span class="string">'row_number'</span>) == <span class="number">2</span>).toPandas().to_markdown())</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">|    | name   | department   |   salary |   row_number |</span><br><span class="line">|---:|:-------|:-------------|---------:|-------------:|</span><br><span class="line">|  <span class="number">0</span> | Cindy  | Sales        |     <span class="number">7500</span> |            <span class="number">2</span> |</span><br><span class="line">|  <span class="number">1</span> | George | Finance      |    <span class="number">11000</span> |            <span class="number">2</span> |</span><br><span class="line">|  <span class="number">2</span> | Ilaja  | Marketing    |     <span class="number">8000</span> |            <span class="number">2</span> |</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-rank"><a href="#2-2-rank" class="headerlink" title="2.2 rank()"></a>2.2 <code>rank()</code></h4><p><strong>同分数并列。下一个顺延。</strong></p>
+<p><code>rank()</code>用来给按照指定列排序的分组窗增加一个排序的序号，</p>
+<p>如果有相同数值，则排序数相同，下一个序数顺延一位。来看如下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 rank 排序，都是8000的薪水，就同列第二</span></span><br><span class="line">windowSpec = Window.partitionBy(<span class="string">"department"</span>).orderBy(F.desc(<span class="string">"salary"</span>))</span><br><span class="line">df_rank = df.withColumn(<span class="string">"rank"</span>, F.rank().over(windowSpec))</span><br><span class="line">print(df_rank.toPandas().to_markdown())</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">|    | name    | department   |   salary |   rank |</span><br><span class="line">|---:|:--------|:-------------|---------:|-------:|</span><br><span class="line">|  <span class="number">0</span> | Joey    | Sales        |     <span class="number">9000</span> |      <span class="number">1</span> |</span><br><span class="line">|  <span class="number">1</span> | Ali     | Sales        |     <span class="number">8000</span> |      <span class="number">2</span> |</span><br><span class="line">|  <span class="number">2</span> | Elena   | Sales        |     <span class="number">8000</span> |      <span class="number">2</span> |</span><br><span class="line">|  <span class="number">3</span> | Cindy   | Sales        |     <span class="number">7500</span> |      <span class="number">4</span> |</span><br><span class="line">|  <span class="number">4</span> | Bob     | Sales        |     <span class="number">7000</span> |      <span class="number">5</span> |</span><br><span class="line">|  <span class="number">5</span> | Fancy   | Finance      |    <span class="number">12000</span> |      <span class="number">1</span> |</span><br><span class="line">|  <span class="number">6</span> | George  | Finance      |    <span class="number">11000</span> |      <span class="number">2</span> |</span><br><span class="line">|  <span class="number">7</span> | Davd    | Finance      |    <span class="number">10000</span> |      <span class="number">3</span> |</span><br><span class="line">|  <span class="number">8</span> | Ilaja   | Marketing    |     <span class="number">8000</span> |      <span class="number">1</span> |</span><br><span class="line">|  <span class="number">9</span> | Haffman | Marketing    |     <span class="number">7000</span> |      <span class="number">2</span> |</span><br><span class="line">print(df_rank.where(F.col(<span class="string">"rank"</span>)==<span class="string">"2"</span>).toPandas().to_markdown())</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">|    | name    | department   |   salary |   rank |</span><br><span class="line">|---:|:--------|:-------------|---------:|-------:|</span><br><span class="line">|  <span class="number">0</span> | Ali     | Sales        |     <span class="number">8000</span> |      <span class="number">2</span> |</span><br><span class="line">|  <span class="number">1</span> | Elena   | Sales        |     <span class="number">8000</span> |      <span class="number">2</span> |</span><br><span class="line">|  <span class="number">2</span> | George  | Finance      |    <span class="number">11000</span> |      <span class="number">2</span> |</span><br><span class="line">|  <span class="number">3</span> | Haffman | Marketing    |     <span class="number">7000</span> |      <span class="number">2</span> |</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">window = Window.partitionBy([<span class="string">'a'</span>]).orderBy([<span class="string">'a'</span>])</span><br><span class="line">df.withColumn(<span class="string">'rank'</span>,F.rank().over(window)).filter(<span class="string">"rank = '1'"</span>).drop(<span class="string">'rank'</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="2-3-dense-rank"><a href="#2-3-dense-rank" class="headerlink" title="2.3 dense_rank"></a>2.3 <code>dense_rank</code></h4><p>观察 <code>dense_rank</code> 与 <code>rank</code> 的区别。</p>
+<p><strong>同分数并列且下一个不顺延。</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注意 rank 排序，8000虽然为同列第二，但7500属于第4名</span></span><br><span class="line"><span class="comment"># dense_rank()中， 8000同列第二后，7500属于第3名</span></span><br><span class="line">windowSpec  = Window.partitionBy(<span class="string">"department"</span>).orderBy(F.desc(<span class="string">"salary"</span>))</span><br><span class="line">df.withColumn(<span class="string">"dense_rank"</span>, F.dense_rank().over(windowSpec)).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+-------+----------+------+----------+</span><br><span class="line">|   name|department|salary|dense_rank|</span><br><span class="line">+-------+----------+------+----------+</span><br><span class="line">|   Joey|     Sales|  <span class="number">9000</span>|         <span class="number">1</span>|</span><br><span class="line">|    Ali|     Sales|  <span class="number">8000</span>|         <span class="number">2</span>|</span><br><span class="line">|  Elena|     Sales|  <span class="number">8000</span>|         <span class="number">2</span>|</span><br><span class="line">|  Cindy|     Sales|  <span class="number">7500</span>|         <span class="number">3</span>|</span><br><span class="line">|    Bob|     Sales|  <span class="number">7000</span>|         <span class="number">4</span>|</span><br><span class="line">|  Fancy|   Finance| <span class="number">12000</span>|         <span class="number">1</span>|</span><br><span class="line">| George|   Finance| <span class="number">11000</span>|         <span class="number">2</span>|</span><br><span class="line">|   Davd|   Finance| <span class="number">10000</span>|         <span class="number">3</span>|</span><br><span class="line">|  Ilaja| Marketing|  <span class="number">8000</span>|         <span class="number">1</span>|</span><br><span class="line">|Haffman| Marketing|  <span class="number">7000</span>|         <span class="number">2</span>|</span><br><span class="line">+-------+----------+------+----------+</span><br></pre></td></tr></table></figure>
+<h4 id="2-4-percent-rank-：百分比排序。（将-dense-rank-的结果进行归一化）"><a href="#2-4-percent-rank-：百分比排序。（将-dense-rank-的结果进行归一化）" class="headerlink" title="2.4 percent_rank()：百分比排序。（将 dense_rank() 的结果进行归一化）"></a>2.4 percent_rank()：百分比排序。（将 <code>dense_rank()</code> 的结果进行归一化）</h4><p>一些业务场景下，我们需要计算不同数值的百分比排序数据，先来看一个例子吧。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">windowSpec  = Window.partitionBy(<span class="string">"department"</span>).orderBy(F.desc(<span class="string">"salary"</span>))</span><br><span class="line">df.withColumn(<span class="string">"percent_rank"</span>,F.percent_rank().over(windowSpec)).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+-------+----------+------+------------+</span><br><span class="line">|   name|department|salary|percent_rank|</span><br><span class="line">+-------+----------+------+------------+</span><br><span class="line">|   Joey|     Sales|  <span class="number">9000</span>|         <span class="number">0.0</span>|</span><br><span class="line">|    Ali|     Sales|  <span class="number">8000</span>|        <span class="number">0.25</span>|</span><br><span class="line">|  Elena|     Sales|  <span class="number">8000</span>|        <span class="number">0.25</span>|</span><br><span class="line">|  Cindy|     Sales|  <span class="number">7500</span>|        <span class="number">0.75</span>|</span><br><span class="line">|    Bob|     Sales|  <span class="number">7000</span>|         <span class="number">1.0</span>|</span><br><span class="line">|  Fancy|   Finance| <span class="number">12000</span>|         <span class="number">0.0</span>|</span><br><span class="line">| George|   Finance| <span class="number">11000</span>|         <span class="number">0.5</span>|</span><br><span class="line">|   Davd|   Finance| <span class="number">10000</span>|         <span class="number">1.0</span>|</span><br><span class="line">|  Ilaja| Marketing|  <span class="number">8000</span>|         <span class="number">0.0</span>|</span><br><span class="line">|Haffman| Marketing|  <span class="number">7000</span>|         <span class="number">1.0</span>|</span><br><span class="line">+-------+----------+------+------------+</span><br></pre></td></tr></table></figure>
+<p>上述结果可以理解为将 <code>dense_rank()</code> 的结果进行归一化， 即可得到<code>0-1</code>以内的百分数。<code>percent_rank()</code> 与 <code>SQL</code> 中的 <code>PERCENT_RANK</code> 函数效果一致。</p>
+<h4 id="2-5-ntile-：分组切分n均等数据。"><a href="#2-5-ntile-：分组切分n均等数据。" class="headerlink" title="2.5 ntile()：分组切分n均等数据。"></a>2.5 <code>ntile()</code>：分组切分n均等数据。</h4><p><code>ntile()</code>可将分组的数据按照指定数值<code>n</code>切分为<code>n</code>个部分， 每一部分按照行的先后给定相同的序数。例如n指定为2，则将组内数据分为两个部分， 第一部分序号为1，第二部分序号为2。理论上两部分数据行数是均等的， 但当数据为奇数行时，中间的那一行归到前一部分。</p>
+<p>按照部门对数据进行分组，然后在组内按照薪水高低进行排序， 再使用 <code>ntile()</code> 将组内数据切分为两个部分。结果如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 按照部门对数据进行分组，然后在组内按照薪水高低进行排序 </span></span><br><span class="line">windowSpec = Window.partitionBy(</span><br><span class="line">    <span class="string">"department"</span>).orderBy(F.desc(<span class="string">"salary"</span>))</span><br><span class="line"><span class="comment"># 使用ntile() 将组内数据切分为两个部分</span></span><br><span class="line">df.withColumn(<span class="string">"ntile"</span>, F.ntile(<span class="number">2</span>).over(windowSpec)).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+-------+----------+------+-----+</span><br><span class="line">|   name|department|salary|ntile|</span><br><span class="line">+-------+----------+------+-----+</span><br><span class="line">|   Joey|     Sales|  <span class="number">9000</span>|    <span class="number">1</span>|</span><br><span class="line">|    Ali|     Sales|  <span class="number">8000</span>|    <span class="number">1</span>|</span><br><span class="line">|  Elena|     Sales|  <span class="number">8000</span>|    <span class="number">1</span>|</span><br><span class="line">|  Cindy|     Sales|  <span class="number">7500</span>|    <span class="number">2</span>|</span><br><span class="line">|    Bob|     Sales|  <span class="number">7000</span>|    <span class="number">2</span>|</span><br><span class="line">|  Fancy|   Finance| <span class="number">12000</span>|    <span class="number">1</span>|</span><br><span class="line">| George|   Finance| <span class="number">11000</span>|    <span class="number">1</span>|</span><br><span class="line">|   Davd|   Finance| <span class="number">10000</span>|    <span class="number">2</span>|</span><br><span class="line">|  Ilaja| Marketing|  <span class="number">8000</span>|    <span class="number">1</span>|</span><br><span class="line">|Haffman| Marketing|  <span class="number">7000</span>|    <span class="number">2</span>|</span><br><span class="line">+-------+----------+------+-----+</span><br></pre></td></tr></table></figure>
+<h3 id="（3）-Analytic-functions"><a href="#（3）-Analytic-functions" class="headerlink" title="（3）. Analytic functions"></a>（3）. Analytic functions</h3><h4 id="3-1-cume-dist-：（将-rank-的结果进行归一化），和percent-rank很像。"><a href="#3-1-cume-dist-：（将-rank-的结果进行归一化），和percent-rank很像。" class="headerlink" title="3.1 cume_dist()：（将 rank() 的结果进行归一化），和percent_rank很像。"></a>3.1 <code>cume_dist()</code>：（将 <code>rank()</code> 的结果进行归一化），和percent_rank很像。</h4><p><code>cume_dist()</code>函数用来获取数值的累进分布值，看如下例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">windowSpec = Window.partitionBy(<span class="string">"department"</span>).orderBy(F.desc(<span class="string">"salary"</span>))</span><br><span class="line">df.withColumn(</span><br><span class="line">    <span class="string">"cume_dist"</span>, F.cume_dist().over(windowSpec)).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+-------+----------+------+------------------+</span><br><span class="line">|   name|department|salary|         cume_dist|</span><br><span class="line">+-------+----------+------+------------------+</span><br><span class="line">|   Joey|     Sales|  <span class="number">9000</span>|               <span class="number">0.2</span>|</span><br><span class="line">|    Ali|     Sales|  <span class="number">8000</span>|               <span class="number">0.6</span>|</span><br><span class="line">|  Elena|     Sales|  <span class="number">8000</span>|               <span class="number">0.6</span>|</span><br><span class="line">|  Cindy|     Sales|  <span class="number">7500</span>|               <span class="number">0.8</span>|</span><br><span class="line">|    Bob|     Sales|  <span class="number">7000</span>|               <span class="number">1.0</span>|</span><br><span class="line">|  Fancy|   Finance| <span class="number">12000</span>|<span class="number">0.3333333333333333</span>|</span><br><span class="line">| George|   Finance| <span class="number">11000</span>|<span class="number">0.6666666666666666</span>|</span><br><span class="line">|   Davd|   Finance| <span class="number">10000</span>|               <span class="number">1.0</span>|</span><br><span class="line">|  Ilaja| Marketing|  <span class="number">8000</span>|               <span class="number">0.5</span>|</span><br><span class="line">|Haffman| Marketing|  <span class="number">7000</span>|               <span class="number">1.0</span>|</span><br><span class="line">+-------+----------+------+------------------+</span><br><span class="line"><span class="comment"># 和 percent_rank 对比一下</span></span><br><span class="line">df.withColumn(</span><br><span class="line">    <span class="string">'percent_rank'</span>,</span><br><span class="line">    F.percent_rank().over(windowSpec)).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+-------+----------+------+------------+</span><br><span class="line">|   name|department|salary|percent_rank|</span><br><span class="line">+-------+----------+------+------------+</span><br><span class="line">|   Joey|     Sales|  <span class="number">9000</span>|         <span class="number">0.0</span>|</span><br><span class="line">|    Ali|     Sales|  <span class="number">8000</span>|        <span class="number">0.25</span>|</span><br><span class="line">|  Elena|     Sales|  <span class="number">8000</span>|        <span class="number">0.25</span>|</span><br><span class="line">|  Cindy|     Sales|  <span class="number">7500</span>|        <span class="number">0.75</span>|</span><br><span class="line">|    Bob|     Sales|  <span class="number">7000</span>|         <span class="number">1.0</span>|</span><br><span class="line">|  Fancy|   Finance| <span class="number">12000</span>|         <span class="number">0.0</span>|</span><br><span class="line">| George|   Finance| <span class="number">11000</span>|         <span class="number">0.5</span>|</span><br><span class="line">|   Davd|   Finance| <span class="number">10000</span>|         <span class="number">1.0</span>|</span><br><span class="line">|  Ilaja| Marketing|  <span class="number">8000</span>|         <span class="number">0.0</span>|</span><br><span class="line">|Haffman| Marketing|  <span class="number">7000</span>|         <span class="number">1.0</span>|</span><br><span class="line">+-------+----------+------+------------+</span><br></pre></td></tr></table></figure>
+<p>结果好像和前面的<code>percent_rank()</code>很类似对不对，于是我们联想到这个其实也是一种归一化结果， 其按照 <code>rank()</code> 的结果进行归一化处理。回想一下前面讲过的 <code>rank()</code> 函数，并列排序会影响后续排序， 于是序号中间可能存在隔断。这样Sales组的排序数就是1、2、2、4、5， 归一化以后就得到了0.2、0.6、0.6、0.8、1。这个统计结果按照实际业务来理解就是：</p>
+<ul>
+<li>9000及以上的人占了20%，</li>
+<li>8000及以上的人占了60%，</li>
+<li>7500以上的人数占了80%，</li>
+<li>7000以上的人数占了100%，</li>
+</ul>
+<h4 id="3-2-lag-：排序后找上一个数值。"><a href="#3-2-lag-：排序后找上一个数值。" class="headerlink" title="3.2 lag()：排序后找上一个数值。"></a>3.2 <code>lag()</code>：排序后找上一个数值。</h4><p><code>lag()</code> 函数用于寻找按照指定列排好序的分组内每个数值的上一个数值，</p>
+<p>通俗的说，就是数值排好序以后，寻找排在每个数值的上一个数值。代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 相当于滞后项</span></span><br><span class="line">windowSpec  = Window.partitionBy(<span class="string">"department"</span>).orderBy(F.desc(<span class="string">"salary"</span>))</span><br><span class="line">df.withColumn(<span class="string">"lag"</span>, F.lag(<span class="string">"salary"</span>,<span class="number">1</span>).over(windowSpec)).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+-------+----------+------+-----+</span><br><span class="line">|   name|department|salary|  lag|</span><br><span class="line">+-------+----------+------+-----+</span><br><span class="line">|   Joey|     Sales|  <span class="number">9000</span>| null|</span><br><span class="line">|    Ali|     Sales|  <span class="number">8000</span>| <span class="number">9000</span>|</span><br><span class="line">|  Elena|     Sales|  <span class="number">8000</span>| <span class="number">8000</span>|</span><br><span class="line">|  Cindy|     Sales|  <span class="number">7500</span>| <span class="number">8000</span>|</span><br><span class="line">|    Bob|     Sales|  <span class="number">7000</span>| <span class="number">7500</span>|</span><br><span class="line">|  Fancy|   Finance| <span class="number">12000</span>| null|</span><br><span class="line">| George|   Finance| <span class="number">11000</span>|<span class="number">12000</span>|</span><br><span class="line">|   Davd|   Finance| <span class="number">10000</span>|<span class="number">11000</span>|</span><br><span class="line">|  Ilaja| Marketing|  <span class="number">8000</span>| null|</span><br><span class="line">|Haffman| Marketing|  <span class="number">7000</span>| <span class="number">8000</span>|</span><br><span class="line">+-------+----------+------+-----+</span><br></pre></td></tr></table></figure>
+<h4 id="3-3-lead-：排序后找下一个数值。"><a href="#3-3-lead-：排序后找下一个数值。" class="headerlink" title="3.3 lead()：排序后找下一个数值。"></a>3.3 <code>lead()</code>：排序后找下一个数值。</h4><p><code>lead()</code> 用于获取排序后的数值的下一个，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 和滞后项相反，提前一位</span></span><br><span class="line">windowSpec  = Window.partitionBy(<span class="string">"department"</span>).orderBy(F.desc(<span class="string">"salary"</span>))</span><br><span class="line">df.withColumn(<span class="string">"lead"</span>,F.lead(<span class="string">"salary"</span>,<span class="number">1</span>).over(windowSpec)).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+-------+----------+------+-----+</span><br><span class="line">|   name|department|salary| lead|</span><br><span class="line">+-------+----------+------+-----+</span><br><span class="line">|   Joey|     Sales|  <span class="number">9000</span>| <span class="number">8000</span>|</span><br><span class="line">|    Ali|     Sales|  <span class="number">8000</span>| <span class="number">8000</span>|</span><br><span class="line">|  Elena|     Sales|  <span class="number">8000</span>| <span class="number">7500</span>|</span><br><span class="line">|  Cindy|     Sales|  <span class="number">7500</span>| <span class="number">7000</span>|</span><br><span class="line">|    Bob|     Sales|  <span class="number">7000</span>| null|</span><br><span class="line">|  Fancy|   Finance| <span class="number">12000</span>|<span class="number">11000</span>|</span><br><span class="line">| George|   Finance| <span class="number">11000</span>|<span class="number">10000</span>|</span><br><span class="line">|   Davd|   Finance| <span class="number">10000</span>| null|</span><br><span class="line">|  Ilaja| Marketing|  <span class="number">8000</span>| <span class="number">7000</span>|</span><br><span class="line">|Haffman| Marketing|  <span class="number">7000</span>| null|</span><br><span class="line">+-------+----------+------+-----+</span><br></pre></td></tr></table></figure>
+<ol>
+<li>实际业务场景中，假设我们获取了每个月的销售数据， 我们可能想要知道，某月份与上一个月或下一个月数据相比怎么样， 于是就可以使用<code>lag</code>和<code>lead</code>来进行数据分析了。</li>
+<li>思考差分如何做？增长率如何做（同比、环比）？</li>
+</ol>
+<h3 id="（4）-Aggregate-Functions"><a href="#（4）-Aggregate-Functions" class="headerlink" title="（4）. Aggregate Functions"></a>（4）. Aggregate Functions</h3><p>常见的聚合函数有<code>avg, sum, min, max, count, approx_count_distinct()</code>等，我们用如下代码来同时使用这些函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 分组，并对组内数据排序</span></span><br><span class="line">windowSpec  = Window.partitionBy(<span class="string">"department"</span>).orderBy(F.desc(<span class="string">"salary"</span>))</span><br><span class="line"><span class="comment"># 仅分组</span></span><br><span class="line">windowSpecAgg  = Window.partitionBy(<span class="string">"department"</span>)</span><br><span class="line"></span><br><span class="line">df.withColumn(<span class="string">"row"</span>, F.row_number().over(windowSpec)) \</span><br><span class="line">  .withColumn(<span class="string">"avg"</span>, F.avg(<span class="string">"salary"</span>).over(windowSpecAgg)) \</span><br><span class="line">  .withColumn(<span class="string">"sum"</span>, F.sum(<span class="string">"salary"</span>).over(windowSpecAgg)) \</span><br><span class="line">  .withColumn(<span class="string">"min"</span>, F.min(<span class="string">"salary"</span>).over(windowSpecAgg)) \</span><br><span class="line">  .withColumn(<span class="string">"max"</span>, F.max(<span class="string">"salary"</span>).over(windowSpecAgg)) \</span><br><span class="line">  .withColumn(<span class="string">"count"</span>, F.count(<span class="string">"salary"</span>).over(windowSpecAgg)) \</span><br><span class="line">  .withColumn(<span class="string">"distinct_count"</span>, F.approxCountDistinct(<span class="string">"salary"</span>).over(windowSpecAgg)) \</span><br><span class="line">  .show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+-------+----------+------+---+-------+-----+-----+-----+-----+--------------+</span><br><span class="line">|   name|department|salary|row|    avg|  sum|  min|  max|count|distinct_count|</span><br><span class="line">+-------+----------+------+---+-------+-----+-----+-----+-----+--------------+</span><br><span class="line">|   Joey|     Sales|  <span class="number">9000</span>|  <span class="number">1</span>| <span class="number">7900.0</span>|<span class="number">39500</span>| <span class="number">7000</span>| <span class="number">9000</span>|    <span class="number">5</span>|             <span class="number">4</span>|</span><br><span class="line">|    Ali|     Sales|  <span class="number">8000</span>|  <span class="number">2</span>| <span class="number">7900.0</span>|<span class="number">39500</span>| <span class="number">7000</span>| <span class="number">9000</span>|    <span class="number">5</span>|             <span class="number">4</span>|</span><br><span class="line">|  Elena|     Sales|  <span class="number">8000</span>|  <span class="number">3</span>| <span class="number">7900.0</span>|<span class="number">39500</span>| <span class="number">7000</span>| <span class="number">9000</span>|    <span class="number">5</span>|             <span class="number">4</span>|</span><br><span class="line">|  Cindy|     Sales|  <span class="number">7500</span>|  <span class="number">4</span>| <span class="number">7900.0</span>|<span class="number">39500</span>| <span class="number">7000</span>| <span class="number">9000</span>|    <span class="number">5</span>|             <span class="number">4</span>|</span><br><span class="line">|    Bob|     Sales|  <span class="number">7000</span>|  <span class="number">5</span>| <span class="number">7900.0</span>|<span class="number">39500</span>| <span class="number">7000</span>| <span class="number">9000</span>|    <span class="number">5</span>|             <span class="number">4</span>|</span><br><span class="line">|  Fancy|   Finance| <span class="number">12000</span>|  <span class="number">1</span>|<span class="number">11000.0</span>|<span class="number">33000</span>|<span class="number">10000</span>|<span class="number">12000</span>|    <span class="number">3</span>|             <span class="number">3</span>|</span><br><span class="line">| George|   Finance| <span class="number">11000</span>|  <span class="number">2</span>|<span class="number">11000.0</span>|<span class="number">33000</span>|<span class="number">10000</span>|<span class="number">12000</span>|    <span class="number">3</span>|             <span class="number">3</span>|</span><br><span class="line">|   Davd|   Finance| <span class="number">10000</span>|  <span class="number">3</span>|<span class="number">11000.0</span>|<span class="number">33000</span>|<span class="number">10000</span>|<span class="number">12000</span>|    <span class="number">3</span>|             <span class="number">3</span>|</span><br><span class="line">|  Ilaja| Marketing|  <span class="number">8000</span>|  <span class="number">1</span>| <span class="number">7500.0</span>|<span class="number">15000</span>| <span class="number">7000</span>| <span class="number">8000</span>|    <span class="number">2</span>|             <span class="number">2</span>|</span><br><span class="line">|Haffman| Marketing|  <span class="number">7000</span>|  <span class="number">2</span>| <span class="number">7500.0</span>|<span class="number">15000</span>| <span class="number">7000</span>| <span class="number">8000</span>|    <span class="number">2</span>|             <span class="number">2</span>|</span><br><span class="line">+-------+----------+------+---+-------+-----+-----+-----+-----+--------------+</span><br></pre></td></tr></table></figure>
+<p>需要注意的是 <code>approx_count_distinct()</code> 函数适用与窗函数的统计， 而在<code>groupby</code>中通常用<code>countDistinct()</code>来代替该函数，用来求组内不重复的数值的条数。</p>
+<p>从结果来看，统计值基本上是按照部门分组，统计组内的salary情况。 如果我们只想要保留部门的统计结果，而将每个人的实际情况去掉，可以采用如下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">windowSpec  = Window.partitionBy(<span class="string">"department"</span>).orderBy(F.desc(<span class="string">"salary"</span>))</span><br><span class="line">windowSpecAgg  = Window.partitionBy(<span class="string">"department"</span>)</span><br><span class="line"></span><br><span class="line">df = df.withColumn(<span class="string">"row"</span>, F.row_number().over(windowSpec)) \</span><br><span class="line">  .withColumn(<span class="string">"avg"</span>, F.avg(<span class="string">"salary"</span>).over(windowSpecAgg)) \</span><br><span class="line">  .withColumn(<span class="string">"sum"</span>, F.sum(<span class="string">"salary"</span>).over(windowSpecAgg)) \</span><br><span class="line">  .withColumn(<span class="string">"min"</span>, F.min(<span class="string">"salary"</span>).over(windowSpecAgg)) \</span><br><span class="line">  .withColumn(<span class="string">"max"</span>, F.max(<span class="string">"salary"</span>).over(windowSpecAgg)) \</span><br><span class="line">  .withColumn(<span class="string">"count"</span>, F.count(<span class="string">"salary"</span>).over(windowSpecAgg)) \</span><br><span class="line">  .withColumn(<span class="string">"distinct_count"</span>, F.approx_count_distinct(<span class="string">"salary"</span>).over(windowSpecAgg))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 仅选取分组第一行数据</span></span><br><span class="line"><span class="comment"># 用F.col 去选row 行，怪怪的</span></span><br><span class="line">df_part  = df.where(F.col(<span class="string">"row"</span>)==<span class="number">1</span>)</span><br><span class="line">df_part.select(<span class="string">"department"</span>,<span class="string">"avg"</span>,<span class="string">"sum"</span>,<span class="string">"min"</span>,<span class="string">"max"</span>,<span class="string">"count"</span>,<span class="string">"distinct_count"</span>).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+----------+-------+-----+-----+-----+-----+--------------+</span><br><span class="line">|department|    avg|  sum|  min|  max|count|distinct_count|</span><br><span class="line">+----------+-------+-----+-----+-----+-----+--------------+</span><br><span class="line">|     Sales| <span class="number">7900.0</span>|<span class="number">39500</span>| <span class="number">7000</span>| <span class="number">9000</span>|    <span class="number">5</span>|             <span class="number">4</span>|</span><br><span class="line">|   Finance|<span class="number">11000.0</span>|<span class="number">33000</span>|<span class="number">10000</span>|<span class="number">12000</span>|    <span class="number">3</span>|             <span class="number">3</span>|</span><br><span class="line">| Marketing| <span class="number">7500.0</span>|<span class="number">15000</span>| <span class="number">7000</span>| <span class="number">8000</span>|    <span class="number">2</span>|             <span class="number">2</span>|</span><br><span class="line">+----------+-------+-----+-----+-----+-----+--------------+</span><br></pre></td></tr></table></figure>
+<h2 id="3-frame函数"><a href="#3-frame函数" class="headerlink" title="3. frame函数"></a>3. frame函数</h2><h3 id="（1）Window-rangeBetween-start-end"><a href="#（1）Window-rangeBetween-start-end" class="headerlink" title="（1）Window.rangeBetween(start, end)"></a>（1）Window.rangeBetween(start, end)</h3><blockquote>
+<p>创建一个<code>WindowSpec</code>，定义了从<code>start</code>(含)到<code>end</code>(含)的帧边界。start<code>和</code>end` 都是相对于当前行的。例如“0”表示“current row”，“-1”表示当前行前一关，“5”表示当前行后五关。</p>
+</blockquote>
+<p>基准为当前行</p>
+<p>行数选择</p>
+<ul>
+<li>rowsBetween(x, y)</li>
+<li>Window.unboundedPreceding 表示当前行之前的无限行</li>
+<li>Window.currentRow 表示当前行</li>
+<li>Window.unboundedFollowing 表示当前行之后的无限行</li>
+</ul>
+<p>rowsBetween(-1,1)：函数作用范围为当前行的上一行至下一行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> Window</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> functions <span class="keyword">as</span> func</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> SQLContext</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sc = SparkContext.getOrCreate()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sqlContext = SQLContext(sc)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tup = [(<span class="number">1</span>, <span class="string">"a"</span>), (<span class="number">1</span>, <span class="string">"a"</span>), (<span class="number">2</span>, <span class="string">"a"</span>), (<span class="number">1</span>, <span class="string">"b"</span>), (<span class="number">2</span>, <span class="string">"b"</span>), (<span class="number">3</span>, <span class="string">"b"</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>df = sqlContext.createDataFrame(tup, [<span class="string">"id"</span>, <span class="string">"category"</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>window = Window.partitionBy(<span class="string">"category"</span>).orderBy(<span class="string">"id"</span>).rangeBetween(Window.currentRow, <span class="number">1</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>df.withColumn(<span class="string">"sum"</span>, func.sum(<span class="string">"id"</span>).over(window)).sort(<span class="string">"id"</span>, <span class="string">"category"</span>).show()</span><br><span class="line">+---+--------+---+</span><br><span class="line">| id|category|sum|</span><br><span class="line">+---+--------+---+</span><br><span class="line">|  <span class="number">1</span>|       a|  <span class="number">4</span>|</span><br><span class="line">|  <span class="number">1</span>|       a|  <span class="number">4</span>|</span><br><span class="line">|  <span class="number">1</span>|       b|  <span class="number">3</span>|</span><br><span class="line">|  <span class="number">2</span>|       a|  <span class="number">2</span>|</span><br><span class="line">|  <span class="number">2</span>|       b|  <span class="number">5</span>|</span><br><span class="line">|  <span class="number">3</span>|       b|  <span class="number">3</span>|</span><br><span class="line">+---+--------+---+</span><br></pre></td></tr></table></figure>
+<h3 id="（2）rowsBetween"><a href="#（2）rowsBetween" class="headerlink" title="（2）rowsBetween"></a>（2）rowsBetween</h3><ul>
+<li><code>ROWS BETWEEN</code>不关心确切的值.它只关心行的顺序,并在计算帧时采用固定数量的前后行. （比较行的顺序）</li>
+<li><code>RANGE BETWEEN</code> 在计算帧时考虑值   .(比较值的大小)</li>
+</ul>
+<p>行范围设置 rangeBetween(x,y)<br>基准为当前行的值</p>
+<ul>
+<li>rangeBetween(20,50)<br>例如当前值为18<br>则选取的值范围为[-2,68]</li>
+</ul>
+<h2 id="4-例子"><a href="#4-例子" class="headerlink" title="4. 例子"></a>4. 例子</h2><h3 id="（1）小例子"><a href="#（1）小例子" class="headerlink" title="（1）小例子"></a>（1）小例子</h3><p>需求：组内按分数排序。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.select($<span class="string">"uid"</span>, $<span class="string">"date"</span>, $<span class="string">"score"</span>, row_number().over(Window.partitionBy(<span class="string">"uid"</span>).orderBy($<span class="string">"score"</span>.desc)).<span class="keyword">as</span>(<span class="string">"rank"</span>))</span><br></pre></td></tr></table></figure>
+<p><img src="https://ask.qcloudimg.com/http-save/yehe-7131597/qi0imvjt5y.png?imageView2/2/w/1620" alt="img"></p>
+<h3 id="（2）udf-窗口函数"><a href="#（2）udf-窗口函数" class="headerlink" title="（2）udf + 窗口函数"></a>（2）udf + 窗口函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> Window</span><br><span class="line"></span><br><span class="line"><span class="meta">@pandas_udf("double")</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mean_udf</span><span class="params">(v: pd.Series)</span> -&gt; float:</span></span><br><span class="line">    <span class="keyword">return</span> v.mean()</span><br><span class="line"></span><br><span class="line">df = spark.createDataFrame(</span><br><span class="line">    [(<span class="number">1</span>, <span class="number">1.0</span>), (<span class="number">1</span>, <span class="number">2.0</span>), (<span class="number">2</span>, <span class="number">3.0</span>), (<span class="number">2</span>, <span class="number">5.0</span>), (<span class="number">2</span>, <span class="number">10.0</span>)], (<span class="string">"id"</span>, <span class="string">"v"</span>))</span><br><span class="line">w = Window.partitionBy(<span class="string">'id'</span>).orderBy(<span class="string">'v'</span>).rowsBetween(<span class="number">-1</span>, <span class="number">0</span>)</span><br><span class="line">df.withColumn(<span class="string">'mean_v'</span>, mean_udf(<span class="string">"v"</span>).over(w)).show()</span><br><span class="line"></span><br><span class="line">+---+----+------+</span><br><span class="line">| id|   v|mean_v|</span><br><span class="line">+---+----+------+</span><br><span class="line">|  <span class="number">1</span>| <span class="number">1.0</span>|   <span class="number">1.0</span>|</span><br><span class="line">|  <span class="number">1</span>| <span class="number">2.0</span>|   <span class="number">1.5</span>|</span><br><span class="line">|  <span class="number">2</span>| <span class="number">3.0</span>|   <span class="number">3.0</span>|</span><br><span class="line">|  <span class="number">2</span>| <span class="number">5.0</span>|   <span class="number">4.0</span>|</span><br><span class="line">|  <span class="number">2</span>|<span class="number">10.0</span>|   <span class="number">7.5</span>|</span><br><span class="line">+---+----+------+</span><br></pre></td></tr></table></figure>
+<h3 id="（3）同时groupby-两个key"><a href="#（3）同时groupby-两个key" class="headerlink" title="（3）同时groupby 两个key"></a>（3）同时groupby 两个key</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成首次付费时间(FirstPayDate), 首次付费当天的付费金额(FirstPayPrice), 总付费金额(AllPayPrice). 首次单天付费频次(FirstPayFreq), 总付费频次(AllPayFreq)</span></span><br><span class="line">w1 = Window.partitionBy(<span class="string">"OrderId"</span>).orderBy(col(<span class="string">"PayDate"</span>))</span><br><span class="line">w2 = Window.partitionBy(<span class="string">"OrderId"</span>)</span><br><span class="line">df_pay_data = df_order_all.filter((F.col(<span class="string">"OrderType"</span>) == <span class="number">0</span>) &amp; ((F.col(<span class="string">"IsPay"</span>) == <span class="number">1</span>)))\</span><br><span class="line">    .withColumnRenamed(<span class="string">"OrderTime"</span>, <span class="string">"PayTime"</span>) \</span><br><span class="line">    .withColumnRenamed(<span class="string">"OrderPrice"</span>, <span class="string">"PayPrice"</span>) \</span><br><span class="line">    .withColumn(<span class="string">"PayDate"</span>, date_trunc(<span class="string">'day'</span>, to_timestamp(F.col(<span class="string">"PayTime"</span>)/<span class="number">1000</span>)))\</span><br><span class="line">    .withColumn(<span class="string">"row"</span>,row_number().over(w1)) \</span><br><span class="line">    .withColumn(<span class="string">"AllPayPrice"</span>, sum(col(<span class="string">"PayPrice"</span>)).over(w2)) \</span><br><span class="line">    .withColumn(<span class="string">"FirstPayDate"</span>, min(col(<span class="string">"PayDate"</span>)).over(w2)) \</span><br><span class="line">    .withColumn(<span class="string">"FirstPayPrice"</span>, sum(col(<span class="string">"PayPrice"</span>)).over(w1)) \</span><br><span class="line">    .withColumn(<span class="string">"FirstPayFreq"</span>, count(col(<span class="string">"IsPay"</span>)).over(w1)) \</span><br><span class="line">    .withColumn(<span class="string">"AllPayFreq"</span>, count(col(<span class="string">"IsPay"</span>)).over(w2)) \</span><br><span class="line">    .where(col(<span class="string">"row"</span>) == <span class="number">1</span>).select(<span class="string">"AllPayPrice"</span>, <span class="string">"FirstPayPrice"</span>, <span class="string">"FirstPayDate"</span>,<span class="string">"OrderId"</span>, <span class="string">"FirstPayFreq"</span>, <span class="string">"AllPayFreq"</span>)</span><br></pre></td></tr></table></figure>
+<p><a href="https://sparkbyexamples.com/pyspark/pyspark-select-first-row-of-each-group/" target="_blank" rel="noopener">https://sparkbyexamples.com/pyspark/pyspark-select-first-row-of-each-group/</a></p>
+<p><a href="https://stackoverflow.com/questions/45946349/python-spark-cumulative-sum-by-group-using-dataframe" target="_blank" rel="noopener">https://stackoverflow.com/questions/45946349/python-spark-cumulative-sum-by-group-using-dataframe</a> (相加)</p>
+<h3 id="（4）groupby-sort-list"><a href="#（4）groupby-sort-list" class="headerlink" title="（4）groupby  + sort + list"></a>（4）groupby  + sort + list</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">group_df = qds_com.groupby([<span class="string">'company'</span>]) \</span><br><span class="line">    .agg(F.sort_array(F.collect_list(F.struct(<span class="string">"features"</span>, <span class="string">"label"</span>, <span class="string">"samples_count"</span>))) \</span><br><span class="line">         .alias(<span class="string">"pair"</span>))</span><br></pre></td></tr></table></figure>
+<h3 id="（5）求众数"><a href="#（5）求众数" class="headerlink" title="（5）求众数"></a>（5）求众数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df_com_cookie.groupBy([<span class="string">'company'</span>,<span class="string">'price'</span>]).agg(F.count(<span class="string">'price'</span>).alias(<span class="string">'count_price'</span>)).orderBy([<span class="string">'company'</span>,<span class="string">'count_price'</span>], ascending=<span class="literal">False</span>).drop_duplicates(subset=[<span class="string">'company'</span>]).show()</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/9.-数据源/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/9.-数据源/" itemprop="url">9. 数据源</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-19T00:00:00+08:00">
+                2023-03-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/" itemprop="url" rel="index">
+                    <span itemprop="name">大数据</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本文仅做学习总结，如有侵权立删</p>
+<h1 id="一、核心数据源"><a href="#一、核心数据源" class="headerlink" title="一、核心数据源"></a>一、核心数据源</h1><ul>
+<li>CSV</li>
+<li>JSON</li>
+<li>Parquet</li>
+<li>ORC</li>
+<li>JDBC</li>
+<li><p>纯文本</p>
+</li>
+<li><p>Hbase</p>
+</li>
+<li>MongoDB</li>
+<li>AWS Redshift</li>
+<li>XML</li>
+</ul>
+<p>。。。</p>
+<h1 id="二、Read-API结构"><a href="#二、Read-API结构" class="headerlink" title="二、Read API结构"></a>二、Read API结构</h1><p>读取数据的核心结构如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DataFrameReader.format(...).option(<span class="string">"key"</span>, <span class="string">"value"</span>).schema(...).load()</span><br></pre></td></tr></table></figure>
+<p>使用以上格式来读取所有数据源，format是可选的，默认是parquet格式。</p>
+<p>Spark数据读取使用DataFrameReader，通过SparkSession的read属性得到：</p>
+<p>​    Spark.read</p>
+<p>需指定：</p>
+<ul>
+<li>format</li>
+<li>schema</li>
+<li>read模式</li>
+<li>一系列option选项</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">spark.read.format(<span class="string">"csv"</span>)</span><br><span class="line">.option(<span class="string">"mode"</span>, <span class="string">"FAILFAST"</span>)</span><br><span class="line">.option(<span class="string">"path"</span>, <span class="string">"path/to/file(s)"</span>)</span><br><span class="line">.schema(someSchema)</span><br><span class="line">.load()</span><br></pre></td></tr></table></figure>
+<h2 id="1-读取模式mode"><a href="#1-读取模式mode" class="headerlink" title="(1) 读取模式mode"></a>(1) 读取模式mode</h2><p>从外部源读取数据很容易会遇到错误格式的数据，指定读取模式可以当Spark遇到错误格式的记录时应采取什么操作。</p>
+<ul>
+<li>permissive：当遇到错误格式的记录时，将所有字段设置为null并将所有错误格式的记录放在名为_corrupt_record字符串列中</li>
+<li>dropMalformed：删除包含错误格式记录的行</li>
+<li>failFast：遇到错误格式的记录后立即返回失败</li>
+</ul>
+<p>默认是permissive.</p>
+<h1 id="三、Write-API结构"><a href="#三、Write-API结构" class="headerlink" title="三、Write API结构"></a>三、Write API结构</h1><p>写数据的核心结构如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DataFrameWriter.format(...).option(...).partitionBy(...).bucketBy(...).sortBy(...).save()</span><br></pre></td></tr></table></figure>
+<h2 id="1-保存模式mode"><a href="#1-保存模式mode" class="headerlink" title="(1) 保存模式mode"></a>(1) 保存模式mode</h2><p>.option(“mode”, “OVERWRITE”)</p>
+<ul>
+<li>append：将输出内容追加到目标文件中</li>
+<li>overwrite：将输出内容重写到目标文件中</li>
+<li>errorIfExists：如果目标路径已存在数据或文件，则抛出错误并返回写入操作失败</li>
+<li>ignore：如果目标路径已存在数据或文件，则不执行任何操作</li>
+</ul>
+<p>默认值为errorIfExists.</p>
+<h1 id="四、CSV-json-parquet等文件"><a href="#四、CSV-json-parquet等文件" class="headerlink" title="四、CSV/json/parquet等文件"></a>四、CSV/json/parquet等文件</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">spark.read.format(<span class="string">"csv"</span>) <span class="comment"># json/ parquet/orc/</span></span><br><span class="line">.option(<span class="string">"header"</span>, <span class="string">"true"</span>)</span><br><span class="line">.load(<span class="string">"file.csv"</span>)</span><br><span class="line"></span><br><span class="line">df.write.format(<span class="string">"csv"</span>).mode(<span class="string">"overwrite"</span>).option(<span class="string">"sep"</span>, <span class="string">"\t"</span>).save(<span class="string">"file.csv"</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="五、文本文件"><a href="#五、文本文件" class="headerlink" title="五、文本文件"></a>五、文本文件</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 读文件</span></span><br><span class="line">spark.read.textFile(<span class="string">"file.csv"</span>).selectExpr(<span class="string">"split(value, ',') as rows"</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 写文件</span></span><br><span class="line">df.limit(<span class="number">10</span>).select(<span class="string">"a"</span>, <span class="string">"b"</span>).write..partitionBy(<span class="string">'b'</span>).text(<span class="string">'file.csv'</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="六、高级I-O概念"><a href="#六、高级I-O概念" class="headerlink" title="六、高级I/O概念"></a>六、高级I/O概念</h1><ul>
+<li><p>可分割的文件类型和压缩(gzip压缩格式的Parquet等)</p>
+</li>
+<li><p>并行读写数据（分区概念)</p>
+<ul>
+<li><p>repartitions：减少分区数量</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.repartitions(<span class="number">5</span>).write.format(<span class="string">"csv"</span>).save(<span class="string">"file.csv"</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>partitionBy：按什么字段来分区</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.write.mode(<span class="string">"overwrite"</span>).partitionBy(<span class="string">"a"</span>).save(<span class="string">"file.csv"</span>)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>数据分桶：bucketBy</p>
+</li>
+</ul>
+<p>具有相同桶ID（哈希分桶的ID）的数据将放置到一个物理分区中，这样就可以避免在稍后读取数据时进行shuffle。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DataFrameWriter.bucketBy(numBuckets, col, *cols)</span><br><span class="line"><span class="comment"># 按给定列存储输出。如果指定，则输出布局在文件系统上，类似于 Hive 的分桶方案，但具有不同的桶哈希函数，并且与 Hive 的分桶不兼容。</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>(df.write.format(<span class="string">'parquet'</span>)  </span><br><span class="line">     .bucketBy(<span class="number">100</span>, <span class="string">'year'</span>, <span class="string">'month'</span>)</span><br><span class="line">     .mode(<span class="string">"overwrite"</span>)</span><br><span class="line">     .saveAsTable(<span class="string">'bucketed_table'</span>))</span><br></pre></td></tr></table></figure>
+<ul>
+<li>管理文件</li>
+</ul>
+<p>！！！写数据对文件大小不那么重要，但读取很重要！管理大量小文件产生很大的元数据开销，Spark特别不适合处理小文件。</p>
+<p>​    maxRecordsPerFile选项来指定每个文件的最大记录数，这使得你可以通过控制写入每个文件的记录数来控制文件大小。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.write.option(<span class="string">'maxRecordsPerFile'</span>, <span class="number">5000</span>) <span class="comment"># Spark确保每个文件最多包含5000条记录</span></span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/7.Spark处理不同的数据类型/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -334,7 +902,8 @@
         
           
             <p>本文仅做学习总结，如有侵权立删</p>
-<h1 id="一、处理不同的数据类型"><a href="#一、处理不同的数据类型" class="headerlink" title="一、处理不同的数据类型"></a>一、处理不同的数据类型</h1><h2 id="1-数据类型"><a href="#1-数据类型" class="headerlink" title="1. 数据类型"></a>1. 数据类型</h2><ul>
+<p>[TOC]</p>
+<h1 id="处理不同的数据类型"><a href="#处理不同的数据类型" class="headerlink" title="处理不同的数据类型"></a>处理不同的数据类型</h1><h2 id="1-数据类型"><a href="#1-数据类型" class="headerlink" title="1. 数据类型"></a>1. 数据类型</h2><ul>
 <li>布尔型</li>
 <li>数值型</li>
 <li>字符串型</li>
@@ -394,7 +963,7 @@
 <h2 id="5、正则表达式"><a href="#5、正则表达式" class="headerlink" title="5、正则表达式"></a>5、正则表达式</h2><ul>
 <li>regexp_extract（列名，正则表达式，第几个）：提取值</li>
 </ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> regexp_extract</span><br><span class="line">regex_string = <span class="string">"BLACK|WHITE|RED|GREEN|BLUE"</span></span><br><span class="line">df.select(regexp_extract(F.col(<span class="string">'a'</span>, regex_string, <span class="number">1</span>))) <span class="comment"># 将列名为a的字段中出现包含在正则表达式的第一个单词取出来。</span></span><br><span class="line"><span class="comment"># 如 df['a'] = "WHITE HANGING HEA", 结果为WHITE</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> regexp_extract</span><br><span class="line">regex_string = <span class="string">"BLACK|WHITE|RED|GREEN|BLUE"</span></span><br><span class="line">df.select(regexp_extract(F.col(<span class="string">'a'</span>), regex_string, <span class="number">1</span>)) <span class="comment"># 将列名为a的字段中出现包含在正则表达式的第一个单词取出来。</span></span><br><span class="line"><span class="comment"># 如 df['a'] = "WHITE HANGING HEA", 结果为WHITE</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>regexp_replace：替换值</li>
 </ul>
@@ -444,7 +1013,7 @@
 <h2 id="7-处理数据中的空值"><a href="#7-处理数据中的空值" class="headerlink" title="7. 处理数据中的空值"></a>7. 处理数据中的空值</h2><h2 id="8-复杂类型"><a href="#8-复杂类型" class="headerlink" title="8. 复杂类型"></a>8. 复杂类型</h2><ul>
 <li>结构体: struct</li>
 </ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> struct</span><br><span class="line">df1 = df.select(struct(<span class="string">'a'</span>, <span class="string">'b'</span>).alias(<span class="string">'c'</span>))</span><br><span class="line"><span class="comment"># 可以通过"."来访问或列方法getField来实现：</span></span><br><span class="line">df1.select(<span class="string">"c.a"</span>)</span><br><span class="line">df1.select(F.col(<span class="string">"c"</span>).getField(<span class="string">"a"</span>))</span><br><span class="line"><span class="comment"># 可以通过 ".*"来查询结构体中所哟就值</span></span><br><span class="line">df1.select(<span class="string">"c.*"</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> struct</span><br><span class="line">df1 = df.select(struct(<span class="string">'a'</span>, <span class="string">'b'</span>).alias(<span class="string">'c'</span>))</span><br><span class="line"><span class="comment"># 可以通过"."来访问或列方法getField来实现：</span></span><br><span class="line">df1.select(<span class="string">"c.a"</span>)</span><br><span class="line">df1.select(F.col(<span class="string">"c"</span>).getField(<span class="string">"a"</span>))</span><br><span class="line"><span class="comment"># 可以通过 ".*"来查询结构体中所有值</span></span><br><span class="line">df1.select(<span class="string">"c.*"</span>)</span><br></pre></td></tr></table></figure>
 <ul>
 <li>数组<ul>
 <li>split：指定分隔符</li>
@@ -459,6 +1028,16 @@
 <p>​    explode：一行拆分成多行</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> explode, split</span><br><span class="line"></span><br><span class="line">df = df.withColumn(<span class="string">"sub_str"</span>, explode(split(df[<span class="string">"str_col"</span>], <span class="string">"_"</span>))) </span><br><span class="line"><span class="comment"># 将str_col按-拆分成list，list中的每一个元素成为sub_str,与原行中的其他列一起组成新的行</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">eg:</span></span><br><span class="line"><span class="string">"hello world","other column"</span></span><br><span class="line"><span class="string">split ===&gt; ["hello", "world"], "other column"</span></span><br><span class="line"><span class="string">explode ===&gt; </span></span><br><span class="line"><span class="string">		"hello", "other column"; </span></span><br><span class="line"><span class="string">		"world", "other column"</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
 <ul>
+<li><p>将嵌套数组 <code>DataFrame</code> 列分解为行</p>
+<p>创建一个带有嵌套数组列的 <code>DataFrame</code>。</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">arrayArrayData = [</span><br><span class="line">  (<span class="string">"James"</span>,[[<span class="string">"Java"</span>,<span class="string">"Scala"</span>,<span class="string">"C++"</span>],[<span class="string">"Spark"</span>,<span class="string">"Java"</span>]]),</span><br><span class="line">  (<span class="string">"Michael"</span>,[[<span class="string">"Spark"</span>,<span class="string">"Java"</span>,<span class="string">"C++"</span>],[<span class="string">"Spark"</span>,<span class="string">"Java"</span>]]),</span><br><span class="line">  (<span class="string">"Robert"</span>,[[<span class="string">"CSharp"</span>,<span class="string">"VB"</span>],[<span class="string">"Spark"</span>,<span class="string">"Python"</span>]])</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">df = spark.createDataFrame(data=arrayArrayData, schema = [<span class="string">'name'</span>,<span class="string">'subjects'</span>])</span><br><span class="line">df.printSchema()</span><br><span class="line">df.show(truncate=<span class="literal">False</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">root</span><br><span class="line"> |-- name: string (nullable = true)</span><br><span class="line"> |-- subjects: array (nullable = true)</span><br><span class="line"> |    |-- element: array (containsNull = true)</span><br><span class="line"> |    |    |-- element: string (containsNull = true)</span><br><span class="line"></span><br><span class="line">+-------+-----------------------------------+</span><br><span class="line">|name   |subjects                           |</span><br><span class="line">+-------+-----------------------------------+</span><br><span class="line">|James  |[[Java, Scala, C++], [Spark, Java]]|</span><br><span class="line">|Michael|[[Spark, Java, C++], [Spark, Java]]|</span><br><span class="line">|Robert |[[CSharp, VB], [Spark, Python]]    |</span><br><span class="line">+-------+-----------------------------------+</span><br></pre></td></tr></table></figure>
+<p>​    展平数组，请使用 <code>flatten</code> 函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> flatten</span><br><span class="line">df.select(df.name, flatten(df.subjects)).show(truncate=<span class="literal">False</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+-------+-------------------------------+</span><br><span class="line">|name   |flatten(subjects)              |</span><br><span class="line">+-------+-------------------------------+</span><br><span class="line">|James  |[Java, Scala, C++, Spark, Java]|</span><br><span class="line">|Michael|[Spark, Java, C++, Spark, Java]|</span><br><span class="line">|Robert |[CSharp, VB, Spark, Python]    |</span><br><span class="line">+-------+-------------------------------+</span><br></pre></td></tr></table></figure>
+<pre><code>展平再分解
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">df.select(df.name, explode(flatten(df.subjects))).show(truncate=<span class="literal">False</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+-------+------+</span><br><span class="line">|name   |col   |</span><br><span class="line">+-------+------+</span><br><span class="line">|James  |Java  |</span><br><span class="line">|James  |Scala |</span><br><span class="line">|James  |C++   |</span><br><span class="line">|James  |Spark |</span><br><span class="line">|James  |Java  |</span><br><span class="line">|Michael|Spark |</span><br><span class="line">|Michael|Java  |</span><br><span class="line">|Michael|C++   |</span><br><span class="line">|Michael|Spark |</span><br><span class="line">|Michael|Java  |</span><br><span class="line">|Robert |CSharp|</span><br><span class="line">|Robert |VB    |</span><br><span class="line">|Robert |Spark |</span><br><span class="line">|Robert |Python|</span><br><span class="line">+-------+------+</span><br></pre></td></tr></table></figure>
+<ul>
 <li><p>Map</p>
 <ul>
 <li>create_map：键值对</li>
@@ -467,12 +1046,29 @@
 <p>​    根据key值取value</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> explode, split</span><br><span class="line">df.select(create_map(F.col(<span class="string">"a"</span>), F.col(<span class="string">"b"</span>)).alias(<span class="string">"c_map"</span>))\</span><br><span class="line">.selectExpt(<span class="string">"c_map['WHILE METAL LANTERN']"</span>)</span><br></pre></td></tr></table></figure>
 <p>​    展开map类型，将其转换成列:explode</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df.select(create_map(F.col(<span class="string">"a"</span>), F.col(<span class="string">"b"</span>)).alias(<span class="string">"c_map"</span>))\</span><br><span class="line">.selectExpt(<span class="string">"explod('c_map')"</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df.select(create_map(F.col(<span class="string">"a"</span>), F.col(<span class="string">"b"</span>)).alias(<span class="string">"c_map"</span>))\</span><br><span class="line">.selectExpt(<span class="string">"explode('c_map')"</span>)</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h2 id="8、处理Json类型"><a href="#8、处理Json类型" class="headerlink" title="8、处理Json类型"></a>8、处理Json类型</h2><h3 id="（1）创建一个Json类型的列："><a href="#（1）创建一个Json类型的列：" class="headerlink" title="（1）创建一个Json类型的列："></a>（1）创建一个Json类型的列：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">jsonDF = spark.range(<span class="number">1</span>).selectExpr(<span class="string">"""</span></span><br><span class="line"><span class="string">	'&#123;</span></span><br><span class="line"><span class="string">        "a": &#123;</span></span><br><span class="line"><span class="string">            "aa": [1,2,3]</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">	&#125;' as jsonString</span></span><br><span class="line"><span class="string">"""</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="2-get-json-object：查询JSON对象"><a href="#2-get-json-object：查询JSON对象" class="headerlink" title="(2) get_json_object：查询JSON对象"></a>(2) get_json_object：查询JSON对象</h3><p>若此查询的JSON对象仅有一层嵌套，则可使用json_tuple</p>
-<h3 id="3）to-json：将StructType转换成JSON字符串"><a href="#3）to-json：将StructType转换成JSON字符串" class="headerlink" title="(3）to_json：将StructType转换成JSON字符串"></a>(3）to_json：将StructType转换成JSON字符串</h3><h3 id="4-from-json：解析JSON数据，需指定模式"><a href="#4-from-json：解析JSON数据，需指定模式" class="headerlink" title="(4) from_json：解析JSON数据，需指定模式"></a>(4) from_json：解析JSON数据，需指定模式</h3>
+<h2 id="9-处理Json类型"><a href="#9-处理Json类型" class="headerlink" title="9. 处理Json类型"></a>9. 处理Json类型</h2><h3 id="（1）创建一个Json类型的列："><a href="#（1）创建一个Json类型的列：" class="headerlink" title="（1）创建一个Json类型的列："></a>（1）创建一个Json类型的列：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">jsonDF = spark.range(<span class="number">1</span>).selectExpr(<span class="string">"""</span></span><br><span class="line"><span class="string">	'&#123;</span></span><br><span class="line"><span class="string">        "a": &#123;</span></span><br><span class="line"><span class="string">            "aa": [1,2,3]</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">	&#125;' as jsonString</span></span><br><span class="line"><span class="string">"""</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="2-get-json-object：查询JSON对象"><a href="#2-get-json-object：查询JSON对象" class="headerlink" title="(2) get_json_object：查询JSON对象"></a>(2) get_json_object：查询JSON对象</h3><p>pyspark.sql.functions.get_json_object(col, path) : 根据指定的 json 路径从 json 字符串中提取 json 对象，并返回提取的 json 对象的 json 字符串。如果输入的 json 字符串无效，它将返回 null。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data = [(<span class="string">"1"</span>, <span class="string">'''&#123;"f1": "value1", "f2": "value2"&#125;'''</span>), (<span class="string">"2"</span>, <span class="string">'''&#123;"f1": "value12"&#125;'''</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>df = spark.createDataFrame(data, (<span class="string">"key"</span>, <span class="string">"jstring"</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>df.select(df.key, get_json_object(df.jstring, <span class="string">'$.f1'</span>).alias(<span class="string">"c0"</span>), \</span><br><span class="line"><span class="meta">... </span>                  get_json_object(df.jstring, <span class="string">'$.f2'</span>).alias(<span class="string">"c1"</span>) ).collect()</span><br><span class="line">[Row(key=<span class="string">'1'</span>, c0=<span class="string">'value1'</span>, c1=<span class="string">'value2'</span>), Row(key=<span class="string">'2'</span>, c0=<span class="string">'value12'</span>, c1=<span class="literal">None</span>)]</span><br></pre></td></tr></table></figure>
+<h3 id="3-若此查询的JSON对象仅有一层嵌套，则可使用json-tuple"><a href="#3-若此查询的JSON对象仅有一层嵌套，则可使用json-tuple" class="headerlink" title="(3) 若此查询的JSON对象仅有一层嵌套，则可使用json_tuple"></a>(3) 若此查询的JSON对象仅有一层嵌套，则可使用json_tuple</h3><p>pyspark.sql.functions.json_tuple(col, *fields): 根据给定的字段名称为 json 列创建一个新行。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>data = [(<span class="string">"1"</span>, <span class="string">'''&#123;"f1": "value1", "f2": "value2"&#125;'''</span>), (<span class="string">"2"</span>, <span class="string">'''&#123;"f1": "value12"&#125;'''</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>df = spark.createDataFrame(data, (<span class="string">"key"</span>, <span class="string">"jstring"</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>df.select(df.key, json_tuple(df.jstring, <span class="string">'f1'</span>, <span class="string">'f2'</span>)).collect()</span><br><span class="line">[Row(key=<span class="string">'1'</span>, c0=<span class="string">'value1'</span>, c1=<span class="string">'value2'</span>), Row(key=<span class="string">'2'</span>, c0=<span class="string">'value12'</span>, c1=<span class="literal">None</span>)]</span><br></pre></td></tr></table></figure>
+<h3 id="4）to-json：将StructType转换成JSON字符串"><a href="#4）to-json：将StructType转换成JSON字符串" class="headerlink" title="(4）to_json：将StructType转换成JSON字符串"></a>(4）to_json：将StructType转换成JSON字符串</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>df = ps.DataFrame([[<span class="string">'a'</span>, <span class="string">'b'</span>], [<span class="string">'c'</span>, <span class="string">'d'</span>]],</span><br><span class="line"><span class="meta">... </span>                  columns=[<span class="string">'col 1'</span>, <span class="string">'col 2'</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>df.to_json()</span><br><span class="line"><span class="string">'[&#123;"col 1":"a","col 2":"b"&#125;,&#123;"col 1":"c","col 2":"d"&#125;]'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>df[<span class="string">'col 1'</span>].to_json()</span><br><span class="line"><span class="string">'[&#123;"col 1":"a"&#125;,&#123;"col 1":"c"&#125;]'</span></span><br></pre></td></tr></table></figure>
+<h3 id="5-from-json：解析JSON数据，需指定模式"><a href="#5-from-json：解析JSON数据，需指定模式" class="headerlink" title="(5) from_json：解析JSON数据，需指定模式"></a>(5) from_json：解析JSON数据，需指定模式</h3><p>  可以使用<code>pyspark.sql.functions.from_json</code>函数将DataFrame中的字典列拆分为多列</p>
+<h2 id="10-UDF-自定义函数"><a href="#10-UDF-自定义函数" class="headerlink" title="10. UDF (自定义函数)"></a>10. UDF (自定义函数)</h2><p>UDF允许使用多种不同的变成语言编写，这些UDF函数被注册为SparkSession或者Context的临时函数。</p>
+<p>Spark将在Driver进程上序列化UDF函数，并将它通过网络传递到所有的executor进程。</p>
+<blockquote>
+<p>如果用<strong>Scala或Java编写的，可以在JVM</strong>中使用它。除了不能使用Spark为内置函数提供的代码生成功能之外，会导致性能的下降。</p>
+<p>如果函数是<strong>用Python编写的，Spark在worker上启动一个Python进程</strong>，<strong>将所有程序列化为Python可解释的格式</strong>（在此之前程序位于JVM中），在Python进程中对该程序逐行执行函数，最终将对每行的操作结果返回给JVM和Spark。</p>
+</blockquote>
+<p>将程序序列化为Python可解释的格式这个过程代价很高！！！！</p>
+<ol>
+<li>计算昂贵</li>
+<li>程序进入Python后Spark无法管理worker内存。若某个worker因资源受限而失败（JVM和Python在同一台机器争夺内存），可能会导致该worker出现故障。———–建议用java/scala编写UDF。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql.functions <span class="keyword">import</span> udf</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">power1</span><span class="params">(v)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> v**<span class="number">2</span></span><br><span class="line">powerudf = udf(power1)</span><br><span class="line">df.select(powerudf(F.col(<span class="string">'a'</span>)))</span><br></pre></td></tr></table></figure>
+
           
         
       
@@ -2648,7 +3244,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/正则化/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/标准化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Lee_yl">
@@ -2667,7 +3263,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/正则化/" itemprop="url">正则化</a></h1>
+                <a class="post-title-link" href="/标准化/" itemprop="url">标准化</a></h1>
         
 
         <div class="post-meta">
@@ -2713,8 +3309,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/正则化/" itemprop="url" rel="index">
-                    <span itemprop="name">正则化</span>
+                  <a href="/categories/机器学习/标准化/" itemprop="url" rel="index">
+                    <span itemprop="name">标准化</span>
                   </a>
                 </span>
 
@@ -2753,395 +3349,13 @@
         
           
             <p>本篇博客仅作为学习,如有侵权必删。</p>
-<h1 id="正则化-惩罚项"><a href="#正则化-惩罚项" class="headerlink" title="正则化/惩罚项"></a>正则化/惩罚项</h1><h2 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h2><blockquote>
-<p> <strong>（1）范数：</strong><img src="..\imgs\范数.jpg" alt></p>
-<p><strong>（2）方差和偏差：</strong></p>
-<p>Error = Bias + Variance</p>
-<ul>
-<li>Error反映的是整个模型的准确度，</li>
-<li>Bias反映的是模型在样本上的输出与真实值之间的误差，即模型本身的精准度，</li>
-<li>Variance反映的是模型每一次输出结果与模型输出期望之间的误差（描述的是样本上训练的模型在测试集上的表现。），即模型的稳定性。</li>
-<li>欠拟合是高bias，过拟合是高variance。</li>
-</ul>
-</blockquote>
-<blockquote>
-<p><strong>（3）正则化的目的</strong>：减少模型参数大小或者参数数量，缓解过拟合。</p>
-<p>正则化的作用是给模型加一个先验，lasso(l1)认为模型是拉普拉斯分布，ridge(l2)认为是高斯分布，正则项对应参数的协方差，协方差越小，这个模型的variance越小，泛化 能力越强，也就抵抗了过拟合。</p>
-<p><strong>（4）正则化通用形式：</strong></p>
-<p>​        Loss_with_regularization = loss(w,x) + λf(w)</p>
-<ul>
-<li>正则化恒为非负</li>
-<li>f(w)不能为负数，若其为负数，Loss(w,x)+λf(x)本来尽可能想让其变小，那f(x)为负数，f(x)绝对值会越学越大。</li>
-</ul>
-<p><strong>(5) 正则化方法：</strong>L1正则、L2正则、Dropout正则</p>
-</blockquote>
-<h2 id="二、-从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】"><a href="#二、-从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】" class="headerlink" title="二、 从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】"></a>二、 从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】</h2><p><strong>过拟合就是模型在学习训练样本时将噪声异常值也学习得非常好，使得模型参数过多，模型较复杂，给参数加上一个先验约束，可降低过拟合。</strong></p>
-<p> <img src="..\imgs\正则化1.jpg" alt></p>
-<h2 id="三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；"><a href="#三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；" class="headerlink" title="三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；"></a>三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；</h2><p><strong>区别</strong>：L1假设参数服从拉普拉斯分布，L2则符合高斯分布；</p>
-<p>L1范数更容易产生稀疏的权重，L2范数更容易产生分散的权重。</p>
-<p><strong>原因</strong>：（L1稀疏的原因，L2不稀疏的原因）【几何、公式两个角度】</p>
-<p><strong>场景</strong>：具有高维的数据特征时采用L1正则效果好一点。因为L1具有稀疏性。</p>
-<h2 id="四、解释L1范数更容易产生稀疏的权重，L2不的原因："><a href="#四、解释L1范数更容易产生稀疏的权重，L2不的原因：" class="headerlink" title="四、解释L1范数更容易产生稀疏的权重，L2不的原因："></a>四、解释L1范数更容易产生稀疏的权重，L2不的原因：</h2><h3 id="（1）几何角度"><a href="#（1）几何角度" class="headerlink" title="（1）几何角度"></a>（1）几何角度</h3><p>L2正则项约束后的解空间是圆形，L1正则项约束后的解空间是多方形，L1易在角点发生交点，从而产生稀疏解。</p>
-<blockquote>
-<p>绿色等高线代表未施加正则化的代价函数，菱形和圆形分别代表L1和L2正则化约束，L1-ball 与L2-ball的不同就在于L1在和每个坐标轴相交的地方都有“角”出现，而目标函数的”等高线”除非位置摆得非常好，大部分时候都会在角的地方相交。注意到在角的位置就会产生稀疏性。相比之下，L2-ball 就没有这样的性质，因为没有角，所以第一次相交的地方出现在具有稀疏性的位置的概率就变得非常小</p>
-</blockquote>
-<p><img src="..\imgs\L1正则解释.jpg" alt></p>
-<h3 id="（2）公式角度：（拉格朗日求导）"><a href="#（2）公式角度：（拉格朗日求导）" class="headerlink" title="（2）公式角度：（拉格朗日求导）"></a>（2）公式角度：（拉格朗日求导）</h3><blockquote>
-<p>深度学习花书7.1节（202页左右）。带L1正则化的最优参数w=sign(w<em>) max{|w</em>|- a/H , 0}，其中w代表未正则化的目标函数的最优参数，H代表海森矩阵，a是正则化系数，只要a足够大，w就会在更大区间范围内使w变为0，而带L2正则化的最优参数w=H/(H+a)▪w,只要w不为0，w也不为0.</p>
-</blockquote>
-<p><strong>1、稀疏性的约束：</strong></p>
-<p><img src="..\imgs\正则公式1.jpg" alt></p>
-<p>​    L1范数和L0范数可以实现稀疏，L1因具有比L0更好的优化求解特性而被广泛应用。</p>
-<p><strong>2、不好求解，松弛为L1，L2：</strong></p>
-<p><img src="..\imgs\正则公式2.jpg" alt></p>
-<p><strong>3、拉格朗日</strong></p>
-<p><img src="..\imgs\正则公式3.jpg" alt></p>
-<h3 id="（3）贝叶斯先验"><a href="#（3）贝叶斯先验" class="headerlink" title="（3）贝叶斯先验"></a>（3）贝叶斯先验</h3><blockquote>
-<p>L1正则化相当于对模型参数w引入了拉普拉斯先验，L2正则化相当于引入了高斯先验，而拉普拉斯先验使参数为0的可能性更大。</p>
-</blockquote>
-<p><strong>L1正则化可通过假设权重w的先验分布为拉普拉斯分布，由最大后验概率估计导出。</strong></p>
-<p><strong>L2正则化可通过假设权重w的先验分布为高斯分布，由最大后验概率估计导出。</strong></p>
-<p><strong>详细解释：</strong> <a href="https://blog.csdn.net/m0_38045485/article/details/82147817" target="_blank" rel="noopener">https://blog.csdn.net/m0_38045485/article/details/82147817</a></p>
-<p><img src="..\imgs\正则公式4.jpg" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/概率论1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lee_yl">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lee_yl's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/概率论1/" itemprop="url">概率论</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-26T00:00:00+08:00">
-                2023-02-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/先导知识/" itemprop="url" rel="index">
-                    <span itemprop="name">先导知识</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/先导知识/概率论基本知识/" itemprop="url" rel="index">
-                    <span itemprop="name">概率论基本知识</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本篇博客仅作为学习,如有侵权必删。</p>
-<h1 id="一、均值、方差、协方差"><a href="#一、均值、方差、协方差" class="headerlink" title="一、均值、方差、协方差"></a>一、均值、方差、协方差</h1><ul>
-<li>期望/均值：实验中每次可能结果的概率乘其结果的总和。<ul>
-<li>E(X)=∑xP(X), x表示随机变量的取值，P(X)表示随机变量X=x的概率。</li>
-</ul>
-</li>
-<li>方差：概率分布的数据期望，反映了随机变量取值的变异程度。<ul>
-<li>D(x ) = E{[X-E(X)]^2} =E(X^2) - [ E(X)]^2</li>
-</ul>
-</li>
-</ul>
-<p><img src="..\imgs\协方差.jpg" alt></p>
-<ul>
-<li>协方差：度量两个随机变量关系的统计量<ul>
-<li><img src="..\imgs\协方差2.jpg" alt></li>
-</ul>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/过拟合欠拟合/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lee_yl">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lee_yl's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/过拟合欠拟合/" itemprop="url">过拟合</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-26T00:00:00+08:00">
-                2023-02-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/过拟合/" itemprop="url" rel="index">
-                    <span itemprop="name">过拟合</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本篇博客仅作为学习,如有侵权必删。</p>
-<h1 id="过拟合"><a href="#过拟合" class="headerlink" title="过拟合"></a>过拟合</h1><h1 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h1><blockquote>
-<p>过拟合：模型对于训练数拟合呈过当的情况，反映到评估指标上，就是模型在训练集上表现很好，测试集和新数据上表现较差。</p>
-<p>欠拟合：模型在训练和和预测时表现都不好的情况。</p>
-</blockquote>
-<p><img src="..\imgs\过拟合欠拟合.jpg" alt></p>
+<h2 id="一、BN批标准化"><a href="#一、BN批标准化" class="headerlink" title="一、BN批标准化"></a>一、BN批标准化</h2><h3 id="1、BN的基本动机"><a href="#1、BN的基本动机" class="headerlink" title="1、BN的基本动机"></a>1、BN的基本动机</h3><ol>
+<li><strong>（初始数据分布一致）</strong>神经网络训练过程的本质是学习数据分布，如果训练数据与测试数据的分布      不同将大大降低网络的泛化能力，因此我们需要在训练开始前对所有输入数据进行归一化处理。</li>
+<li><strong>（中间数据分布一致）</strong>然而随着网络训练的进行，每个隐层的参数变化使得后一层的输入发生变      化，从而每一批训练数据的分布也随之改变，致使网络在每次迭代中都需要拟合 不同的数据分布，增大训练的复杂度以及过拟合的风险。</li>
+</ol>
+<p>原因在于神经网络学习过程<strong>本质上是为了学习数据的分布</strong>，一旦训练数据与测试数据的分布不同，那么网络的泛化能力也大大降低；另一方面，一旦在mini-batch梯度下降训练的时候，每批训练数据的分布不相同，那么网络就要在每次迭代的时候去学习以适应不同的分布，这样将会大大降低网络的训练速度，这也正是为什么我们需要对所有训练数据做一个Normalization预处理的原因。</p>
+<h3 id="2、-BN的原理"><a href="#2、-BN的原理" class="headerlink" title="2、 BN的原理"></a>2、 BN的原理</h3><p>BN首先是把所有的样本的统计分布标准化，降低了batch内不同样本的差异性，然后又允许batch内的各个样本有各自的统计分布。</p>
+<p>BN是针对每一批数据，在网络的每一层输入之前增加归一化处理（均值为0，标准差为1），将所有批数据强制在统一的数据分布下，即对该层 的任意一个神经元（假设为第k维）x^(k) 采用如下公式:</p>
 
           
         
@@ -3227,7 +3441,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
