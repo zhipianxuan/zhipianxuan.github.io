@@ -229,7 +229,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/概率论1/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/标准化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Lee_yl">
@@ -248,7 +248,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/概率论1/" itemprop="url">概率论</a></h1>
+                <a class="post-title-link" href="/标准化/" itemprop="url">标准化</a></h1>
         
 
         <div class="post-meta">
@@ -294,19 +294,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/先导知识/" itemprop="url" rel="index">
-                    <span itemprop="name">先导知识</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/先导知识/概率论基本知识/" itemprop="url" rel="index">
-                    <span itemprop="name">概率论基本知识</span>
+                  <a href="/categories/机器学习/标准化/" itemprop="url" rel="index">
+                    <span itemprop="name">标准化</span>
                   </a>
                 </span>
 
@@ -345,23 +334,13 @@
         
           
             <p>本篇博客仅作为学习,如有侵权必删。</p>
-<h1 id="一、均值、方差、协方差"><a href="#一、均值、方差、协方差" class="headerlink" title="一、均值、方差、协方差"></a>一、均值、方差、协方差</h1><ul>
-<li>期望/均值：实验中每次可能结果的概率乘其结果的总和。<ul>
-<li>E(X)=∑xP(X), x表示随机变量的取值，P(X)表示随机变量X=x的概率。</li>
-</ul>
-</li>
-<li>方差：概率分布的数据期望，反映了随机变量取值的变异程度。<ul>
-<li>D(x ) = E{[X-E(X)]^2} =E(X^2) - [ E(X)]^2</li>
-</ul>
-</li>
-</ul>
-<p><img src="..\imgs\协方差.jpg" alt></p>
-<ul>
-<li>协方差：度量两个随机变量关系的统计量<ul>
-<li><img src="..\imgs\协方差2.jpg" alt></li>
-</ul>
-</li>
-</ul>
+<h2 id="一、BN批标准化"><a href="#一、BN批标准化" class="headerlink" title="一、BN批标准化"></a>一、BN批标准化</h2><h3 id="1、BN的基本动机"><a href="#1、BN的基本动机" class="headerlink" title="1、BN的基本动机"></a>1、BN的基本动机</h3><ol>
+<li><strong>（初始数据分布一致）</strong>神经网络训练过程的本质是学习数据分布，如果训练数据与测试数据的分布      不同将大大降低网络的泛化能力，因此我们需要在训练开始前对所有输入数据进行归一化处理。</li>
+<li><strong>（中间数据分布一致）</strong>然而随着网络训练的进行，每个隐层的参数变化使得后一层的输入发生变      化，从而每一批训练数据的分布也随之改变，致使网络在每次迭代中都需要拟合 不同的数据分布，增大训练的复杂度以及过拟合的风险。</li>
+</ol>
+<p>原因在于神经网络学习过程<strong>本质上是为了学习数据的分布</strong>，一旦训练数据与测试数据的分布不同，那么网络的泛化能力也大大降低；另一方面，一旦在mini-batch梯度下降训练的时候，每批训练数据的分布不相同，那么网络就要在每次迭代的时候去学习以适应不同的分布，这样将会大大降低网络的训练速度，这也正是为什么我们需要对所有训练数据做一个Normalization预处理的原因。</p>
+<h3 id="2、-BN的原理"><a href="#2、-BN的原理" class="headerlink" title="2、 BN的原理"></a>2、 BN的原理</h3><p>BN首先是把所有的样本的统计分布标准化，降低了batch内不同样本的差异性，然后又允许batch内的各个样本有各自的统计分布。</p>
+<p>BN是针对每一批数据，在网络的每一层输入之前增加归一化处理（均值为0，标准差为1），将所有批数据强制在统一的数据分布下，即对该层 的任意一个神经元（假设为第k维）x^(k) 采用如下公式:</p>
 
           
         
@@ -613,7 +592,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/标准化/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/概率论1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Lee_yl">
@@ -632,7 +611,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/标准化/" itemprop="url">标准化</a></h1>
+                <a class="post-title-link" href="/概率论1/" itemprop="url">概率论</a></h1>
         
 
         <div class="post-meta">
@@ -678,8 +657,19 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/标准化/" itemprop="url" rel="index">
-                    <span itemprop="name">标准化</span>
+                  <a href="/categories/机器学习/先导知识/" itemprop="url" rel="index">
+                    <span itemprop="name">先导知识</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/先导知识/概率论基本知识/" itemprop="url" rel="index">
+                    <span itemprop="name">概率论基本知识</span>
                   </a>
                 </span>
 
@@ -718,13 +708,23 @@
         
           
             <p>本篇博客仅作为学习,如有侵权必删。</p>
-<h2 id="一、BN批标准化"><a href="#一、BN批标准化" class="headerlink" title="一、BN批标准化"></a>一、BN批标准化</h2><h3 id="1、BN的基本动机"><a href="#1、BN的基本动机" class="headerlink" title="1、BN的基本动机"></a>1、BN的基本动机</h3><ol>
-<li><strong>（初始数据分布一致）</strong>神经网络训练过程的本质是学习数据分布，如果训练数据与测试数据的分布      不同将大大降低网络的泛化能力，因此我们需要在训练开始前对所有输入数据进行归一化处理。</li>
-<li><strong>（中间数据分布一致）</strong>然而随着网络训练的进行，每个隐层的参数变化使得后一层的输入发生变      化，从而每一批训练数据的分布也随之改变，致使网络在每次迭代中都需要拟合 不同的数据分布，增大训练的复杂度以及过拟合的风险。</li>
-</ol>
-<p>原因在于神经网络学习过程<strong>本质上是为了学习数据的分布</strong>，一旦训练数据与测试数据的分布不同，那么网络的泛化能力也大大降低；另一方面，一旦在mini-batch梯度下降训练的时候，每批训练数据的分布不相同，那么网络就要在每次迭代的时候去学习以适应不同的分布，这样将会大大降低网络的训练速度，这也正是为什么我们需要对所有训练数据做一个Normalization预处理的原因。</p>
-<h3 id="2、-BN的原理"><a href="#2、-BN的原理" class="headerlink" title="2、 BN的原理"></a>2、 BN的原理</h3><p>BN首先是把所有的样本的统计分布标准化，降低了batch内不同样本的差异性，然后又允许batch内的各个样本有各自的统计分布。</p>
-<p>BN是针对每一批数据，在网络的每一层输入之前增加归一化处理（均值为0，标准差为1），将所有批数据强制在统一的数据分布下，即对该层 的任意一个神经元（假设为第k维）x^(k) 采用如下公式:</p>
+<h1 id="一、均值、方差、协方差"><a href="#一、均值、方差、协方差" class="headerlink" title="一、均值、方差、协方差"></a>一、均值、方差、协方差</h1><ul>
+<li>期望/均值：实验中每次可能结果的概率乘其结果的总和。<ul>
+<li>E(X)=∑xP(X), x表示随机变量的取值，P(X)表示随机变量X=x的概率。</li>
+</ul>
+</li>
+<li>方差：概率分布的数据期望，反映了随机变量取值的变异程度。<ul>
+<li>D(x ) = E{[X-E(X)]^2} =E(X^2) - [ E(X)]^2</li>
+</ul>
+</li>
+</ul>
+<p><img src="..\imgs\协方差.jpg" alt></p>
+<ul>
+<li>协方差：度量两个随机变量关系的统计量<ul>
+<li><img src="..\imgs\协方差2.jpg" alt></li>
+</ul>
+</li>
+</ul>
 
           
         

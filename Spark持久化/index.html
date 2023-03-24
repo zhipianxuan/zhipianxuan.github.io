@@ -88,7 +88,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="e:/GitHub_learn/blog/source/imgs/RDD持久化.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/Spark持久化1.jpg">
-<meta property="og:updated_time" content="2023-03-24T14:59:48.733Z">
+<meta property="og:updated_time" content="2023-03-24T15:05:38.347Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="10. Spark持久化">
 <meta name="twitter:description" content="本文仅做学习总结，如有侵权立删 持久化1. 引言  查看上面那段伪代码，两个count触发算子会产生两个job, 那么,这两个job会往回去找errors，lines这两个rdd，最后到磁盘上拿数据。也就是每个job都会去读一遍磁盘，这里可以做优化， 将errors这个rdd保存到内存中， 然后第一个count会去磁盘度数， 但第二个count直接可以从内存中读数据了。  控制算子有三种，cac">
@@ -402,12 +402,15 @@
 <li>Spark框架会自动启动一个新的job，重新计算这个RDD的数据，将数据持久化到HDFS上。</li>
 </ul>
 </li>
-<li><p>优化：对RDD执行checkpoint之前，最好对这个RDD先执行cache，这样新启动的job只需要将内存中的数据拷贝到HDFS上就可以，省去了重新计算这一步</p>
+<li><p>优化：<strong>对RDD执行checkpoint之前，最好对这个RDD先执行cache，这样新启动的job只需要将内存中的数据拷贝到HDFS上就可以，省去了重新计算这一步</strong></p>
+</li>
+<li><p>解释：cache 机制是每计算出一个要 cache 的 partition 就直接将其 cache 到内存了。但 checkpoint 没有使用这种第一次计算得到就存储的方法，而是等到 job 结束后另外启动专门的 job 去完成 checkpoint 。也就是说需要 checkpoint 的 RDD 会被计算两次。因此，在使用 rdd.checkpoint() 的时候，建议加上 rdd.cache()，这样第二次运行的 job 就不用再去计算该 rdd 了，直接读取 cache 写磁盘。</p>
 </li>
 </ul>
 <h4 id="（1）cache-和-checkpoint-之间有一个重大的区别，"><a href="#（1）cache-和-checkpoint-之间有一个重大的区别，" class="headerlink" title="（1）cache 和 checkpoint 之间有一个重大的区别，"></a><strong>（1）cache 和 checkpoint 之间有一个重大的区别，</strong></h4><p><strong>cache 将 RDD 以及 RDD 的血统(记录了这个RDD如何产生)缓存到内存中</strong>，当缓存的 RDD 失效的时候(如内存损坏)，它们可以通过血统重新计算来进行恢复。但是 <strong>checkpoint 将 RDD 缓存到了 HDFS 中，同时忽略了它的血统(也就是RDD之前的那些依赖)</strong>。为什么要丢掉依赖？因为可以利用 HDFS 多副本特性保证容错！</p>
 <h4 id="（2）persist与checkpoint的区别"><a href="#（2）persist与checkpoint的区别" class="headerlink" title="（2）persist与checkpoint的区别"></a>（2）persist与checkpoint的区别</h4><p>rdd.persist(StorageLevel.DISK_ONLY) 与 checkpoint 也有区别。前者虽然可以将 RDD 的 partition 持久化到磁盘，但该 partition 由 blockManager 管理。一旦 driver program 执行结束，也就是 executor 所在进程 CoarseGrainedExecutorBackend stop，blockManager 也会 stop，<strong>被 cache 到磁盘上的 RDD 也会被清空</strong>（整个 blockManager 使用的 local 文件夹被删除）。</p>
 <p>而 <strong>checkpoint 将 RDD 持久化到 HDFS 或本地文件夹</strong>，如果不被手动 remove 掉，是一直存在的，也就是说可以被下一个 driver program 使用，而 cached RDD 不能被其他 dirver program 使用。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Spark相比Hadoop的优势在于尽量不去持久化，所以使用 pipeline，cache 等机制。用户如果感觉 job 可能会出错可以手动去 checkpoint 一些 critical 的 RDD，job 如果出错，下次运行时直接从 checkpoint 中读取数据。唯一不足的是，checkpoint 需要两次运行 job。</p>
 
       
     </div>
@@ -441,6 +444,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Spark-聚合操作/" rel="prev" title="8. 聚合操作">
+                8. 聚合操作 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -572,7 +579,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#持久化"><span class="nav-number">1.</span> <span class="nav-text">持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-引言"><span class="nav-number">1.1.</span> <span class="nav-text">1. 引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存储级别"><span class="nav-number">1.2.</span> <span class="nav-text">存储级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何选择存储级别"><span class="nav-number">1.3.</span> <span class="nav-text">如何选择存储级别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-persist"><span class="nav-number">2.</span> <span class="nav-text">2. persist</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-cache"><span class="nav-number">3.</span> <span class="nav-text">3. cache</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RDD的cache和persist的区别"><span class="nav-number">3.1.</span> <span class="nav-text">RDD的cache和persist的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-unpersist-释放缓存："><span class="nav-number">3.2.</span> <span class="nav-text">4. unpersist 释放缓存：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-checkpoint"><span class="nav-number">3.3.</span> <span class="nav-text">5. checkpoint</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#（1）cache-和-checkpoint-之间有一个重大的区别，"><span class="nav-number">3.3.0.1.</span> <span class="nav-text">（1）cache 和 checkpoint 之间有一个重大的区别，</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#（2）persist与checkpoint的区别"><span class="nav-number">3.3.0.2.</span> <span class="nav-text">（2）persist与checkpoint的区别</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#持久化"><span class="nav-number">1.</span> <span class="nav-text">持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-引言"><span class="nav-number">1.1.</span> <span class="nav-text">1. 引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存储级别"><span class="nav-number">1.2.</span> <span class="nav-text">存储级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何选择存储级别"><span class="nav-number">1.3.</span> <span class="nav-text">如何选择存储级别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-persist"><span class="nav-number">2.</span> <span class="nav-text">2. persist</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-cache"><span class="nav-number">3.</span> <span class="nav-text">3. cache</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RDD的cache和persist的区别"><span class="nav-number">3.1.</span> <span class="nav-text">RDD的cache和persist的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-unpersist-释放缓存："><span class="nav-number">3.2.</span> <span class="nav-text">4. unpersist 释放缓存：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-checkpoint"><span class="nav-number">3.3.</span> <span class="nav-text">5. checkpoint</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#（1）cache-和-checkpoint-之间有一个重大的区别，"><span class="nav-number">3.3.0.1.</span> <span class="nav-text">（1）cache 和 checkpoint 之间有一个重大的区别，</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#（2）persist与checkpoint的区别"><span class="nav-number">3.3.0.2.</span> <span class="nav-text">（2）persist与checkpoint的区别</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.4.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>

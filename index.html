@@ -229,456 +229,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Spark持久化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lee_yl">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lee_yl's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Spark持久化/" itemprop="url">10. Spark持久化</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-19T00:00:00+08:00">
-                2023-03-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/大数据/" itemprop="url" rel="index">
-                    <span itemprop="name">大数据</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/大数据/Spark/" itemprop="url" rel="index">
-                    <span itemprop="name">Spark</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p>本文仅做学习总结，如有侵权立删</p>
-<h1 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h1><h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1. 引言"></a>1. 引言</h2><p><img src="E:\GitHub_learn\blog\source\imgs\RDD持久化.jpg" alt></p>
-<blockquote>
-<p>查看上面那段伪代码，两个count触发算子会产生两个job, 那么,这两个job会往回去找errors，lines这两个rdd，最后到磁盘上拿数据。也就是每个job都会去读一遍磁盘，这里可以做优化， 将errors这个rdd保存到内存中， 然后第一个count会去磁盘度数， 但第二个count直接可以从内存中读数据了。</p>
-</blockquote>
-<p><strong>控制算子有三种，cache,persist,checkpoint，以上算子都可以将RDD持久化，持久化的单位是partition。</strong></p>
-<p><strong>cache和persist都是懒执行的。</strong></p>
-<p><strong>必须有一个action类算子触发执行。checkpoint算子不仅能将RDD持久化到磁盘，还能切断RDD之间的依赖关系</strong></p>
-<p>RDD 可以使用 persist() 方法或 cache() 方法进行持久化。数据将会在第一次 action 操作时进行计算，并缓存在节点的内存中。Spark 的缓存具有容错机制，如果一个缓存的 RDD 的某个分区丢失了，Spark 将按照原来的计算过程，自动重新计算并进行缓存。</p>
-<p>在 shuffle 操作中（例如 reduceByKey），即便是用户没有调用 persist 方法，Spark 也会自动缓存部分中间数据。这么做的目的是，在 shuffle 的过程中某个节点运行失败时，不需要重新计算所有的输入数据。如果用户想多次使用某个 RDD，强烈推荐在该 RDD 上调用 persist 方法。</p>
-<h2 id="存储级别"><a href="#存储级别" class="headerlink" title="存储级别"></a>存储级别</h2><blockquote>
-<p>可以看到StorageLevel类的主构造器包含了5个参数：</p>
-<ul>
-<li>useDisk：使用硬盘（外存）</li>
-<li>useMemory：使用内存</li>
-<li>useOffHeap：使用堆外内存，这是Java虚拟机里面的概念，堆外内存意味着把内存对象分配在Java虚拟机的堆以外的内存，这些内存直接受操作系统管理（而不是虚拟机）。这样做的结果就是能保持一个较小的堆，以减少垃圾收集对应用的影响。</li>
-<li>deserialized：反序列化，其逆过程序列化（Serialization）是java提供的一种机制，将对象表示成一连串的字节；而反序列化就表示将字节恢复为对象的过程。序列化是对象永久化的一种机制，可以将对象及其属性保存起来，并能在反序列化后直接恢复这个对象</li>
-<li>replication：备份数（在多个节点上备份）</li>
-</ul>
-</blockquote>
-<p>每个持久化的 RDD 可以使用不同的存储级别进行缓存，例如，持久化到磁盘、已序列化的 Java 对象形式持久化到内存（可以节省空间）、跨节点间复制、以 off-heap 的方式存储在 Tachyon。这些存储级别通过传递一个 StorageLevel 对象给 persist() 方法进行设置。<br>详细的存储级别介绍如下：</p>
-<ul>
-<li>MEMORY_ONLY : 将 RDD 以反序列化 Java 对象的形式存储在 JVM 中。如果内存空间不够，部分数据分区将不再缓存，在每次需要用到这些数据时重新进行计算。这是默认的级别。</li>
-<li>MEMORY_AND_DISK : 将 RDD 以反序列化 Java 对象的形式存储在 JVM 中。如果内存空间不够，将未缓存的数据分区存储到磁盘，在需要使用这些分区时从磁盘读取。</li>
-<li>MEMORY_ONLY_SER : 将 RDD 以序列化的 Java 对象的形式进行存储（每个分区为一个 byte 数组）。这种方式会比反序列化对象的方式节省很多空间，尤其是在使用 fast serializer时会节省更多的空间，但是在读取时会增加 CPU 的计算负担。</li>
-<li>MEMORY_AND_DISK_SER : 类似于 MEMORY_ONLY_SER ，但是溢出的分区会存储到磁盘，而不是在用到它们时重新计算。</li>
-<li>DISK_ONLY : 只在磁盘上缓存 RDD。</li>
-<li>MEMORY_ONLY_2，MEMORY_AND_DISK_2，等等 : 与上面的级别功能相同，只不过每个分区在集群中两个节点上建立副本。</li>
-<li>OFF_HEAP）: 类似于 MEMORY_ONLY_SER ，但是将数据存储在 off-heap memory，这需要启动 off-heap 内存。（Off-heap是指在堆外内存）</li>
-</ul>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> <span class="type">NONE</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">DISK_ONLY</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">DISK_ONLY_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY_SER</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY_SER_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_AND_DISK</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_AND_DISK_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_AND_DISK_SER</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_AND_DISK_SER_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">OFF_HEAP</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-<p><img src="..\imgs\Spark持久化1.jpg" alt></p>
-<h2 id="如何选择存储级别"><a href="#如何选择存储级别" class="headerlink" title="如何选择存储级别"></a>如何选择存储级别</h2><p>Spark 的存储级别的选择，核心问题是在<strong>内存使用率和 CPU 效率</strong>之间进行权衡。建议按下面的过程进行存储级别的选择 :</p>
-<ul>
-<li>如果使用默认的存储级别<strong>（MEMORY_ONLY）</strong>，存储在内存中的 RDD 没有发生溢出，那么就选择默认的存储级别。默认存储级别可以最大程度的提高 CPU 的效率,可以使在 RDD 上的操作以最快的速度运行。</li>
-<li>如果内存不能全部存储 RDD，那么使用 <strong>MEMORY_ONLY_SER</strong>，并挑选一个快速序列化库将对象序列化，以节省内存空间。使用这种存储级别，计算速度仍然很快。</li>
-<li>除了在计算该数据集的代价特别高，或者在需要过滤大量数据的情况下，尽量不要将溢出的数据存储到磁盘。因为，<strong>重新计算这个数据分区的耗时与从磁盘读取这些数据的耗时差不多。</strong></li>
-<li>如果想快速还原故障，建议使用<strong>多副本存储级别</strong>（例如，使用 Spark 作为 web 应用的后台服务，在服务出故障时需要快速恢复的场景下）。所有的存储级别都通过重新计算丢失的数据的方式，提供了完全容错机制。但是多副本级别在发生数据丢失时，不需要重新计算对应的数据库，可以让任务继续运行。</li>
-</ul>
-<h1 id="2-persist"><a href="#2-persist" class="headerlink" title="2. persist"></a>2. persist</h1><p>persist使用场景：</p>
-<ul>
-<li>某个步骤计算非常耗时，需要进行persist持久化</li>
-<li>计算链条非常长，重新恢复要算很多步骤</li>
-<li>需要checkpoint的RDD最好进行persist，checkpoint机制会在job执行完成之后根据DAG向前回溯，找到需要进行checkpoint的RDD，另起一个job来计算该RDD，将计算结果存储到HDFS，如果在job执行的过程中对该RDD进行了persist，那么进行checkpoint会非常快</li>
-<li>shuffle之前进行persist，Spark默认将数据持久化到磁盘，自动完成，无需干预</li>
-<li>shuffle之后为什么要persist，shuffle要进性网络传输，风险很大，数据丢失重来，恢复代价很大</li>
-</ul>
-<h1 id="3-cache"><a href="#3-cache" class="headerlink" title="3. cache"></a>3. cache</h1><h2 id="RDD的cache和persist的区别"><a href="#RDD的cache和persist的区别" class="headerlink" title="RDD的cache和persist的区别"></a>RDD的cache和persist的区别</h2><p>cache()调用的persist()，是使用默认存储级别的快捷设置方法（MEMORY_ONLY）</p>
-<p>通过源码可以看出cache()是persist()的简化方式，调用persist的无参版本，也就是调用persist(StorageLevel.MEMORY_ONLY)，cache只有一个默认的缓存级别MEMORY_ONLY，即将数据持久化到内存中，而persist可以通过传递一个 StorageLevel 对象来设置其它的缓存级别。</p>
-<h2 id="4-unpersist-释放缓存："><a href="#4-unpersist-释放缓存：" class="headerlink" title="4. unpersist 释放缓存："></a>4. unpersist 释放缓存：</h2><p>Spark 自动监控各个节点上的缓存使用率，并以最近最少使用的方式（LRU）将旧数据块移除内存。如果想手动移除一个 RDD，而不是等待该 RDD 被 Spark 自动移除，可以使用 RDD.unpersist() 方法</p>
-<p>注意：如果缓存的RDD之间有依赖关系，比如</p>
-<p>val rdd_a = df.persist</p>
-<p>val rdd_<em>b = rdd_a.filter.persist</em></p>
-<p><em>val rdd_c = rdd_b.map.persist</em></p>
-<p>在用unpersist清理缓存时，当首先清理rdd_a时，会重建rdd_b和rdd_c的缓存，如果数据量巨大，这个过程可能花费很长时间，即使rdd<em>b</em>和rdd_c后面也即将被清理，但是重建过程也会进行，可能会出现一个现象，所有job都以完成，但是任务长时间处于RUNNING状态，这可能就是因为最后再清理缓存时又会把依赖于它的RDD再重算一遍。这时可以只用使用<em>spark</em>.<em>sharedState</em>.<em>cacheManager</em>.uncacheQuery(df, cascade = true, blocking = false)来全部释放，参数cascade 表示是否清理所有引用此RDD的其他RDD，以下是unpersist的源码，可以一目了然</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">unpersist</span></span>(blocking: <span class="type">Boolean</span>): <span class="keyword">this</span>.<span class="keyword">type</span> = &#123;</span><br><span class="line">  sparkSession.sharedState.cacheManager.uncacheQuery(<span class="keyword">this</span>, cascade = <span class="literal">false</span>, blocking)</span><br><span class="line">  <span class="keyword">this</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="5-checkpoint"><a href="#5-checkpoint" class="headerlink" title="5. checkpoint"></a>5. checkpoint</h2><ul>
-<li><p>checkpoint将RDD持久化到磁盘，还可以切断RDD之间的依赖关系</p>
-</li>
-<li><p>checkpoint 的执行原理</p>
-<ul>
-<li>当RDD的job执行完毕后，会从finalRDD从后往前回溯。</li>
-<li>当回溯到某一个RDD调用了checkpoint方法，会对当前的RDD做一个标记。</li>
-<li>Spark框架会自动启动一个新的job，重新计算这个RDD的数据，将数据持久化到HDFS上。</li>
-</ul>
-</li>
-<li><p>优化：对RDD执行checkpoint之前，最好对这个RDD先执行cache，这样新启动的job只需要将内存中的数据拷贝到HDFS上就可以，省去了重新计算这一步</p>
-</li>
-</ul>
-<h4 id="（1）cache-和-checkpoint-之间有一个重大的区别，"><a href="#（1）cache-和-checkpoint-之间有一个重大的区别，" class="headerlink" title="（1）cache 和 checkpoint 之间有一个重大的区别，"></a><strong>（1）cache 和 checkpoint 之间有一个重大的区别，</strong></h4><p><strong>cache 将 RDD 以及 RDD 的血统(记录了这个RDD如何产生)缓存到内存中</strong>，当缓存的 RDD 失效的时候(如内存损坏)，它们可以通过血统重新计算来进行恢复。但是 <strong>checkpoint 将 RDD 缓存到了 HDFS 中，同时忽略了它的血统(也就是RDD之前的那些依赖)</strong>。为什么要丢掉依赖？因为可以利用 HDFS 多副本特性保证容错！</p>
-<h4 id="（2）persist与checkpoint的区别"><a href="#（2）persist与checkpoint的区别" class="headerlink" title="（2）persist与checkpoint的区别"></a>（2）persist与checkpoint的区别</h4><p>rdd.persist(StorageLevel.DISK_ONLY) 与 checkpoint 也有区别。前者虽然可以将 RDD 的 partition 持久化到磁盘，但该 partition 由 blockManager 管理。一旦 driver program 执行结束，也就是 executor 所在进程 CoarseGrainedExecutorBackend stop，blockManager 也会 stop，<strong>被 cache 到磁盘上的 RDD 也会被清空</strong>（整个 blockManager 使用的 local 文件夹被删除）。</p>
-<p>而 <strong>checkpoint 将 RDD 持久化到 HDFS 或本地文件夹</strong>，如果不被手动 remove 掉，是一直存在的，也就是说可以被下一个 driver program 使用，而 cached RDD 不能被其他 dirver program 使用。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/9.-数据源/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lee_yl">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lee_yl's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/9.-数据源/" itemprop="url">9. 数据源</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-19T00:00:00+08:00">
-                2023-03-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/大数据/" itemprop="url" rel="index">
-                    <span itemprop="name">大数据</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/大数据/Spark/" itemprop="url" rel="index">
-                    <span itemprop="name">Spark</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本文仅做学习总结，如有侵权立删</p>
-<h1 id="一、核心数据源"><a href="#一、核心数据源" class="headerlink" title="一、核心数据源"></a>一、核心数据源</h1><ul>
-<li>CSV</li>
-<li>JSON</li>
-<li>Parquet</li>
-<li>ORC</li>
-<li>JDBC</li>
-<li><p>纯文本</p>
-</li>
-<li><p>Hbase</p>
-</li>
-<li>MongoDB</li>
-<li>AWS Redshift</li>
-<li>XML</li>
-</ul>
-<p>。。。</p>
-<h1 id="二、Read-API结构"><a href="#二、Read-API结构" class="headerlink" title="二、Read API结构"></a>二、Read API结构</h1><p>读取数据的核心结构如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DataFrameReader.format(...).option(<span class="string">"key"</span>, <span class="string">"value"</span>).schema(...).load()</span><br></pre></td></tr></table></figure>
-<p>使用以上格式来读取所有数据源，format是可选的，默认是parquet格式。</p>
-<p>Spark数据读取使用DataFrameReader，通过SparkSession的read属性得到：</p>
-<p>​    Spark.read</p>
-<p>需指定：</p>
-<ul>
-<li>format</li>
-<li>schema</li>
-<li>read模式</li>
-<li>一系列option选项</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">spark.read.format(<span class="string">"csv"</span>)</span><br><span class="line">.option(<span class="string">"mode"</span>, <span class="string">"FAILFAST"</span>)</span><br><span class="line">.option(<span class="string">"path"</span>, <span class="string">"path/to/file(s)"</span>)</span><br><span class="line">.schema(someSchema)</span><br><span class="line">.load()</span><br></pre></td></tr></table></figure>
-<h2 id="1-读取模式mode"><a href="#1-读取模式mode" class="headerlink" title="(1) 读取模式mode"></a>(1) 读取模式mode</h2><p>从外部源读取数据很容易会遇到错误格式的数据，指定读取模式可以当Spark遇到错误格式的记录时应采取什么操作。</p>
-<ul>
-<li>permissive：当遇到错误格式的记录时，将所有字段设置为null并将所有错误格式的记录放在名为_corrupt_record字符串列中</li>
-<li>dropMalformed：删除包含错误格式记录的行</li>
-<li>failFast：遇到错误格式的记录后立即返回失败</li>
-</ul>
-<p>默认是permissive.</p>
-<h1 id="三、Write-API结构"><a href="#三、Write-API结构" class="headerlink" title="三、Write API结构"></a>三、Write API结构</h1><p>写数据的核心结构如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DataFrameWriter.format(...).option(...).partitionBy(...).bucketBy(...).sortBy(...).save()</span><br></pre></td></tr></table></figure>
-<h2 id="1-保存模式mode"><a href="#1-保存模式mode" class="headerlink" title="(1) 保存模式mode"></a>(1) 保存模式mode</h2><p>.option(“mode”, “OVERWRITE”)</p>
-<ul>
-<li>append：将输出内容追加到目标文件中</li>
-<li>overwrite：将输出内容重写到目标文件中</li>
-<li>errorIfExists：如果目标路径已存在数据或文件，则抛出错误并返回写入操作失败</li>
-<li>ignore：如果目标路径已存在数据或文件，则不执行任何操作</li>
-</ul>
-<p>默认值为errorIfExists.</p>
-<h1 id="四、CSV-json-parquet等文件"><a href="#四、CSV-json-parquet等文件" class="headerlink" title="四、CSV/json/parquet等文件"></a>四、CSV/json/parquet等文件</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">spark.read.format(<span class="string">"csv"</span>) <span class="comment"># json/ parquet/orc/</span></span><br><span class="line">.option(<span class="string">"header"</span>, <span class="string">"true"</span>)</span><br><span class="line">.load(<span class="string">"file.csv"</span>)</span><br><span class="line"></span><br><span class="line">df.write.format(<span class="string">"csv"</span>).mode(<span class="string">"overwrite"</span>).option(<span class="string">"sep"</span>, <span class="string">"\t"</span>).save(<span class="string">"file.csv"</span>)</span><br></pre></td></tr></table></figure>
-<h1 id="五、文本文件"><a href="#五、文本文件" class="headerlink" title="五、文本文件"></a>五、文本文件</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 读文件</span></span><br><span class="line">spark.read.textFile(<span class="string">"file.csv"</span>).selectExpr(<span class="string">"split(value, ',') as rows"</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 写文件</span></span><br><span class="line">df.limit(<span class="number">10</span>).select(<span class="string">"a"</span>, <span class="string">"b"</span>).write..partitionBy(<span class="string">'b'</span>).text(<span class="string">'file.csv'</span>)</span><br></pre></td></tr></table></figure>
-<h1 id="六、高级I-O概念"><a href="#六、高级I-O概念" class="headerlink" title="六、高级I/O概念"></a>六、高级I/O概念</h1><ul>
-<li><p>可分割的文件类型和压缩(gzip压缩格式的Parquet等)</p>
-</li>
-<li><p>并行读写数据（分区概念)</p>
-<ul>
-<li><p>repartitions：减少分区数量</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.repartitions(<span class="number">5</span>).write.format(<span class="string">"csv"</span>).save(<span class="string">"file.csv"</span>)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>partitionBy：按什么字段来分区</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.write.mode(<span class="string">"overwrite"</span>).partitionBy(<span class="string">"a"</span>).save(<span class="string">"file.csv"</span>)</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-<li><p>数据分桶：bucketBy</p>
-</li>
-</ul>
-<p>具有相同桶ID（哈希分桶的ID）的数据将放置到一个物理分区中，这样就可以避免在稍后读取数据时进行shuffle。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DataFrameWriter.bucketBy(numBuckets, col, *cols)</span><br><span class="line"><span class="comment"># 按给定列存储输出。如果指定，则输出布局在文件系统上，类似于 Hive 的分桶方案，但具有不同的桶哈希函数，并且与 Hive 的分桶不兼容。</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>(df.write.format(<span class="string">'parquet'</span>)  </span><br><span class="line">     .bucketBy(<span class="number">100</span>, <span class="string">'year'</span>, <span class="string">'month'</span>)</span><br><span class="line">     .mode(<span class="string">"overwrite"</span>)</span><br><span class="line">     .saveAsTable(<span class="string">'bucketed_table'</span>))</span><br></pre></td></tr></table></figure>
-<ul>
-<li>管理文件</li>
-</ul>
-<p>！！！写数据对文件大小不那么重要，但读取很重要！管理大量小文件产生很大的元数据开销，Spark特别不适合处理小文件。</p>
-<p>​    maxRecordsPerFile选项来指定每个文件的最大记录数，这使得你可以通过控制写入每个文件的记录数来控制文件大小。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.write.option(<span class="string">'maxRecordsPerFile'</span>, <span class="number">5000</span>) <span class="comment"># Spark确保每个文件最多包含5000条记录</span></span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/Spark-聚合操作/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1025,6 +575,459 @@
 <p><a href="https://stackoverflow.com/questions/45946349/python-spark-cumulative-sum-by-group-using-dataframe" target="_blank" rel="noopener">https://stackoverflow.com/questions/45946349/python-spark-cumulative-sum-by-group-using-dataframe</a> (相加)</p>
 <h3 id="（4）groupby-sort-list"><a href="#（4）groupby-sort-list" class="headerlink" title="（4）groupby  + sort + list"></a>（4）groupby  + sort + list</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">group_df = qds_com.groupby([<span class="string">'company'</span>]) \</span><br><span class="line">    .agg(F.sort_array(F.collect_list(F.struct(<span class="string">"features"</span>, <span class="string">"label"</span>, <span class="string">"samples_count"</span>))) \</span><br><span class="line">         .alias(<span class="string">"pair"</span>))</span><br></pre></td></tr></table></figure>
 <h3 id="（5）求众数"><a href="#（5）求众数" class="headerlink" title="（5）求众数"></a>（5）求众数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df_com_cookie.groupBy([<span class="string">'company'</span>,<span class="string">'price'</span>]).agg(F.count(<span class="string">'price'</span>).alias(<span class="string">'count_price'</span>)).orderBy([<span class="string">'company'</span>,<span class="string">'count_price'</span>], ascending=<span class="literal">False</span>).drop_duplicates(subset=[<span class="string">'company'</span>]).show()</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Spark持久化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Spark持久化/" itemprop="url">10. Spark持久化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-19T00:00:00+08:00">
+                2023-03-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/" itemprop="url" rel="index">
+                    <span itemprop="name">大数据</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p>本文仅做学习总结，如有侵权立删</p>
+<h1 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h1><h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1. 引言"></a>1. 引言</h2><p><img src="E:\GitHub_learn\blog\source\imgs\RDD持久化.jpg" alt></p>
+<blockquote>
+<p>查看上面那段伪代码，两个count触发算子会产生两个job, 那么,这两个job会往回去找errors，lines这两个rdd，最后到磁盘上拿数据。也就是每个job都会去读一遍磁盘，这里可以做优化， 将errors这个rdd保存到内存中， 然后第一个count会去磁盘度数， 但第二个count直接可以从内存中读数据了。</p>
+</blockquote>
+<p><strong>控制算子有三种，cache,persist,checkpoint，以上算子都可以将RDD持久化，持久化的单位是partition。</strong></p>
+<p><strong>cache和persist都是懒执行的。</strong></p>
+<p><strong>必须有一个action类算子触发执行。checkpoint算子不仅能将RDD持久化到磁盘，还能切断RDD之间的依赖关系</strong></p>
+<p>RDD 可以使用 persist() 方法或 cache() 方法进行持久化。数据将会在第一次 action 操作时进行计算，并缓存在节点的内存中。Spark 的缓存具有容错机制，如果一个缓存的 RDD 的某个分区丢失了，Spark 将按照原来的计算过程，自动重新计算并进行缓存。</p>
+<p>在 shuffle 操作中（例如 reduceByKey），即便是用户没有调用 persist 方法，Spark 也会自动缓存部分中间数据。这么做的目的是，在 shuffle 的过程中某个节点运行失败时，不需要重新计算所有的输入数据。如果用户想多次使用某个 RDD，强烈推荐在该 RDD 上调用 persist 方法。</p>
+<h2 id="存储级别"><a href="#存储级别" class="headerlink" title="存储级别"></a>存储级别</h2><blockquote>
+<p>可以看到StorageLevel类的主构造器包含了5个参数：</p>
+<ul>
+<li>useDisk：使用硬盘（外存）</li>
+<li>useMemory：使用内存</li>
+<li>useOffHeap：使用堆外内存，这是Java虚拟机里面的概念，堆外内存意味着把内存对象分配在Java虚拟机的堆以外的内存，这些内存直接受操作系统管理（而不是虚拟机）。这样做的结果就是能保持一个较小的堆，以减少垃圾收集对应用的影响。</li>
+<li>deserialized：反序列化，其逆过程序列化（Serialization）是java提供的一种机制，将对象表示成一连串的字节；而反序列化就表示将字节恢复为对象的过程。序列化是对象永久化的一种机制，可以将对象及其属性保存起来，并能在反序列化后直接恢复这个对象</li>
+<li>replication：备份数（在多个节点上备份）</li>
+</ul>
+</blockquote>
+<p>每个持久化的 RDD 可以使用不同的存储级别进行缓存，例如，持久化到磁盘、已序列化的 Java 对象形式持久化到内存（可以节省空间）、跨节点间复制、以 off-heap 的方式存储在 Tachyon。这些存储级别通过传递一个 StorageLevel 对象给 persist() 方法进行设置。<br>详细的存储级别介绍如下：</p>
+<ul>
+<li>MEMORY_ONLY : 将 RDD 以反序列化 Java 对象的形式存储在 JVM 中。如果内存空间不够，部分数据分区将不再缓存，在每次需要用到这些数据时重新进行计算。这是默认的级别。</li>
+<li>MEMORY_AND_DISK : 将 RDD 以反序列化 Java 对象的形式存储在 JVM 中。如果内存空间不够，将未缓存的数据分区存储到磁盘，在需要使用这些分区时从磁盘读取。</li>
+<li>MEMORY_ONLY_SER : 将 RDD 以序列化的 Java 对象的形式进行存储（每个分区为一个 byte 数组）。这种方式会比反序列化对象的方式节省很多空间，尤其是在使用 fast serializer时会节省更多的空间，但是在读取时会增加 CPU 的计算负担。</li>
+<li>MEMORY_AND_DISK_SER : 类似于 MEMORY_ONLY_SER ，但是溢出的分区会存储到磁盘，而不是在用到它们时重新计算。</li>
+<li>DISK_ONLY : 只在磁盘上缓存 RDD。</li>
+<li>MEMORY_ONLY_2，MEMORY_AND_DISK_2，等等 : 与上面的级别功能相同，只不过每个分区在集群中两个节点上建立副本。</li>
+<li>OFF_HEAP）: 类似于 MEMORY_ONLY_SER ，但是将数据存储在 off-heap memory，这需要启动 off-heap 内存。（Off-heap是指在堆外内存）</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> <span class="type">NONE</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">DISK_ONLY</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">DISK_ONLY_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY_SER</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY_SER_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_AND_DISK</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_AND_DISK_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_AND_DISK_SER</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_AND_DISK_SER_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">OFF_HEAP</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="..\imgs\Spark持久化1.jpg" alt></p>
+<h2 id="如何选择存储级别"><a href="#如何选择存储级别" class="headerlink" title="如何选择存储级别"></a>如何选择存储级别</h2><p>Spark 的存储级别的选择，核心问题是在<strong>内存使用率和 CPU 效率</strong>之间进行权衡。建议按下面的过程进行存储级别的选择 :</p>
+<ul>
+<li>如果使用默认的存储级别<strong>（MEMORY_ONLY）</strong>，存储在内存中的 RDD 没有发生溢出，那么就选择默认的存储级别。默认存储级别可以最大程度的提高 CPU 的效率,可以使在 RDD 上的操作以最快的速度运行。</li>
+<li>如果内存不能全部存储 RDD，那么使用 <strong>MEMORY_ONLY_SER</strong>，并挑选一个快速序列化库将对象序列化，以节省内存空间。使用这种存储级别，计算速度仍然很快。</li>
+<li>除了在计算该数据集的代价特别高，或者在需要过滤大量数据的情况下，尽量不要将溢出的数据存储到磁盘。因为，<strong>重新计算这个数据分区的耗时与从磁盘读取这些数据的耗时差不多。</strong></li>
+<li>如果想快速还原故障，建议使用<strong>多副本存储级别</strong>（例如，使用 Spark 作为 web 应用的后台服务，在服务出故障时需要快速恢复的场景下）。所有的存储级别都通过重新计算丢失的数据的方式，提供了完全容错机制。但是多副本级别在发生数据丢失时，不需要重新计算对应的数据库，可以让任务继续运行。</li>
+</ul>
+<h1 id="2-persist"><a href="#2-persist" class="headerlink" title="2. persist"></a>2. persist</h1><p>persist使用场景：</p>
+<ul>
+<li>某个步骤计算非常耗时，需要进行persist持久化</li>
+<li>计算链条非常长，重新恢复要算很多步骤</li>
+<li>需要checkpoint的RDD最好进行persist，checkpoint机制会在job执行完成之后根据DAG向前回溯，找到需要进行checkpoint的RDD，另起一个job来计算该RDD，将计算结果存储到HDFS，如果在job执行的过程中对该RDD进行了persist，那么进行checkpoint会非常快</li>
+<li>shuffle之前进行persist，Spark默认将数据持久化到磁盘，自动完成，无需干预</li>
+<li>shuffle之后为什么要persist，shuffle要进性网络传输，风险很大，数据丢失重来，恢复代价很大</li>
+</ul>
+<h1 id="3-cache"><a href="#3-cache" class="headerlink" title="3. cache"></a>3. cache</h1><h2 id="RDD的cache和persist的区别"><a href="#RDD的cache和persist的区别" class="headerlink" title="RDD的cache和persist的区别"></a>RDD的cache和persist的区别</h2><p>cache()调用的persist()，是使用默认存储级别的快捷设置方法（MEMORY_ONLY）</p>
+<p>通过源码可以看出cache()是persist()的简化方式，调用persist的无参版本，也就是调用persist(StorageLevel.MEMORY_ONLY)，cache只有一个默认的缓存级别MEMORY_ONLY，即将数据持久化到内存中，而persist可以通过传递一个 StorageLevel 对象来设置其它的缓存级别。</p>
+<h2 id="4-unpersist-释放缓存："><a href="#4-unpersist-释放缓存：" class="headerlink" title="4. unpersist 释放缓存："></a>4. unpersist 释放缓存：</h2><p>Spark 自动监控各个节点上的缓存使用率，并以最近最少使用的方式（LRU）将旧数据块移除内存。如果想手动移除一个 RDD，而不是等待该 RDD 被 Spark 自动移除，可以使用 RDD.unpersist() 方法</p>
+<p>注意：如果缓存的RDD之间有依赖关系，比如</p>
+<p>val rdd_a = df.persist</p>
+<p>val rdd_<em>b = rdd_a.filter.persist</em></p>
+<p><em>val rdd_c = rdd_b.map.persist</em></p>
+<p>在用unpersist清理缓存时，当首先清理rdd_a时，会重建rdd_b和rdd_c的缓存，如果数据量巨大，这个过程可能花费很长时间，即使rdd<em>b</em>和rdd_c后面也即将被清理，但是重建过程也会进行，可能会出现一个现象，所有job都以完成，但是任务长时间处于RUNNING状态，这可能就是因为最后再清理缓存时又会把依赖于它的RDD再重算一遍。这时可以只用使用<em>spark</em>.<em>sharedState</em>.<em>cacheManager</em>.uncacheQuery(df, cascade = true, blocking = false)来全部释放，参数cascade 表示是否清理所有引用此RDD的其他RDD，以下是unpersist的源码，可以一目了然</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">unpersist</span></span>(blocking: <span class="type">Boolean</span>): <span class="keyword">this</span>.<span class="keyword">type</span> = &#123;</span><br><span class="line">  sparkSession.sharedState.cacheManager.uncacheQuery(<span class="keyword">this</span>, cascade = <span class="literal">false</span>, blocking)</span><br><span class="line">  <span class="keyword">this</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="5-checkpoint"><a href="#5-checkpoint" class="headerlink" title="5. checkpoint"></a>5. checkpoint</h2><ul>
+<li><p>checkpoint将RDD持久化到磁盘，还可以切断RDD之间的依赖关系</p>
+</li>
+<li><p>checkpoint 的执行原理</p>
+<ul>
+<li>当RDD的job执行完毕后，会从finalRDD从后往前回溯。</li>
+<li>当回溯到某一个RDD调用了checkpoint方法，会对当前的RDD做一个标记。</li>
+<li>Spark框架会自动启动一个新的job，重新计算这个RDD的数据，将数据持久化到HDFS上。</li>
+</ul>
+</li>
+<li><p>优化：<strong>对RDD执行checkpoint之前，最好对这个RDD先执行cache，这样新启动的job只需要将内存中的数据拷贝到HDFS上就可以，省去了重新计算这一步</strong></p>
+</li>
+<li><p>解释：cache 机制是每计算出一个要 cache 的 partition 就直接将其 cache 到内存了。但 checkpoint 没有使用这种第一次计算得到就存储的方法，而是等到 job 结束后另外启动专门的 job 去完成 checkpoint 。也就是说需要 checkpoint 的 RDD 会被计算两次。因此，在使用 rdd.checkpoint() 的时候，建议加上 rdd.cache()，这样第二次运行的 job 就不用再去计算该 rdd 了，直接读取 cache 写磁盘。</p>
+</li>
+</ul>
+<h4 id="（1）cache-和-checkpoint-之间有一个重大的区别，"><a href="#（1）cache-和-checkpoint-之间有一个重大的区别，" class="headerlink" title="（1）cache 和 checkpoint 之间有一个重大的区别，"></a><strong>（1）cache 和 checkpoint 之间有一个重大的区别，</strong></h4><p><strong>cache 将 RDD 以及 RDD 的血统(记录了这个RDD如何产生)缓存到内存中</strong>，当缓存的 RDD 失效的时候(如内存损坏)，它们可以通过血统重新计算来进行恢复。但是 <strong>checkpoint 将 RDD 缓存到了 HDFS 中，同时忽略了它的血统(也就是RDD之前的那些依赖)</strong>。为什么要丢掉依赖？因为可以利用 HDFS 多副本特性保证容错！</p>
+<h4 id="（2）persist与checkpoint的区别"><a href="#（2）persist与checkpoint的区别" class="headerlink" title="（2）persist与checkpoint的区别"></a>（2）persist与checkpoint的区别</h4><p>rdd.persist(StorageLevel.DISK_ONLY) 与 checkpoint 也有区别。前者虽然可以将 RDD 的 partition 持久化到磁盘，但该 partition 由 blockManager 管理。一旦 driver program 执行结束，也就是 executor 所在进程 CoarseGrainedExecutorBackend stop，blockManager 也会 stop，<strong>被 cache 到磁盘上的 RDD 也会被清空</strong>（整个 blockManager 使用的 local 文件夹被删除）。</p>
+<p>而 <strong>checkpoint 将 RDD 持久化到 HDFS 或本地文件夹</strong>，如果不被手动 remove 掉，是一直存在的，也就是说可以被下一个 driver program 使用，而 cached RDD 不能被其他 dirver program 使用。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Spark相比Hadoop的优势在于尽量不去持久化，所以使用 pipeline，cache 等机制。用户如果感觉 job 可能会出错可以手动去 checkpoint 一些 critical 的 RDD，job 如果出错，下次运行时直接从 checkpoint 中读取数据。唯一不足的是，checkpoint 需要两次运行 job。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/9.-数据源/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/9.-数据源/" itemprop="url">9. 数据源</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-19T00:00:00+08:00">
+                2023-03-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/" itemprop="url" rel="index">
+                    <span itemprop="name">大数据</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本文仅做学习总结，如有侵权立删</p>
+<h1 id="一、核心数据源"><a href="#一、核心数据源" class="headerlink" title="一、核心数据源"></a>一、核心数据源</h1><ul>
+<li>CSV</li>
+<li>JSON</li>
+<li>Parquet</li>
+<li>ORC</li>
+<li>JDBC</li>
+<li><p>纯文本</p>
+</li>
+<li><p>Hbase</p>
+</li>
+<li>MongoDB</li>
+<li>AWS Redshift</li>
+<li>XML</li>
+</ul>
+<p>。。。</p>
+<h1 id="二、Read-API结构"><a href="#二、Read-API结构" class="headerlink" title="二、Read API结构"></a>二、Read API结构</h1><p>读取数据的核心结构如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DataFrameReader.format(...).option(<span class="string">"key"</span>, <span class="string">"value"</span>).schema(...).load()</span><br></pre></td></tr></table></figure>
+<p>使用以上格式来读取所有数据源，format是可选的，默认是parquet格式。</p>
+<p>Spark数据读取使用DataFrameReader，通过SparkSession的read属性得到：</p>
+<p>​    Spark.read</p>
+<p>需指定：</p>
+<ul>
+<li>format</li>
+<li>schema</li>
+<li>read模式</li>
+<li>一系列option选项</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">spark.read.format(<span class="string">"csv"</span>)</span><br><span class="line">.option(<span class="string">"mode"</span>, <span class="string">"FAILFAST"</span>)</span><br><span class="line">.option(<span class="string">"path"</span>, <span class="string">"path/to/file(s)"</span>)</span><br><span class="line">.schema(someSchema)</span><br><span class="line">.load()</span><br></pre></td></tr></table></figure>
+<h2 id="1-读取模式mode"><a href="#1-读取模式mode" class="headerlink" title="(1) 读取模式mode"></a>(1) 读取模式mode</h2><p>从外部源读取数据很容易会遇到错误格式的数据，指定读取模式可以当Spark遇到错误格式的记录时应采取什么操作。</p>
+<ul>
+<li>permissive：当遇到错误格式的记录时，将所有字段设置为null并将所有错误格式的记录放在名为_corrupt_record字符串列中</li>
+<li>dropMalformed：删除包含错误格式记录的行</li>
+<li>failFast：遇到错误格式的记录后立即返回失败</li>
+</ul>
+<p>默认是permissive.</p>
+<h1 id="三、Write-API结构"><a href="#三、Write-API结构" class="headerlink" title="三、Write API结构"></a>三、Write API结构</h1><p>写数据的核心结构如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DataFrameWriter.format(...).option(...).partitionBy(...).bucketBy(...).sortBy(...).save()</span><br></pre></td></tr></table></figure>
+<h2 id="1-保存模式mode"><a href="#1-保存模式mode" class="headerlink" title="(1) 保存模式mode"></a>(1) 保存模式mode</h2><p>.option(“mode”, “OVERWRITE”)</p>
+<ul>
+<li>append：将输出内容追加到目标文件中</li>
+<li>overwrite：将输出内容重写到目标文件中</li>
+<li>errorIfExists：如果目标路径已存在数据或文件，则抛出错误并返回写入操作失败</li>
+<li>ignore：如果目标路径已存在数据或文件，则不执行任何操作</li>
+</ul>
+<p>默认值为errorIfExists.</p>
+<h1 id="四、CSV-json-parquet等文件"><a href="#四、CSV-json-parquet等文件" class="headerlink" title="四、CSV/json/parquet等文件"></a>四、CSV/json/parquet等文件</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">spark.read.format(<span class="string">"csv"</span>) <span class="comment"># json/ parquet/orc/</span></span><br><span class="line">.option(<span class="string">"header"</span>, <span class="string">"true"</span>)</span><br><span class="line">.load(<span class="string">"file.csv"</span>)</span><br><span class="line"></span><br><span class="line">df.write.format(<span class="string">"csv"</span>).mode(<span class="string">"overwrite"</span>).option(<span class="string">"sep"</span>, <span class="string">"\t"</span>).save(<span class="string">"file.csv"</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="五、文本文件"><a href="#五、文本文件" class="headerlink" title="五、文本文件"></a>五、文本文件</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 读文件</span></span><br><span class="line">spark.read.textFile(<span class="string">"file.csv"</span>).selectExpr(<span class="string">"split(value, ',') as rows"</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 写文件</span></span><br><span class="line">df.limit(<span class="number">10</span>).select(<span class="string">"a"</span>, <span class="string">"b"</span>).write..partitionBy(<span class="string">'b'</span>).text(<span class="string">'file.csv'</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="六、高级I-O概念"><a href="#六、高级I-O概念" class="headerlink" title="六、高级I/O概念"></a>六、高级I/O概念</h1><ul>
+<li><p>可分割的文件类型和压缩(gzip压缩格式的Parquet等)</p>
+</li>
+<li><p>并行读写数据（分区概念)</p>
+<ul>
+<li><p>repartitions：减少分区数量</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.repartitions(<span class="number">5</span>).write.format(<span class="string">"csv"</span>).save(<span class="string">"file.csv"</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>partitionBy：按什么字段来分区</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.write.mode(<span class="string">"overwrite"</span>).partitionBy(<span class="string">"a"</span>).save(<span class="string">"file.csv"</span>)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>数据分桶：bucketBy</p>
+</li>
+</ul>
+<p>具有相同桶ID（哈希分桶的ID）的数据将放置到一个物理分区中，这样就可以避免在稍后读取数据时进行shuffle。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DataFrameWriter.bucketBy(numBuckets, col, *cols)</span><br><span class="line"><span class="comment"># 按给定列存储输出。如果指定，则输出布局在文件系统上，类似于 Hive 的分桶方案，但具有不同的桶哈希函数，并且与 Hive 的分桶不兼容。</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>(df.write.format(<span class="string">'parquet'</span>)  </span><br><span class="line">     .bucketBy(<span class="number">100</span>, <span class="string">'year'</span>, <span class="string">'month'</span>)</span><br><span class="line">     .mode(<span class="string">"overwrite"</span>)</span><br><span class="line">     .saveAsTable(<span class="string">'bucketed_table'</span>))</span><br></pre></td></tr></table></figure>
+<ul>
+<li>管理文件</li>
+</ul>
+<p>！！！写数据对文件大小不那么重要，但读取很重要！管理大量小文件产生很大的元数据开销，Spark特别不适合处理小文件。</p>
+<p>​    maxRecordsPerFile选项来指定每个文件的最大记录数，这使得你可以通过控制写入每个文件的记录数来控制文件大小。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.write.option(<span class="string">'maxRecordsPerFile'</span>, <span class="number">5000</span>) <span class="comment"># Spark确保每个文件最多包含5000条记录</span></span><br></pre></td></tr></table></figure>
 
           
         
