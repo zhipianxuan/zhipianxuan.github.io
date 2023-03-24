@@ -88,7 +88,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="e:/GitHub_learn/blog/source/imgs/RDD持久化.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/Spark持久化1.jpg">
-<meta property="og:updated_time" content="2023-03-24T15:05:38.347Z">
+<meta property="og:updated_time" content="2023-03-24T15:07:21.493Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="10. Spark持久化">
 <meta name="twitter:description" content="本文仅做学习总结，如有侵权立删 持久化1. 引言  查看上面那段伪代码，两个count触发算子会产生两个job, 那么,这两个job会往回去找errors，lines这两个rdd，最后到磁盘上拿数据。也就是每个job都会去读一遍磁盘，这里可以做优化， 将errors这个rdd保存到内存中， 然后第一个count会去磁盘度数， 但第二个count直接可以从内存中读数据了。  控制算子有三种，cac">
@@ -264,8 +264,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-19T00:00:00+08:00">
-                2023-03-19
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-24T00:00:00+08:00">
+                2023-03-24
               </time>
             
 
@@ -444,10 +444,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/Spark-聚合操作/" rel="prev" title="8. 聚合操作">
-                8. 聚合操作 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
