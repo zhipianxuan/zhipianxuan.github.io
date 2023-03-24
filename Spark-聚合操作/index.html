@@ -79,20 +79,20 @@
 
 
 
-<meta name="description" content="title: 8. 聚合操作date: 2023-03-19tags:categories:   大数据 Spark  本文仅做学习总结，如有侵权立删 [TOC] 一、分组类型！！！注意null值，如果不过滤空值，则可能会得到不正确的结果。尤其是grouping set、rollup和cube！  group by：指定一个或多个key和一个或多个聚合函数，对列进行转换操作  window：跟gr">
+<meta name="description" content="本文仅做学习总结，如有侵权立删 [TOC] 一、分组类型！！！注意null值，如果不过滤空值，则可能会得到不正确的结果。尤其是grouping set、rollup和cube！  group by：指定一个或多个key和一个或多个聚合函数，对列进行转换操作  window：跟group by类似功能， 但能保留当前行  grouping set：SQL中的用法 rollup：跟groupby类似">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Lee_yl&#39;s blog">
+<meta property="og:title" content="8. 聚合操作">
 <meta property="og:url" content="http://yoursite.com/Spark-聚合操作/index.html">
 <meta property="og:site_name" content="Lee_yl&#39;s blog">
-<meta property="og:description" content="title: 8. 聚合操作date: 2023-03-19tags:categories:   大数据 Spark  本文仅做学习总结，如有侵权立删 [TOC] 一、分组类型！！！注意null值，如果不过滤空值，则可能会得到不正确的结果。尤其是grouping set、rollup和cube！  group by：指定一个或多个key和一个或多个聚合函数，对列进行转换操作  window：跟gr">
+<meta property="og:description" content="本文仅做学习总结，如有侵权立删 [TOC] 一、分组类型！！！注意null值，如果不过滤空值，则可能会得到不正确的结果。尤其是grouping set、rollup和cube！  group by：指定一个或多个key和一个或多个聚合函数，对列进行转换操作  window：跟group by类似功能， 但能保留当前行  grouping set：SQL中的用法 rollup：跟groupby类似">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/imgs/Spark_pivot1.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/Spark_pivot.jpg">
 <meta property="og:image" content="https://ask.qcloudimg.com/http-save/yehe-7131597/qi0imvjt5y.png?imageView2/2/w/1620">
-<meta property="og:updated_time" content="2023-03-19T12:00:51.317Z">
+<meta property="og:updated_time" content="2023-03-19T15:30:39.970Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Lee_yl&#39;s blog">
-<meta name="twitter:description" content="title: 8. 聚合操作date: 2023-03-19tags:categories:   大数据 Spark  本文仅做学习总结，如有侵权立删 [TOC] 一、分组类型！！！注意null值，如果不过滤空值，则可能会得到不正确的结果。尤其是grouping set、rollup和cube！  group by：指定一个或多个key和一个或多个聚合函数，对列进行转换操作  window：跟gr">
+<meta name="twitter:title" content="8. 聚合操作">
+<meta name="twitter:description" content="本文仅做学习总结，如有侵权立删 [TOC] 一、分组类型！！！注意null值，如果不过滤空值，则可能会得到不正确的结果。尤其是grouping set、rollup和cube！  group by：指定一个或多个key和一个或多个聚合函数，对列进行转换操作  window：跟group by类似功能， 但能保留当前行  grouping set：SQL中的用法 rollup：跟groupby类似">
 <meta name="twitter:image" content="http://yoursite.com/imgs/Spark_pivot1.jpg">
 
 
@@ -129,7 +129,7 @@
 
 
 
-  <title> | Lee_yl's blog</title>
+  <title>8. 聚合操作 | Lee_yl's blog</title>
   
 
 
@@ -253,7 +253,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">8. 聚合操作</h1>
         
 
         <div class="post-meta">
@@ -265,7 +265,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-19T18:21:37+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-19T00:00:00+08:00">
                 2023-03-19
               </time>
             
@@ -275,6 +275,39 @@
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/" itemprop="url" rel="index">
+                    <span itemprop="name">大数据</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -303,11 +336,7 @@
       
 
       
-        <p>title: 8. 聚合操作<br>date: 2023-03-19<br>tags:<br>categories: </p>
-<ul>
-<li>大数据</li>
-<li>Spark</li>
-</ul>
+        <hr>
 <p>本文仅做学习总结，如有侵权立删</p>
 <p>[TOC]</p>
 <h1 id="一、分组类型"><a href="#一、分组类型" class="headerlink" title="一、分组类型"></a>一、分组类型</h1><p><strong>！！！注意null值，如果不过滤空值，则可能会得到不正确的结果。尤其是grouping set、rollup和cube！</strong></p>
@@ -365,7 +394,26 @@
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.agg(F.collect_set(<span class="string">"a"</span>), F.collect_list(<span class="string">"a"</span>))</span><br></pre></td></tr></table></figure>
 <ul>
-<li>用户自定义聚合函数：UDAF：仅在Scala和Java中使用</li>
+<li><p>用户自定义聚合函数：UDAF：仅在Scala和Java中使用</p>
+<ul>
+<li><p>UDF：</p>
+<blockquote>
+<p>UDF（User-defined functions）用户自定义函数，简单说就是输入一行输出一行的自定义算子。<br>是大多数 SQL 环境的关键特性，用于扩展系统的内置功能。<strong>（一对一）</strong></p>
+</blockquote>
+</li>
+<li><p>UDAF</p>
+<blockquote>
+<p>UDAF（User Defined Aggregate Function），即用户定义的聚合函数，聚合函数和普通函数的区别是什么呢，普通函数是接受一行输入产生一个输出，聚合函数是接受一组（一般是多行）输入然后产生一个输出，即将一组的值想办法聚合一下。<strong>（多对一）</strong></p>
+<p>UDAF可以跟group by一起使用，也可以不跟group by一起使用，这个其实比较好理解，联想到mysql中的max、min等函数，可以:<br>select max(foo) from foobar group by bar;<br>表示根据bar字段分组，然后求每个分组的最大值，这时候的分组有很多个，使用这个函数对每个分组进行处理，也可以：<br>select max(foo) from foobar;<br>这种情况可以将整张表看做是一个分组，然后在这个分组（实际上就是一整张表）中求最大值。所以聚合函数实际上是对分组做处理，而不关心分组中记录的具体数量。</p>
+</blockquote>
+</li>
+<li><p>UDTF</p>
+<blockquote>
+<p>UDTF(User-Defined Table-Generating Functions),用户自定义生成函数。它就是输入一行输出多行的自定义算子，可输出多行多列，又被称为 “表生成函数”。<strong>（一对多）</strong></p>
+</blockquote>
+</li>
+</ul>
+</li>
 </ul>
 <h1 id="三、例子"><a href="#三、例子" class="headerlink" title="三、例子"></a>三、例子</h1><h2 id="创建数据"><a href="#创建数据" class="headerlink" title="创建数据"></a>创建数据</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> functions <span class="keyword">as</span> F</span><br><span class="line">data = [</span><br><span class="line">    (<span class="string">"James"</span>, <span class="string">"Sales"</span>, <span class="number">3000</span>, <span class="string">'2020'</span>),</span><br><span class="line">    (<span class="string">"Michael"</span>, <span class="string">"Sales"</span>, <span class="number">4600</span>, <span class="string">'2020'</span>),</span><br><span class="line">    (<span class="string">"Robert"</span>, <span class="string">"Sales"</span>, <span class="number">4100</span>, <span class="string">'2020'</span>),</span><br><span class="line">    (<span class="string">"Maria"</span>, <span class="string">"Finance"</span>, <span class="number">3000</span>, <span class="string">'2020'</span>),</span><br><span class="line">    (<span class="string">"James"</span>, <span class="string">"Sales"</span>, <span class="number">3000</span>, <span class="string">'2019'</span>),</span><br><span class="line">    (<span class="string">"Scott"</span>, <span class="string">"Finance"</span>, <span class="number">3300</span>, <span class="string">'2020'</span>),</span><br><span class="line">    (<span class="string">"Jen"</span>, <span class="string">"Finance"</span>, <span class="number">3900</span>, <span class="string">'2020'</span>),</span><br><span class="line">    (<span class="string">"Jeff"</span>, <span class="string">"Marketing"</span>, <span class="number">3000</span>, <span class="string">'2020'</span>),</span><br><span class="line">    (<span class="string">"Kumar"</span>, <span class="string">"Marketing"</span>, <span class="number">2000</span>, <span class="string">'2020'</span>),</span><br><span class="line">    (<span class="string">"Saif"</span>, <span class="string">"Sales"</span>, <span class="number">4100</span>, <span class="string">'2020'</span>)</span><br><span class="line">]</span><br><span class="line">schema = [<span class="string">"employee_name"</span>, <span class="string">"department"</span>, <span class="string">"salary"</span>, <span class="string">'year'</span>]</span><br><span class="line">  </span><br><span class="line">df = spark.createDataFrame(data=data, schema=schema)</span><br><span class="line">df.printSchema()</span><br><span class="line">df.show(truncate=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">root</span><br><span class="line"> |-- employee_name: string (nullable = true)</span><br><span class="line"> |-- department: string (nullable = true)</span><br><span class="line"> |-- salary: long (nullable = true)</span><br><span class="line"> |-- year: string (nullable = true)</span><br><span class="line"></span><br><span class="line">+-------------+----------+------+----+</span><br><span class="line">|employee_name|department|salary|year|</span><br><span class="line">+-------------+----------+------+----+</span><br><span class="line">|James        |Sales     |<span class="number">3000</span>  |<span class="number">2020</span>|</span><br><span class="line">|Michael      |Sales     |<span class="number">4600</span>  |<span class="number">2020</span>|</span><br><span class="line">|Robert       |Sales     |<span class="number">4100</span>  |<span class="number">2020</span>|</span><br><span class="line">|Maria        |Finance   |<span class="number">3000</span>  |<span class="number">2020</span>|</span><br><span class="line">|James        |Sales     |<span class="number">3000</span>  |<span class="number">2019</span>|</span><br><span class="line">|Scott        |Finance   |<span class="number">3300</span>  |<span class="number">2020</span>|</span><br><span class="line">|Jen          |Finance   |<span class="number">3900</span>  |<span class="number">2020</span>|</span><br><span class="line">|Jeff         |Marketing |<span class="number">3000</span>  |<span class="number">2020</span>|</span><br><span class="line">|Kumar        |Marketing |<span class="number">2000</span>  |<span class="number">2020</span>|</span><br><span class="line">|Saif         |Sales     |<span class="number">4100</span>  |<span class="number">2020</span>|</span><br><span class="line">+-------------+----------+------+----+</span><br></pre></td></tr></table></figure>
 <h2 id="1、group-by：分组"><a href="#1、group-by：分组" class="headerlink" title="1、group by：分组"></a>1、group by：分组</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 按照department, year计算工资之和。</span></span><br><span class="line">df.groupBy(<span class="string">'department'</span>, <span class="string">'year'</span>).agg(</span><br><span class="line">    F.sum(<span class="string">'salary'</span>).alias(<span class="string">'salary'</span>)</span><br><span class="line">).orderBy(<span class="string">'department'</span>, <span class="string">'year'</span>).show()</span><br></pre></td></tr></table></figure>
@@ -381,9 +429,12 @@
 <p><img src="..\imgs\Spark_pivot.jpg" alt></p>
 <h2 id="2-rollup：分级分组"><a href="#2-rollup：分级分组" class="headerlink" title="2. rollup：分级分组"></a>2. rollup：分级分组</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">- 先按照 `department`、`employee_name`、`year`分组；</span></span><br><span class="line"><span class="string">- 然后按照`department`、`employee_name`分组；</span></span><br><span class="line"><span class="string">- 然后再按照 `department` 分组；</span></span><br><span class="line"><span class="string">- 最后进行全表分组。</span></span><br><span class="line"><span class="string">- 后面接聚合函数，此处使用的是`sum`。</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line">df.rollup(<span class="string">'department'</span>, <span class="string">'employee_name'</span>, <span class="string">'year'</span>).agg(</span><br><span class="line">    F.sum(<span class="string">'salary'</span>).alias(<span class="string">'salary'</span>)</span><br><span class="line">).orderBy(<span class="string">'department'</span>, <span class="string">'employee_name'</span>, <span class="string">'year'</span>).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+----------+-------------+----+------+</span><br><span class="line">|department|employee_name|year|salary|</span><br><span class="line">+----------+-------------+----+------+</span><br><span class="line">|      null|         null|null| <span class="number">34000</span>|</span><br><span class="line">|   Finance|         null|null| <span class="number">10200</span>|</span><br><span class="line">|   Finance|          Jen|null|  <span class="number">3900</span>|</span><br><span class="line">|   Finance|          Jen|<span class="number">2020</span>|  <span class="number">3900</span>|</span><br><span class="line">|   Finance|        Maria|null|  <span class="number">3000</span>|</span><br><span class="line">|   Finance|        Maria|<span class="number">2020</span>|  <span class="number">3000</span>|</span><br><span class="line">|   Finance|        Scott|null|  <span class="number">3300</span>|</span><br><span class="line">|   Finance|        Scott|<span class="number">2020</span>|  <span class="number">3300</span>|</span><br><span class="line">| Marketing|         null|null|  <span class="number">5000</span>|</span><br><span class="line">| Marketing|         Jeff|null|  <span class="number">3000</span>|</span><br><span class="line">| Marketing|         Jeff|<span class="number">2020</span>|  <span class="number">3000</span>|</span><br><span class="line">| Marketing|        Kumar|null|  <span class="number">2000</span>|</span><br><span class="line">| Marketing|        Kumar|<span class="number">2020</span>|  <span class="number">2000</span>|</span><br><span class="line">|     Sales|         null|null| <span class="number">18800</span>|</span><br><span class="line">|     Sales|        James|null|  <span class="number">6000</span>|</span><br><span class="line">|     Sales|        James|<span class="number">2019</span>|  <span class="number">3000</span>|</span><br><span class="line">|     Sales|        James|<span class="number">2020</span>|  <span class="number">3000</span>|</span><br><span class="line">|     Sales|      Michael|null|  <span class="number">4600</span>|</span><br><span class="line">|     Sales|      Michael|<span class="number">2020</span>|  <span class="number">4600</span>|</span><br><span class="line">|     Sales|       Robert|null|  <span class="number">4100</span>|</span><br><span class="line">+----------+-------------+----+------+</span><br><span class="line">only showing top <span class="number">20</span> rows</span><br></pre></td></tr></table></figure>
 <h2 id="3-cube：分级分组，比rollup组合的维度更全。"><a href="#3-cube：分级分组，比rollup组合的维度更全。" class="headerlink" title="3. cube：分级分组，比rollup组合的维度更全。"></a>3. <code>cube</code>：分级分组，比rollup组合的维度更全。</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">1. cube` 先按照`department、employee_name、year`分组；</span></span><br><span class="line"><span class="string">2. 然后按照`(department, employee_name)`、`(department, year)`、`(year, employee_name)`分组；</span></span><br><span class="line"><span class="string">3. 然后按照`department`、`employee_name`、`year`分别分组；</span></span><br><span class="line"><span class="string">4. 最后进行全表分组。</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line">df.cube(<span class="string">'department'</span>, <span class="string">'employee_name'</span>, <span class="string">'year'</span>).agg(</span><br><span class="line">    F.sum(<span class="string">'salary'</span>).alias(<span class="string">'salary'</span>)</span><br><span class="line">).orderBy(<span class="string">'department'</span>, <span class="string">'employee_name'</span>, <span class="string">'year'</span>).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+----------+-------------+----+------+</span><br><span class="line">|department|employee_name|year|salary|</span><br><span class="line">+----------+-------------+----+------+</span><br><span class="line">|      null|         null|null| <span class="number">34000</span>|</span><br><span class="line">|      null|         null|<span class="number">2019</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|         null|<span class="number">2020</span>| <span class="number">31000</span>|</span><br><span class="line">|      null|        James|null|  <span class="number">6000</span>|</span><br><span class="line">|      null|        James|<span class="number">2019</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|        James|<span class="number">2020</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|         Jeff|null|  <span class="number">3000</span>|</span><br><span class="line">|      null|         Jeff|<span class="number">2020</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|          Jen|null|  <span class="number">3900</span>|</span><br><span class="line">|      null|          Jen|<span class="number">2020</span>|  <span class="number">3900</span>|</span><br><span class="line">|      null|        Kumar|null|  <span class="number">2000</span>|</span><br><span class="line">|      null|        Kumar|<span class="number">2020</span>|  <span class="number">2000</span>|</span><br><span class="line">|      null|        Maria|null|  <span class="number">3000</span>|</span><br><span class="line">|      null|        Maria|<span class="number">2020</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|      Michael|null|  <span class="number">4600</span>|</span><br><span class="line">|      null|      Michael|<span class="number">2020</span>|  <span class="number">4600</span>|</span><br><span class="line">|      null|       Robert|null|  <span class="number">4100</span>|</span><br><span class="line">|      null|       Robert|<span class="number">2020</span>|  <span class="number">4100</span>|</span><br><span class="line">|      null|         Saif|null|  <span class="number">4100</span>|</span><br><span class="line">|      null|         Saif|<span class="number">2020</span>|  <span class="number">4100</span>|</span><br><span class="line">+----------+-------------+----+------+</span><br><span class="line">only showing top <span class="number">20</span> rows</span><br></pre></td></tr></table></figure>
-<h3 id="3-1-grouping"><a href="#3-1-grouping" class="headerlink" title="3.1 grouping"></a>3.1 <code>grouping</code></h3><p>指示 <code>GROUP BY</code> 列表中的指定列是否聚合，在结果集中返回 1 表示聚合或 0 表示未聚合。</p>
+<h3 id="3-1-grouping"><a href="#3-1-grouping" class="headerlink" title="3.1 grouping"></a>3.1 <code>grouping</code></h3><p>指示 <code>GROUP BY</code> 列表中的指定列是否为空，在结果集中返回 1 表示空或 0 表示未空。</p>
+<p>grouping(xx) = 0：表示维度出现在组合里面</p>
+<p>grouping(xx) = 1: 表示维度不出现在组合里面</p>
+<p>CUBE 操作所生成的空值带来一个问题：如何区分 CUBE 操作所生成的 NULL 值和从实际数据中返回的 NULL 值？这个问题可用 GROUPING 函数解决。<strong>如果列中的值来自事实数据，则 GROUPING 函数返回 0；如果列中的值是 CUBE 操作所生成的 NULL，则返回 1。</strong>在 CUBE 操作中，所生成的 NULL 代表全体值。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">df.cube(<span class="string">"department"</span>).agg(</span><br><span class="line">    F.grouping(<span class="string">"department"</span>).alias(<span class="string">'department'</span>), </span><br><span class="line">    F.sum(<span class="string">"salary"</span>).alias(<span class="string">'salary'</span>)</span><br><span class="line">).orderBy(<span class="string">"salary"</span>).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+----------+----------+------+</span><br><span class="line">|department|department|salary|</span><br><span class="line">+----------+----------+------+</span><br><span class="line">| Marketing|         <span class="number">0</span>|  <span class="number">5000</span>|</span><br><span class="line">|   Finance|         <span class="number">0</span>| <span class="number">10200</span>|</span><br><span class="line">|     Sales|         <span class="number">0</span>| <span class="number">18800</span>|</span><br><span class="line">|      null|         <span class="number">1</span>| <span class="number">34000</span>|</span><br><span class="line">+----------+----------+------+</span><br></pre></td></tr></table></figure>
-<h3 id="3-2-grouping-id-帮助轻松找到自己想要的信息。"><a href="#3-2-grouping-id-帮助轻松找到自己想要的信息。" class="headerlink" title="3.2 grouping_id: 帮助轻松找到自己想要的信息。"></a>3.2 <code>grouping_id</code>: 帮助轻松找到自己想要的信息。</h3><p>返回分组级别</p>
+<h3 id="3-2-grouping-id-帮助轻松找到自己想要的信息。"><a href="#3-2-grouping-id-帮助轻松找到自己想要的信息。" class="headerlink" title="3.2 grouping_id: 帮助轻松找到自己想要的信息。"></a>3.2 <code>grouping_id</code>: 帮助轻松找到自己想要的信息。</h3><p>返回分组级别: (分組(c1) &lt;&lt; (n-1)) + (分組(c2) &lt;&lt; (n-2)) + … + 分組(cn)</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">df.cube(<span class="string">'department'</span>, <span class="string">'employee_name'</span>, <span class="string">'year'</span>).agg(</span><br><span class="line">    F.grouping_id().alias(<span class="string">'group_level'</span>), </span><br><span class="line">    F.sum(<span class="string">'salary'</span>).alias(<span class="string">'salary'</span>)</span><br><span class="line">).orderBy(F.desc(<span class="string">'group_level'</span>)).show()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>output Data:</span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line">+----------+-------------+----+-----------+------+</span><br><span class="line">|department|employee_name|year|group_level|salary|</span><br><span class="line">+----------+-------------+----+-----------+------+</span><br><span class="line">|      null|         null|null|          <span class="number">7</span>| <span class="number">34000</span>|</span><br><span class="line">|      null|         null|<span class="number">2020</span>|          <span class="number">6</span>| <span class="number">31000</span>|</span><br><span class="line">|      null|         null|<span class="number">2019</span>|          <span class="number">6</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|         Jeff|null|          <span class="number">5</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|      Michael|null|          <span class="number">5</span>|  <span class="number">4600</span>|</span><br><span class="line">|      null|        James|null|          <span class="number">5</span>|  <span class="number">6000</span>|</span><br><span class="line">|      null|        Kumar|null|          <span class="number">5</span>|  <span class="number">2000</span>|</span><br><span class="line">|      null|        Maria|null|          <span class="number">5</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|         Saif|null|          <span class="number">5</span>|  <span class="number">4100</span>|</span><br><span class="line">|      null|       Robert|null|          <span class="number">5</span>|  <span class="number">4100</span>|</span><br><span class="line">|      null|        Scott|null|          <span class="number">5</span>|  <span class="number">3300</span>|</span><br><span class="line">|      null|          Jen|null|          <span class="number">5</span>|  <span class="number">3900</span>|</span><br><span class="line">|      null|      Michael|<span class="number">2020</span>|          <span class="number">4</span>|  <span class="number">4600</span>|</span><br><span class="line">|      null|       Robert|<span class="number">2020</span>|          <span class="number">4</span>|  <span class="number">4100</span>|</span><br><span class="line">|      null|        Kumar|<span class="number">2020</span>|          <span class="number">4</span>|  <span class="number">2000</span>|</span><br><span class="line">|      null|        James|<span class="number">2019</span>|          <span class="number">4</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|         Saif|<span class="number">2020</span>|          <span class="number">4</span>|  <span class="number">4100</span>|</span><br><span class="line">|      null|        James|<span class="number">2020</span>|          <span class="number">4</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|        Maria|<span class="number">2020</span>|          <span class="number">4</span>|  <span class="number">3000</span>|</span><br><span class="line">|      null|        Scott|<span class="number">2020</span>|          <span class="number">4</span>|  <span class="number">3300</span>|</span><br><span class="line">+----------+-------------+----+-----------+------+</span><br><span class="line">only showing top <span class="number">20</span> rows</span><br></pre></td></tr></table></figure>
 <h2 id="4、grouping-set：分组集，跨多个组的聚合操作，仅SQL"><a href="#4、grouping-set：分组集，跨多个组的聚合操作，仅SQL" class="headerlink" title="4、grouping set：分组集，跨多个组的聚合操作，仅SQL"></a>4、grouping set：分组集，跨多个组的聚合操作，仅SQL</h2><p>希望获得所有用户的各种股票的数量</p>
 <p>sql: </p>
@@ -416,15 +467,15 @@
 <p>Window函数分类为三种：</p>
 <ul>
 <li>排名函数 <code>ranking functions</code>包括:<ul>
-<li>row_number()</li>
-<li>rank()</li>
-<li>dense_rank()</li>
-<li>percent_rank()</li>
-<li>ntile()</li>
+<li>row_number()：连续不重复。</li>
+<li>rank()：连续重复</li>
+<li>dense_rank()：重复不连续</li>
+<li>percent_rank()：对dense_rank归一化</li>
+<li>ntile()：n等份</li>
 </ul>
 </li>
 <li>解析函数 <code>analytic functions</code>包括:<ul>
-<li>cume_dist()</li>
+<li>cume_dist()：对rank归一化</li>
 <li>lag()</li>
 <li>lead()</li>
 </ul>
@@ -551,8 +602,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/9.-数据源/" rel="next" title="9. 数据源">
-                <i class="fa fa-chevron-left"></i> 9. 数据源
+              <a href="/7.Spark处理不同的数据类型/" rel="next" title="7. 处理不同的数据类型">
+                <i class="fa fa-chevron-left"></i> 7. 处理不同的数据类型
               </a>
             
           </div>
@@ -560,6 +611,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/9.-数据源/" rel="prev" title="9. 数据源">
+                9. 数据源 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -636,7 +691,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
