@@ -229,6 +229,192 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/MYSQL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/MYSQL/" itemprop="url">SQL</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-17T00:00:00+08:00">
+                2023-02-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据库/Mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">Mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本篇博客仅作为学习,如有侵权必删。</p>
+<h1 id="Mysql"><a href="#Mysql" class="headerlink" title="Mysql"></a>Mysql</h1><h2 id="1-相关概念："><a href="#1-相关概念：" class="headerlink" title="1. 相关概念："></a>1. 相关概念：</h2><blockquote>
+<ul>
+<li>sql语句必须以分号结尾</li>
+<li>数据库：文件夹。</li>
+<li>表：文件夹里的文件。</li>
+<li>记录：文件中的一行行数据。</li>
+</ul>
+</blockquote>
+<h2 id="2-数据库"><a href="#2-数据库" class="headerlink" title="2. 数据库"></a>2. 数据库</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">'''基于库的增删改查'''</span><br><span class="line">1.创建库</span><br><span class="line">	<span class="keyword">create</span> <span class="keyword">database</span> 库名;</span><br><span class="line">2.查看库</span><br><span class="line">	<span class="keyword">show</span> <span class="keyword">databases</span>;  查看所有的库名称</span><br><span class="line"> 	<span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">database</span> 库名;  查看指定库信息</span><br><span class="line"> 	<span class="keyword">select</span> <span class="keyword">database</span>(); 查看当前使用的数据库</span><br><span class="line">3.编辑库</span><br><span class="line">	<span class="keyword">alter</span> <span class="keyword">database</span> 库名 <span class="keyword">charset</span>=<span class="string">'utf8'</span>;</span><br><span class="line">4.删除库</span><br><span class="line">	<span class="keyword">drop</span> <span class="keyword">database</span> 库名;</span><br><span class="line">5.查看数据库使用端口</span><br><span class="line">	<span class="keyword">show</span> <span class="keyword">variables</span> <span class="keyword">like</span> <span class="string">'port'</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="3-表"><a href="#3-表" class="headerlink" title="3. 表"></a>3. 表</h2><h3 id="（1-构成"><a href="#（1-构成" class="headerlink" title="（1)构成"></a>（1)构成</h3><ul>
+<li>字段：事物的所有属性</li>
+<li>列：事物的某一个属性的集合 </li>
+<li>记录：行</li>
+<li>主键：区分表里的每一条数据行。唯一标识。</li>
+<li>NULL值：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">操作表之前需要先确定库</span><br><span class="line">	<span class="keyword">create</span> <span class="keyword">database</span> db1;</span><br><span class="line">切换操作库</span><br><span class="line">	<span class="keyword">use</span> db1;</span><br><span class="line">	</span><br><span class="line">1.创建表</span><br><span class="line">	<span class="keyword">create</span> <span class="keyword">table</span> 表名(字段名 字段类型,字段名 字段类型);</span><br><span class="line">2.查看表</span><br><span class="line">	<span class="keyword">show</span> <span class="keyword">tables</span>;  查看库下所有的表名称</span><br><span class="line">	<span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> 表名;  查看指定表信息</span><br><span class="line">    <span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> &lt;表名\G&gt; (加上\G，有较高的易读性)</span><br><span class="line">	<span class="keyword">describe</span> 表名;  查看表结构</span><br><span class="line">	desc 表名;</span><br><span class="line"> 	ps:如果想跨库操作其他表 只需要在表名前加库名即可</span><br><span class="line">        desc mysql.user;</span><br><span class="line">3.编辑表</span><br><span class="line">	<span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">rename</span> 新表名;</span><br><span class="line">4.删除表</span><br><span class="line">	<span class="keyword">drop</span> <span class="keyword">table</span> 表名;</span><br></pre></td></tr></table></figure>
+<h2 id="4-记录"><a href="#4-记录" class="headerlink" title="4. 记录"></a>4. 记录</h2><h3 id="（1）数据类型"><a href="#（1）数据类型" class="headerlink" title="（1）数据类型"></a>（1）数据类型</h3><ul>
+<li>定长字符串：CHAR(n)，n为最多保存字符数量。如果字符长度是10，而输入的数据只有5位，则用5位空格填充。</li>
+<li>变长字符串：VARCHAR(n)， n为最多字符数量</li>
+<li>大对象类型：TEXT，大VARCHAR字段，可用于存储大字符集，如JHTML输入。</li>
+<li>数值类型：NUMERIC，通用的数值类型</li>
+<li>小数类型：DECIMAL(p,s)，p表示数值总位数，s表示小数点后位数。DECIMAL（4，2）:12.449存为12.45。</li>
+<li>整数：</li>
+<li>浮点数：FLOAT，总位数和小数点位数都可变。</li>
+<li>日期和时间：DATE、TIME、DATETIME（YEAR、MONTH、DAY、HOUR、MINUTE、SECOND）、TIMESTAMP</li>
+<li>直义字符串：？？？</li>
+<li>NULL</li>
+<li>布尔值：TRUE、FALSE、NULL</li>
+<li>自定义类型：采用语句创建类型。create type PERSON AS OBJECT（NAME VARCHAR（30））</li>
+<li>域：有效数据类型的集合。create domain MONEY_D AS NUMBER(8,2) ？？？</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">'''基于记录的增删改查'''</span><br><span class="line">1.插入数据</span><br><span class="line">	<span class="keyword">insert</span> <span class="keyword">into</span> 表名 <span class="keyword">values</span>(数据值<span class="number">1</span>,数据值<span class="number">2</span>);</span><br><span class="line">2.查询数据</span><br><span class="line">	<span class="keyword">select</span> * <span class="keyword">from</span> 表名;  		查询表中所有的数据</span><br><span class="line">3.编辑数据</span><br><span class="line">	<span class="keyword">update</span> 表名 <span class="keyword">set</span> 字段名=新数据 <span class="keyword">where</span> 筛选条件;</span><br><span class="line">4.删除数据</span><br><span class="line">	<span class="keyword">delete</span> <span class="keyword">from</span> 表名;</span><br><span class="line">	<span class="keyword">delete</span> <span class="keyword">from</span> 表名 <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/DBMTL模型/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1414,219 +1600,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/排序/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lee_yl">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lee_yl's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/排序/" itemprop="url">排序</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-15T19:00:18+08:00">
-                2019-04-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/深度遍历DFS/" itemprop="url" rel="index">
-                    <span itemprop="name">深度遍历DFS</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="十大排序"><a href="#十大排序" class="headerlink" title="十大排序"></a><a href="https://www.cnblogs.com/Lee-yl/p/8969558.html" target="_blank" rel="noopener">十大排序</a></h1><h1 id="题目一：922-按奇偶排序数组-II"><a href="#题目一：922-按奇偶排序数组-II" class="headerlink" title="题目一：922. 按奇偶排序数组 II"></a>题目一：<a href="https://leetcode-cn.com/problems/sort-array-by-parity-ii/" target="_blank" rel="noopener">922. 按奇偶排序数组 II</a></h1><p>给定一个非负整数数组 <code>A</code>， A 中一半整数是奇数，一半整数是偶数。</p>
-<p>对数组进行排序，以便当 <code>A[i]</code> 为奇数时，<code>i</code> 也是奇数；当 <code>A[i]</code> 为偶数时， <code>i</code> 也是偶数。</p>
-<p>你可以返回任何满足上述条件的数组作为答案。</p>
-<p><strong>示例：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：[4,2,5,7]</span><br><span class="line">输出：[4,5,2,7]</span><br><span class="line">解释：[4,7,2,5]，[2,5,4,7]，[2,7,4,5] 也会被接受</span><br></pre></td></tr></table></figure>
-<p><strong>提示：</strong></p>
-<ol>
-<li><code>2 &lt;= A.length &lt;= 20000</code></li>
-<li><code>A.length % 2 == 0</code></li>
-<li><code>0 &lt;= A[i] &lt;= 1000</code></li>
-</ol>
-<p><strong><big>思路：奇偶下标的错误数进行交换。</big></strong></p>
-<p><strong><big>代码：</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sortArrayByParityII</span><span class="params">(A)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> A:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    even , odd = <span class="number">0</span> , <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> even &lt; len(A) <span class="keyword">and</span> odd &lt; len(A):</span><br><span class="line">        <span class="comment">##一旦两个下标的数不对，则交换</span></span><br><span class="line">        <span class="keyword">if</span> A[even] % <span class="number">2</span> <span class="keyword">and</span> A[odd] % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">            A[even] , A[odd] = A[odd] , A[even]</span><br><span class="line">            even += <span class="number">2</span></span><br><span class="line">            odd += <span class="number">2</span></span><br><span class="line">        <span class="keyword">elif</span> A[even] % <span class="number">2</span> == <span class="number">0</span> <span class="keyword">and</span> A[odd] % <span class="number">2</span>:</span><br><span class="line">            even += <span class="number">2</span></span><br><span class="line">            odd += <span class="number">2</span></span><br><span class="line">        <span class="keyword">elif</span> A[even] % <span class="number">2</span> == <span class="number">0</span> <span class="keyword">and</span> A[odd] % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">            even += <span class="number">2</span></span><br><span class="line">        <span class="keyword">elif</span> A[even] % <span class="number">2</span> <span class="keyword">and</span> A[odd] % <span class="number">2</span> :</span><br><span class="line">            odd += <span class="number">2</span></span><br><span class="line">    <span class="keyword">return</span> A</span><br></pre></td></tr></table></figure>
-<h1 id="题目二：349-两个数组的交集"><a href="#题目二：349-两个数组的交集" class="headerlink" title="题目二：349. 两个数组的交集"></a>题目二：<a href="https://leetcode-cn.com/problems/intersection-of-two-arrays/" target="_blank" rel="noopener">349. 两个数组的交集</a></h1><p>给定两个数组，编写一个函数来计算它们的交集。</p>
-<p><strong>示例 1:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: nums1 = [1,2,2,1], nums2 = [2,2]</span><br><span class="line">输出: [2]</span><br></pre></td></tr></table></figure>
-<p><strong>示例 2:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: nums1 = [4,9,5], nums2 = [9,4,9,8,4]</span><br><span class="line">输出: [9,4]</span><br></pre></td></tr></table></figure>
-<p><strong>说明:</strong></p>
-<ul>
-<li>输出结果中的每个元素一定是唯一的。</li>
-<li>我们可以不考虑输出结果的顺序。</li>
-</ul>
-<p><strong><big>思路一：采用字典，时间O（m+n)，空间O（min(m,n)）</big></strong></p>
-<p>​    采用字典存储nums1的数，然后遍历nums2的数，一旦在字典中则加入结果中</p>
-<p><strong><big>代码：</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">intersection</span><span class="params">(self, nums1, nums2)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> nums1 <span class="keyword">or</span> <span class="keyword">not</span> nums2:</span><br><span class="line">            <span class="keyword">return</span> nums1 <span class="keyword">if</span> nums2 <span class="keyword">else</span> nums2</span><br><span class="line">        res = []</span><br><span class="line">        n1 , n2 = len(nums1) , len(nums2)</span><br><span class="line">        counter1 = Counter(nums1)</span><br><span class="line">        <span class="keyword">for</span> num <span class="keyword">in</span> nums2:</span><br><span class="line">            <span class="keyword">if</span> num <span class="keyword">in</span> counter1:</span><br><span class="line">                res.append(num)</span><br><span class="line">        <span class="keyword">return</span> list(set(res))</span><br></pre></td></tr></table></figure>
-<p><strong><big>思路二：排序，时间O(mn)，空间O（1）</big></strong></p>
-<p>​    对两个数组进行排序，同时遍历两个数组</p>
-<p><strong><big>代码</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">intersection</span><span class="params">(self, nums1, nums2)</span>:</span></span><br><span class="line">        snum1 = sorted(nums1)</span><br><span class="line">        snum2 = sorted(nums2)</span><br><span class="line">        res = []</span><br><span class="line">        i , j = <span class="number">0</span> , <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> i &lt; len(snum1) <span class="keyword">and</span> j &lt; len(snum2):</span><br><span class="line">            <span class="keyword">if</span> snum1[i] == snum2[j]:</span><br><span class="line">                res.append(snum2[j])</span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">                j += <span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> snum1[i] &lt; snum2[j]:</span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                j += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> list(set(res))</span><br></pre></td></tr></table></figure>
-<p><strong><big>思路三：采用集合交集特性，平均时间O（min(m,n))，最坏时间O（m*n)，空间O（m+n)</big></strong></p>
-<p><strong><big>代码</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">intersection</span><span class="params">(nums1, nums2)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    :type nums1: List[int]</span></span><br><span class="line"><span class="string">    :type nums2: List[int]</span></span><br><span class="line"><span class="string">    :rtype: List[int]</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> nums1 <span class="keyword">or</span> <span class="keyword">not</span> nums2:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        a=set(nums1)</span><br><span class="line">        b=set(nums2)</span><br><span class="line">        <span class="keyword">return</span> list(a&amp;b)</span><br></pre></td></tr></table></figure>
-<h1 id="题目三：976-三角形的最大周长"><a href="#题目三：976-三角形的最大周长" class="headerlink" title="题目三：976. 三角形的最大周长"></a>题目三：<a href="https://leetcode-cn.com/problems/largest-perimeter-triangle/" target="_blank" rel="noopener">976. 三角形的最大周长</a></h1><p>给定由一些正数（代表长度）组成的数组 <code>A</code>，返回由其中三个长度组成的、<strong>面积不为零</strong>的三角形的最大周长。</p>
-<p>如果不能形成任何面积不为零的三角形，返回 <code>0</code>。</p>
-<p><strong>示例 1：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：[2,1,2]</span><br><span class="line">输出：5</span><br></pre></td></tr></table></figure>
-<p><strong>示例 2：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：[1,2,1]</span><br><span class="line">输出：0</span><br></pre></td></tr></table></figure>
-<p><strong>示例 3：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：[3,2,3,4]</span><br><span class="line">输出：10</span><br></pre></td></tr></table></figure>
-<p><strong>示例 4：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：[3,6,2,3]</span><br><span class="line">输出：8</span><br></pre></td></tr></table></figure>
-<p><strong><big>思路：反向排序，第一个满足A[i+2] + A[i+1] &gt; A[i]为所求</big></strong></p>
-<p><strong><big>代码</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">largestPerimeter</span><span class="params">(A)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> len(A) &lt;= <span class="number">2</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    A.sort(reverse = <span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(A)<span class="number">-2</span>):</span><br><span class="line">        <span class="keyword">if</span> A[i+<span class="number">2</span>] + A[i+<span class="number">1</span>] &gt; A[i]:</span><br><span class="line">            <span class="keyword">return</span> A[i+<span class="number">2</span>] + A[i+<span class="number">1</span>] + A[i]</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<h1 id="题目四：242-有效的字母异位词"><a href="#题目四：242-有效的字母异位词" class="headerlink" title="题目四：242. 有效的字母异位词"></a>题目四：<a href="https://leetcode-cn.com/problems/valid-anagram/" target="_blank" rel="noopener">242. 有效的字母异位词</a></h1><p>给定两个字符串 <em>s</em> 和 <em>t</em> ，编写一个函数来判断 <em>t</em> 是否是 <em>s</em> 的一个字母异位词。</p>
-<p><strong>示例 1:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: s = &quot;anagram&quot;, t = &quot;nagaram&quot;</span><br><span class="line">输出: true</span><br></pre></td></tr></table></figure>
-<p><strong>示例 2:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: s = &quot;rat&quot;, t = &quot;car&quot;</span><br><span class="line">输出: false</span><br></pre></td></tr></table></figure>
-<p><strong>说明:</strong><br> 你可以假设字符串只包含小写字母。</p>
-<p><strong>进阶:</strong><br> 如果输入字符串包含 unicode 字符怎么办？你能否调整你的解法来应对这种情况？</p>
-<p><strong><big>思路一：排序，比较s和t</big></strong></p>
-<p><strong><big>代码一</big></strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">isAnagram</span><span class="params">(s,t)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> len(s)!=len(t):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    s.sort()</span><br><span class="line">    t.sort()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(s)):</span><br><span class="line">        <span class="keyword">if</span> s[i] != t[i]:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
-<p><strong><big>思路二：字典</big></strong></p>
-<p><strong>代码二：</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">isAnagram</span><span class="params">(s,t)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> len(s) !=len(t):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">if</span> Counter(s) == Counter(t):</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/DFS/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1940,6 +1913,219 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/排序/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/排序/" itemprop="url">排序</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-15T19:00:18+08:00">
+                2019-04-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/深度遍历DFS/" itemprop="url" rel="index">
+                    <span itemprop="name">深度遍历DFS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="十大排序"><a href="#十大排序" class="headerlink" title="十大排序"></a><a href="https://www.cnblogs.com/Lee-yl/p/8969558.html" target="_blank" rel="noopener">十大排序</a></h1><h1 id="题目一：922-按奇偶排序数组-II"><a href="#题目一：922-按奇偶排序数组-II" class="headerlink" title="题目一：922. 按奇偶排序数组 II"></a>题目一：<a href="https://leetcode-cn.com/problems/sort-array-by-parity-ii/" target="_blank" rel="noopener">922. 按奇偶排序数组 II</a></h1><p>给定一个非负整数数组 <code>A</code>， A 中一半整数是奇数，一半整数是偶数。</p>
+<p>对数组进行排序，以便当 <code>A[i]</code> 为奇数时，<code>i</code> 也是奇数；当 <code>A[i]</code> 为偶数时， <code>i</code> 也是偶数。</p>
+<p>你可以返回任何满足上述条件的数组作为答案。</p>
+<p><strong>示例：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：[4,2,5,7]</span><br><span class="line">输出：[4,5,2,7]</span><br><span class="line">解释：[4,7,2,5]，[2,5,4,7]，[2,7,4,5] 也会被接受</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ol>
+<li><code>2 &lt;= A.length &lt;= 20000</code></li>
+<li><code>A.length % 2 == 0</code></li>
+<li><code>0 &lt;= A[i] &lt;= 1000</code></li>
+</ol>
+<p><strong><big>思路：奇偶下标的错误数进行交换。</big></strong></p>
+<p><strong><big>代码：</big></strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sortArrayByParityII</span><span class="params">(A)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> A:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    even , odd = <span class="number">0</span> , <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> even &lt; len(A) <span class="keyword">and</span> odd &lt; len(A):</span><br><span class="line">        <span class="comment">##一旦两个下标的数不对，则交换</span></span><br><span class="line">        <span class="keyword">if</span> A[even] % <span class="number">2</span> <span class="keyword">and</span> A[odd] % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">            A[even] , A[odd] = A[odd] , A[even]</span><br><span class="line">            even += <span class="number">2</span></span><br><span class="line">            odd += <span class="number">2</span></span><br><span class="line">        <span class="keyword">elif</span> A[even] % <span class="number">2</span> == <span class="number">0</span> <span class="keyword">and</span> A[odd] % <span class="number">2</span>:</span><br><span class="line">            even += <span class="number">2</span></span><br><span class="line">            odd += <span class="number">2</span></span><br><span class="line">        <span class="keyword">elif</span> A[even] % <span class="number">2</span> == <span class="number">0</span> <span class="keyword">and</span> A[odd] % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">            even += <span class="number">2</span></span><br><span class="line">        <span class="keyword">elif</span> A[even] % <span class="number">2</span> <span class="keyword">and</span> A[odd] % <span class="number">2</span> :</span><br><span class="line">            odd += <span class="number">2</span></span><br><span class="line">    <span class="keyword">return</span> A</span><br></pre></td></tr></table></figure>
+<h1 id="题目二：349-两个数组的交集"><a href="#题目二：349-两个数组的交集" class="headerlink" title="题目二：349. 两个数组的交集"></a>题目二：<a href="https://leetcode-cn.com/problems/intersection-of-two-arrays/" target="_blank" rel="noopener">349. 两个数组的交集</a></h1><p>给定两个数组，编写一个函数来计算它们的交集。</p>
+<p><strong>示例 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: nums1 = [1,2,2,1], nums2 = [2,2]</span><br><span class="line">输出: [2]</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: nums1 = [4,9,5], nums2 = [9,4,9,8,4]</span><br><span class="line">输出: [9,4]</span><br></pre></td></tr></table></figure>
+<p><strong>说明:</strong></p>
+<ul>
+<li>输出结果中的每个元素一定是唯一的。</li>
+<li>我们可以不考虑输出结果的顺序。</li>
+</ul>
+<p><strong><big>思路一：采用字典，时间O（m+n)，空间O（min(m,n)）</big></strong></p>
+<p>​    采用字典存储nums1的数，然后遍历nums2的数，一旦在字典中则加入结果中</p>
+<p><strong><big>代码：</big></strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">intersection</span><span class="params">(self, nums1, nums2)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> nums1 <span class="keyword">or</span> <span class="keyword">not</span> nums2:</span><br><span class="line">            <span class="keyword">return</span> nums1 <span class="keyword">if</span> nums2 <span class="keyword">else</span> nums2</span><br><span class="line">        res = []</span><br><span class="line">        n1 , n2 = len(nums1) , len(nums2)</span><br><span class="line">        counter1 = Counter(nums1)</span><br><span class="line">        <span class="keyword">for</span> num <span class="keyword">in</span> nums2:</span><br><span class="line">            <span class="keyword">if</span> num <span class="keyword">in</span> counter1:</span><br><span class="line">                res.append(num)</span><br><span class="line">        <span class="keyword">return</span> list(set(res))</span><br></pre></td></tr></table></figure>
+<p><strong><big>思路二：排序，时间O(mn)，空间O（1）</big></strong></p>
+<p>​    对两个数组进行排序，同时遍历两个数组</p>
+<p><strong><big>代码</big></strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">intersection</span><span class="params">(self, nums1, nums2)</span>:</span></span><br><span class="line">        snum1 = sorted(nums1)</span><br><span class="line">        snum2 = sorted(nums2)</span><br><span class="line">        res = []</span><br><span class="line">        i , j = <span class="number">0</span> , <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> i &lt; len(snum1) <span class="keyword">and</span> j &lt; len(snum2):</span><br><span class="line">            <span class="keyword">if</span> snum1[i] == snum2[j]:</span><br><span class="line">                res.append(snum2[j])</span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">                j += <span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> snum1[i] &lt; snum2[j]:</span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                j += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> list(set(res))</span><br></pre></td></tr></table></figure>
+<p><strong><big>思路三：采用集合交集特性，平均时间O（min(m,n))，最坏时间O（m*n)，空间O（m+n)</big></strong></p>
+<p><strong><big>代码</big></strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">intersection</span><span class="params">(nums1, nums2)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    :type nums1: List[int]</span></span><br><span class="line"><span class="string">    :type nums2: List[int]</span></span><br><span class="line"><span class="string">    :rtype: List[int]</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> nums1 <span class="keyword">or</span> <span class="keyword">not</span> nums2:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        a=set(nums1)</span><br><span class="line">        b=set(nums2)</span><br><span class="line">        <span class="keyword">return</span> list(a&amp;b)</span><br></pre></td></tr></table></figure>
+<h1 id="题目三：976-三角形的最大周长"><a href="#题目三：976-三角形的最大周长" class="headerlink" title="题目三：976. 三角形的最大周长"></a>题目三：<a href="https://leetcode-cn.com/problems/largest-perimeter-triangle/" target="_blank" rel="noopener">976. 三角形的最大周长</a></h1><p>给定由一些正数（代表长度）组成的数组 <code>A</code>，返回由其中三个长度组成的、<strong>面积不为零</strong>的三角形的最大周长。</p>
+<p>如果不能形成任何面积不为零的三角形，返回 <code>0</code>。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：[2,1,2]</span><br><span class="line">输出：5</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：[1,2,1]</span><br><span class="line">输出：0</span><br></pre></td></tr></table></figure>
+<p><strong>示例 3：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：[3,2,3,4]</span><br><span class="line">输出：10</span><br></pre></td></tr></table></figure>
+<p><strong>示例 4：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：[3,6,2,3]</span><br><span class="line">输出：8</span><br></pre></td></tr></table></figure>
+<p><strong><big>思路：反向排序，第一个满足A[i+2] + A[i+1] &gt; A[i]为所求</big></strong></p>
+<p><strong><big>代码</big></strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">largestPerimeter</span><span class="params">(A)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> len(A) &lt;= <span class="number">2</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    A.sort(reverse = <span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(A)<span class="number">-2</span>):</span><br><span class="line">        <span class="keyword">if</span> A[i+<span class="number">2</span>] + A[i+<span class="number">1</span>] &gt; A[i]:</span><br><span class="line">            <span class="keyword">return</span> A[i+<span class="number">2</span>] + A[i+<span class="number">1</span>] + A[i]</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h1 id="题目四：242-有效的字母异位词"><a href="#题目四：242-有效的字母异位词" class="headerlink" title="题目四：242. 有效的字母异位词"></a>题目四：<a href="https://leetcode-cn.com/problems/valid-anagram/" target="_blank" rel="noopener">242. 有效的字母异位词</a></h1><p>给定两个字符串 <em>s</em> 和 <em>t</em> ，编写一个函数来判断 <em>t</em> 是否是 <em>s</em> 的一个字母异位词。</p>
+<p><strong>示例 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: s = &quot;anagram&quot;, t = &quot;nagaram&quot;</span><br><span class="line">输出: true</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: s = &quot;rat&quot;, t = &quot;car&quot;</span><br><span class="line">输出: false</span><br></pre></td></tr></table></figure>
+<p><strong>说明:</strong><br> 你可以假设字符串只包含小写字母。</p>
+<p><strong>进阶:</strong><br> 如果输入字符串包含 unicode 字符怎么办？你能否调整你的解法来应对这种情况？</p>
+<p><strong><big>思路一：排序，比较s和t</big></strong></p>
+<p><strong><big>代码一</big></strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">isAnagram</span><span class="params">(s,t)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> len(s)!=len(t):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    s.sort()</span><br><span class="line">    t.sort()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(s)):</span><br><span class="line">        <span class="keyword">if</span> s[i] != t[i]:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<p><strong><big>思路二：字典</big></strong></p>
+<p><strong>代码二：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">isAnagram</span><span class="params">(s,t)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> len(s) !=len(t):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">if</span> Counter(s) == Counter(t):</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -1990,7 +2176,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-count">29</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

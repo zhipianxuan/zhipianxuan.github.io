@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文仅做学习总结，如有侵权立删 Spark SQL简介1、什么是SQL结构化查询语言：一种表示数据关系操作的特定领域语言。 Spark2.0发布了一个支持Hive操作的超集，并提供了一个能够同时支持ANSI SQL（标准SQL）和HiveSQL的原生SQL解析器。  SparkSession新的起始点在老的版本中，SparkSQL提供两种SQL查询起始点：一个叫SQLContext，用于Spar">
+<meta property="og:type" content="article">
+<meta property="og:title" content="11. Spark SQL">
+<meta property="og:url" content="http://yoursite.com/Spark-SQL/index.html">
+<meta property="og:site_name" content="Lee_yl&#39;s blog">
+<meta property="og:description" content="本文仅做学习总结，如有侵权立删 Spark SQL简介1、什么是SQL结构化查询语言：一种表示数据关系操作的特定领域语言。 Spark2.0发布了一个支持Hive操作的超集，并提供了一个能够同时支持ANSI SQL（标准SQL）和HiveSQL的原生SQL解析器。  SparkSession新的起始点在老的版本中，SparkSQL提供两种SQL查询起始点：一个叫SQLContext，用于Spar">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/imgs/SparkSQL1.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/SparkSQL2.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/SparkSQL3.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/SparkSQL4.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/SparkSQL5.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/SparkSQL7.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/SparkSQL6.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/SparkSQL8.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/SparkSQL9.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/SparkSQL10.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/SparkSQL11.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/SparkSQL12.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/SparkSQL13.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/SparkSQL14.jpg">
+<meta property="og:updated_time" content="2023-03-25T14:43:42.834Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="11. Spark SQL">
+<meta name="twitter:description" content="本文仅做学习总结，如有侵权立删 Spark SQL简介1、什么是SQL结构化查询语言：一种表示数据关系操作的特定领域语言。 Spark2.0发布了一个支持Hive操作的超集，并提供了一个能够同时支持ANSI SQL（标准SQL）和HiveSQL的原生SQL解析器。  SparkSession新的起始点在老的版本中，SparkSQL提供两种SQL查询起始点：一个叫SQLContext，用于Spar">
+<meta name="twitter:image" content="http://yoursite.com/imgs/SparkSQL1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/Spark-SQL/">
+
+
+
+
+
+  <title>11. Spark SQL | Lee_yl's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Lee_yl's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Spark-SQL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">11. Spark SQL</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-24T00:00:00+08:00">
+                2023-03-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/" itemprop="url" rel="index">
+                    <span itemprop="name">大数据</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<p>本文仅做学习总结，如有侵权立删</p>
+<h1 id="Spark-SQL简介"><a href="#Spark-SQL简介" class="headerlink" title="Spark SQL简介"></a>Spark SQL简介</h1><h2 id="1、什么是SQL"><a href="#1、什么是SQL" class="headerlink" title="1、什么是SQL"></a>1、什么是SQL</h2><p>结构化查询语言：一种表示数据关系操作的特定领域语言。</p>
+<p>Spark2.0发布了一个支持Hive操作的超集，并提供了一个能够同时支持ANSI SQL（标准SQL）和HiveSQL的原生SQL解析器。</p>
+<ul>
+<li><p>SparkSession新的起始点<br>在老的版本中，SparkSQL提供两种SQL查询起始点：一个叫SQLContext，用于Spark自己提供的SQL查询；一个叫HiveContext，用于连接Hive的查询。<br>SparkSession是Spark最新的SQL查询起始点，实质上是SQLContext和HiveContext的组合，所以在SQLContext和HiveContext上可用的API在SparkSession上同样是可以使用的。SparkSession内部封装了sparkContext，所以计算实际上是由sparkContext完成的</p>
+</li>
+<li><p>表存储两类重要的信息：表内数据和表的有关数据，也就是元数据。</p>
+</li>
+<li>托管表: 让Spark管理一组文件和数据的元数据</li>
+</ul>
+<p>当您从磁盘上的文件定义表时，您正在定义一个非托管表。</p>
+<p>“拥有”其数据，表定义 (元数据) 以及表数据都通过元数据系统进行管理。 托管表在其架构和数据之间提供一致性，如果删除了托管表，则它包含的数据    也将被删除。</p>
+<ul>
+<li>非托管表： Spark只管理表的元数据</li>
+</ul>
+<p>外部表是在元数据系统中提供表架构的表，但仅引用来自元数据系统控件的外部数据的表。 因此，在创建表后，无法保证表架构与数据一致。 无需通过外部表即可更改外部数据。 如果更改或删除外部表，基础数据不会受到影响或删除。</p>
+<h2 id="2-Dataframe和SQL互转"><a href="#2-Dataframe和SQL互转" class="headerlink" title="2. Dataframe和SQL互转"></a>2. Dataframe和SQL互转</h2><p>（1）<strong>createOrReplaceTempView</strong>：对DataFrame创建一个临时表</p>
+<p>（2）df.<strong>createGlobalTempView：</strong>对于DataFrame创建一个全局表</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Dataframe转SQL，对DataFrame创建一个临时表</span></span><br><span class="line">spark.read.json(<span class="string">"data.json"</span>)\</span><br><span class="line">	.createOrReplaceTempView(<span class="string">"some_sql_view"</span>)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># SQL转DataFrame</span></span><br><span class="line">spark.sql(<span class="string">"""</span></span><br><span class="line"><span class="string">SELECT a，count FROM some_sql_view </span></span><br><span class="line"><span class="string">"""</span>).where(<span class="string">"a like 'S%'"</span>).where(<span class="string">"`sum(count)` &gt; 10"</span>).count() </span><br><span class="line"><span class="comment"># 注意：临时表是Session范围内的，Session退出后，表就失效了。如果想应用范围内有效，可以使用全局表。注意使用全局表时需要全路径访问，如：global_temp.some_sql_view</span></span><br></pre></td></tr></table></figure>
+<h2 id="3-Catalog"><a href="#3-Catalog" class="headerlink" title="3. Catalog"></a>3. Catalog</h2><p> <em>catalog: 指的是所有的database目录</em></p>
+<p>Spark SQL中的最高抽象是Catalog。Catalog是存储关于表中存储的数据以及其他有用的东西(如数据库、表、函数和视图)的元数据的抽象。</p>
+<p>Catalog位于org.apache.spark.sql.catalog.Catalog包中，包含许多有用的函数，用于列出表、数据库和函数。我们将很快讨论所有这些事情。它对用户来说非常容易理解，因此我们将省略这里的代码示例，但它实际上只是另一个SparkSQL的编程接口。本章只显示正在执行的SQL;因此，如果您正在使用编程接口，请记住您需要将所有内容封装在一个spark.sql()函数中，执行相关代码。</p>
+<h2 id="4-表"><a href="#4-表" class="headerlink" title="4. 表"></a>4. 表</h2><h3 id="1-创建表：create-table"><a href="#1-创建表：create-table" class="headerlink" title="(1)创建表：create table"></a>(1)创建表：create table</h3><ul>
+<li>从多种数据源创建表：</li>
+</ul>
+<p><img src="..\imgs\SparkSQL1.jpg" alt></p>
+<blockquote>
+<p><strong>USING</strong> <strong>和 STORED AS</strong></p>
+<p>前面示例中的USING语法规范非常重要。如果不指定格式，Spark将默认为Hive SerDe配置。这对将来的读取和写入有性能影响，因为Hive SerDes比Spark的本地序列化慢得多。Hive用户还可以使用STORED AS语法来指定这应该是一个Hive表。</p>
+</blockquote>
+<ul>
+<li>也可以从查询中创建一个表:</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> flights_from_select <span class="keyword">USING</span> parquet <span class="keyword">AS</span> <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> flights</span><br></pre></td></tr></table></figure>
+<p>此外，只有在表当前不存在时，才可以指定创建表:</p>
+<blockquote>
+<p>在本例中，我们创建了一个与hive兼容的表，因为我们没有通过USING显式指定格式。我们还可以这样做:</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> flights_from_select <span class="keyword">AS</span> <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> flights</span><br></pre></td></tr></table></figure>
+<p>根据分区的控制数据布局：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> partitioned_flights <span class="keyword">USING</span> parquet </span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (DEST_COUNTRY_NAME)</span><br><span class="line"><span class="keyword">AS</span> <span class="keyword">SELECT</span> DEST_COUNTRY_NAME, ORIGIN_COUNTRY_NAME, <span class="keyword">count</span> <span class="keyword">FROM</span> flights <span class="keyword">LIMIT</span> <span class="number">5</span></span><br></pre></td></tr></table></figure>
+<p>这些表甚至可以通过会话在Spark中使用;Spark中目前不存在临时表。您必须创建一个临时视图.</p>
+<h3 id="（2）创建外部表-create-EXTERNAL-table"><a href="#（2）创建外部表-create-EXTERNAL-table" class="headerlink" title="（2）创建外部表:create EXTERNAL table"></a>（2）创建外部表:create EXTERNAL table</h3><ul>
+<li><strong>create EXTERNAL table：</strong>创建一个外部表</li>
+</ul>
+<p>您可以通过运行以下命令来使用任何已经定义的文件创建外部表:</p>
+<p><img src="..\imgs\SparkSQL2.jpg" alt></p>
+<p>您还可以从select子句创建一个外部表:</p>
+<p><img src="..\imgs\SparkSQL3.jpg" alt></p>
+<h3 id="（3）插入数据到表"><a href="#（3）插入数据到表" class="headerlink" title="（3）插入数据到表"></a>（3）<strong>插入数据到表</strong></h3><p><strong>标准SQL：INSERT INTO</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> flights_from_select </span><br><span class="line">	<span class="keyword">SELECT</span> DEST_COUNTRY_NAME, ORIGIN_COUNTRY_NAME, <span class="keyword">count</span> <span class="keyword">FROM</span> flights <span class="keyword">LIMIT</span> <span class="number">20</span></span><br></pre></td></tr></table></figure>
+<p>如果只希望写入某个分区，可以选择提供分区规范。注意，写操作也会遵循分区模式(这可能导致上面的查询运行得非常慢);但是，它只会添加额外的文件到目的分区:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> partitioned_flights </span><br><span class="line">	<span class="keyword">PARTITION</span> (DEST_COUNTRY_NAME=<span class="string">"UNITED STATES"</span>) </span><br><span class="line">	<span class="keyword">SELECT</span> <span class="keyword">count</span>, ORIGIN_COUNTRY_NAME <span class="keyword">FROM</span> flights 	</span><br><span class="line">	<span class="keyword">WHERE</span> DEST_COUNTRY_NAME=<span class="string">'UNITED STATES'</span> <span class="keyword">LIMIT</span> <span class="number">12</span></span><br></pre></td></tr></table></figure>
+<h3 id="4-查看表元数据-DESCRIBE-TABLE"><a href="#4-查看表元数据-DESCRIBE-TABLE" class="headerlink" title="(4) 查看表元数据: DESCRIBE TABLE"></a>(4) <strong>查看表元数据</strong>: DESCRIBE TABLE</h3><p>我们在前面看到，可以在创建表时添加注释。你可以通过描述表元数据来查看，它会显示相关的注释:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DESCRIBE</span> <span class="keyword">TABLE</span> flights_csv</span><br></pre></td></tr></table></figure>
+<p> 您还可以使用以下方法查看数据的分区方案(但是，请注意，这只适用于分区表):</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="keyword">PARTITIONS</span> partitioned_flights</span><br></pre></td></tr></table></figure>
+<h3 id="5-刷新表元数据-REFRESH-TABLE-、REPAIR-TABLE"><a href="#5-刷新表元数据-REFRESH-TABLE-、REPAIR-TABLE" class="headerlink" title="(5)刷新表元数据: REFRESH TABLE 、REPAIR TABLE"></a>(5)刷新表元数据: REFRESH TABLE 、REPAIR TABLE</h3><p>维护表元数据是确保从最新数据集读取数据的一项重要任务。有两个命令用于刷新表元数据。<strong>REFRESH TABLE</strong>刷新与该表关联的所有缓存条目(本质上是文件)。如果该表以前缓存过，那么下次扫描时它将被延迟缓存:</p>
+<p>另一个相关命令是<strong>REPAIR TABLE</strong>，它刷新catalog中为给定表维护的分区。这个命令的重点是收集新的分区信息，例如手工写一个新的分区，需要相应地修复表:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MSCKREPAIR TABLE partitioned_flights</span><br></pre></td></tr></table></figure>
+<h3 id="6-删除表：drop-table"><a href="#6-删除表：drop-table" class="headerlink" title="(6) 删除表：drop table"></a>(6) <strong>删除表</strong>：drop table</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">您不能delete表:您只能“drop”它们。可以使用drop关键字删除表。如果删除托管表(例如flights_csv)，数据和表定义都将被删除:</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> flights_csv;</span><br></pre></td></tr></table></figure>
+<p>如果您试图删除不存在的表，您将收到一个错误。若要仅删除已经存在的表，请使用DROP TABLE IF EXISTS：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> flights_csv;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>删除非托管表</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果您正在删除一个非托管表(例如，hive_flights)，则不会删除任何数据，但您将不再能够通过表名引用该数据。</span><br></pre></td></tr></table></figure>
+<h3 id="（7）缓存表：cache和uncache"><a href="#（7）缓存表：cache和uncache" class="headerlink" title="（7）缓存表：cache和uncache"></a>（7）缓存表：cache和uncache</h3><p>就像DataFrames一样，您可以缓存和不缓存表。您只需使用以下语法指定要使用哪个表:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 缓存表</span></span><br><span class="line"><span class="keyword">CACHE</span> <span class="keyword">TABLE</span> flights </span><br><span class="line"><span class="comment"># 不缓存表</span></span><br><span class="line">UNCACHE <span class="keyword">TABLE</span> flights</span><br></pre></td></tr></table></figure>
+<h2 id="5、视图"><a href="#5、视图" class="headerlink" title="5、视图"></a>5、视图</h2><p>创建了表之后，还可以定义视图。视图在现有表的之上定义一组转换(基本上就是保存的查询计划)，这对于组织或重用查询逻辑非常方便。Spark有几个不同的视图概念。视图可以是全局级别的，可以设置为数据库级别，也可以是会话级别。</p>
+<h3 id="（1）创建视图-CREATE-VIEW"><a href="#（1）创建视图-CREATE-VIEW" class="headerlink" title="（1）创建视图: CREATE VIEW"></a>（1）创建视图: CREATE VIEW</h3><p>对于最终用户来说，视图显示为表，只是在查询时对源数据执行转换，而不是将所有源数据重写到新的位置。这可能是一个filter、select，也可能是一个更大的group BY或ROLLUP。例如，在下面的例子中，我们创建了一个目的地为美国的视图，以便只看到这些航班:</p>
+<ul>
+<li><strong>创建视图</strong>: CREATE VIEW</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> just_usa_view <span class="keyword">AS</span> <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> flights <span class="keyword">WHERE</span> dest_country_name = <span class="string">'United States'</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>创建临时视图</strong>: CREATE TEMP VIEW</p>
+<p>这些视图只在当前会话期间可用，并且不注册到数据库:</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> TEMP <span class="keyword">VIEW</span> just_usa_view_temp <span class="keyword">AS</span> <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> flights <span class="keyword">WHERE</span> dest_country_name = <span class="string">'United States'</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>创建全局临时视图</strong>: CREATE GLOBAL TEMP VIEW<br>全局临时视图的解析与数据库无关，可以在整个Spark应用程序中查看，但在会话结束时将它们删除:</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">GLOBAL</span> TEMP <span class="keyword">VIEW</span> just_usa_global_view_temp <span class="keyword">AS</span>  <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> flights <span class="keyword">WHERE</span> dest_country_name = <span class="string">'United States'</span><span class="keyword">SHOW</span> <span class="keyword">TABLES</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>覆盖视图：CREATE OR REPLACE TEMP VIEW</strong></p>
+<p> 还可以使用下面示例中所示的关键字指定，如果一个视图已经存在，则希望覆盖该视图。我们可以覆盖临时视图和常规视图: </p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">OR</span> <span class="keyword">REPLACE</span> TEMP <span class="keyword">VIEW</span> just_usa_view_temp <span class="keyword">AS</span> <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> flights <span class="keyword">WHERE</span> dest_country_name = <span class="string">'United States'</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>查询视图</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> just_usa_view_temp</span><br></pre></td></tr></table></figure>
+<p>视图实际上是一个转换，Spark只在查询时执行它。这意味着它只会在您实际查询表之后应用该过滤器(而不是更早)。</p>
+<p>实际上，视图相当于从现有DataFrame创建一个新的DataFrame。实际上，您可以通过比较Spark DataFrames和Spark SQL生成的查询计划来了解这一点。</p>
+</li>
+<li><p>删除视图: DROP VIEW IF EXISTS</p>
+</li>
+</ul>
+<p>可以像删除表一样删除视图;只需指定要删除的是视图而不是表。删除视图和删除表的主要区别在于，对于视图，不删除底层数据，只删除视图定义本身:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">VIEW</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> just_usa_view;</span><br></pre></td></tr></table></figure>
+<h2 id="6、数据库"><a href="#6、数据库" class="headerlink" title="6、数据库"></a>6、数据库</h2><ul>
+<li><p>查看所有数据库：SHOW DATABASES</p>
+</li>
+<li><p>创建数据库</p>
+<p>创建数据库的模式与您在本章前面看到的相同;但是，这里使用CREATE DATABASE关键字: </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> some_db</span><br></pre></td></tr></table></figure>
+<p>您可能想要设置一个数据库来执行某个查询。要做到这一点，使用use关键字后面跟着数据库名称: </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">USE</span> some_db</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看当前使用的数数据库</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> current_database()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>删除数据库： DROP DATABASE</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">DATABASE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> some_db;</span><br></pre></td></tr></table></figure>
+<h2 id="7、高级主题"><a href="#7、高级主题" class="headerlink" title="7、高级主题"></a>7、高级主题</h2><p><strong>Spark SQL中有三种核心的复杂类型:struct、list和map。</strong></p>
+<h2 id="（1）Struct"><a href="#（1）Struct" class="headerlink" title="（1）Struct"></a>（1）Struct</h2><p>struct更类似于map。它们提供了在Spark中创建或查询嵌套数据的方法。要创建一个，你只需要用括号括起一组列(或表达式):</p>
+<p><img src="..\imgs\SparkSQL4.jpg" alt></p>
+<ul>
+<li>查询Struct</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> country.DEST_COUNTRY_NAME, <span class="keyword">count</span> <span class="keyword">FROM</span> nested_date</span><br><span class="line"><span class="keyword">select</span> country.*, <span class="keyword">count</span> <span class="keyword">FROM</span> nested_date <span class="comment"># 全部列</span></span><br></pre></td></tr></table></figure>
+<h2 id="（2）List"><a href="#（2）List" class="headerlink" title="（2）List"></a>（2）List</h2><p>有几种方法可以创建数组或值列表。</p>
+<ul>
+<li><p>使用<strong>collect_list</strong>函数，它创建一个值列表。</p>
+</li>
+<li><p>使用函数<strong>collect_set</strong>，它创建一个没有重复值的数组。<br>这两个都是聚合函数，因此只能在聚合中指定:</p>
+</li>
+</ul>
+<p><img src="..\imgs\SparkSQL5.jpg" alt></p>
+<ul>
+<li>手动创建数组</li>
+</ul>
+<p><img src="..\imgs\SparkSQL7.jpg" alt></p>
+<ul>
+<li>查询列表索引：[0]</li>
+</ul>
+<p><img src="..\imgs\SparkSQL6.jpg" alt></p>
+<ul>
+<li><p>将数组转换回行。使用explode函数</p>
+<ul>
+<li>建视图</li>
+</ul>
+<p><img src="..\imgs\SparkSQL8.jpg" alt></p>
+<ul>
+<li>拆行</li>
+</ul>
+<p>现在让我们将复杂类型分解为数组中每个值对应的结果中的一行。DEST_COUNTRY_NAME将对数组中的每个值进行复制，执行与原始collect完全相反的操作，并返回到原始DataFrame:</p>
+<p><img src="..\imgs\SparkSQL9.jpg" alt></p>
+</li>
+</ul>
+<h2 id="（3）查看Spark-SQL中的函数列表："><a href="#（3）查看Spark-SQL中的函数列表：" class="headerlink" title="（3）查看Spark SQL中的函数列表："></a>（3）查看Spark SQL中的函数列表：</h2><p>SHOW FUNCTIONS： 查看Spark SQL中的函数列表</p>
+<p>SHOW SYSTEM FUNCTIONS：指示是否希望查看系统函数(即Spark内置函数)以及用户函数:</p>
+<p>SHOW USER FUNCTIONS: 用户函数是由您或其他共享Spark环境的人定义的。</p>
+<p>SHOW FUNCTIONS “s*“: 通过传递带有通配符(*)的字符串来过滤所有SHOW命令。所有以“s”开头的函数:;</p>
+<p>SHOW FUNCTIONS LIKE “collect*”： 选择包含LIKE关键字</p>
+<ul>
+<li>自定义函数</li>
+</ul>
+<p><img src="..\imgs\SparkSQL10.jpg" alt></p>
+<p>可以通过Hive CREATE TEMPORARY FUNCTION语法注册函数。</p>
+<h2 id="（4）子查询"><a href="#（4）子查询" class="headerlink" title="（4）子查询"></a>（4）子查询</h2><p>如果你想看到你的航班是否会把你从你当前所在国家带回来,你可以通过检查是否有这样航班：以当前所在国家为起飞点，以带回国家为目的地:</p>
+<p><img src="..\imgs\SparkSQL11.jpg" alt></p>
+<p>EXISTS只检查子查询中的一些存在性，如果有值，返回true。你可以通过把NOT运算符放在它前面来翻转它。这就相当于找到了一架飞往你无法返回目的地的航班!</p>
+<p><img src="..\imgs\SparkSQL12.jpg" alt></p>
+<h2 id="SQL配置"><a href="#SQL配置" class="headerlink" title="SQL配置"></a>SQL配置</h2><p>您可以在应用程序初始化时或在应用程序执行过程中设置这些参数(就像我们在本书中看到的shuffle分区一样)。</p>
+<p><img src="..\imgs\SparkSQL13.jpg" alt></p>
+<p><img src="..\imgs\SparkSQL14.jpg" alt></p>
+<p>spark.sql.shuffle.partitions             200             配置在为连接或聚合shuffle数据时要使用的分区数。</p>
+<p>您只能以这种方式设置Spark SQL配置，但是下面是如何设置shuffle分区:SETspark.sql.shuffle.partitions=20</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/9.-数据源/" rel="next" title="9. 数据源">
+                <i class="fa fa-chevron-left"></i> 9. 数据源
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Spark持久化/" rel="prev" title="10. Spark持久化">
+                10. Spark持久化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Lee_yl</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spark-SQL简介"><span class="nav-number">1.</span> <span class="nav-text">Spark SQL简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、什么是SQL"><span class="nav-number">1.1.</span> <span class="nav-text">1、什么是SQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Dataframe和SQL互转"><span class="nav-number">1.2.</span> <span class="nav-text">2. Dataframe和SQL互转</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Catalog"><span class="nav-number">1.3.</span> <span class="nav-text">3. Catalog</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-表"><span class="nav-number">1.4.</span> <span class="nav-text">4. 表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-创建表：create-table"><span class="nav-number">1.4.1.</span> <span class="nav-text">(1)创建表：create table</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（2）创建外部表-create-EXTERNAL-table"><span class="nav-number">1.4.2.</span> <span class="nav-text">（2）创建外部表:create EXTERNAL table</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（3）插入数据到表"><span class="nav-number">1.4.3.</span> <span class="nav-text">（3）插入数据到表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-查看表元数据-DESCRIBE-TABLE"><span class="nav-number">1.4.4.</span> <span class="nav-text">(4) 查看表元数据: DESCRIBE TABLE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-刷新表元数据-REFRESH-TABLE-、REPAIR-TABLE"><span class="nav-number">1.4.5.</span> <span class="nav-text">(5)刷新表元数据: REFRESH TABLE 、REPAIR TABLE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-删除表：drop-table"><span class="nav-number">1.4.6.</span> <span class="nav-text">(6) 删除表：drop table</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（7）缓存表：cache和uncache"><span class="nav-number">1.4.7.</span> <span class="nav-text">（7）缓存表：cache和uncache</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5、视图"><span class="nav-number">1.5.</span> <span class="nav-text">5、视图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）创建视图-CREATE-VIEW"><span class="nav-number">1.5.1.</span> <span class="nav-text">（1）创建视图: CREATE VIEW</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6、数据库"><span class="nav-number">1.6.</span> <span class="nav-text">6、数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7、高级主题"><span class="nav-number">1.7.</span> <span class="nav-text">7、高级主题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#（1）Struct"><span class="nav-number">1.8.</span> <span class="nav-text">（1）Struct</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#（2）List"><span class="nav-number">1.9.</span> <span class="nav-text">（2）List</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#（3）查看Spark-SQL中的函数列表："><span class="nav-number">1.10.</span> <span class="nav-text">（3）查看Spark SQL中的函数列表：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#（4）子查询"><span class="nav-number">1.11.</span> <span class="nav-text">（4）子查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL配置"><span class="nav-number">1.12.</span> <span class="nav-text">SQL配置</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lee_yl</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

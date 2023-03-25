@@ -86,13 +86,13 @@
 <meta property="og:site_name" content="Lee_yl&#39;s blog">
 <meta property="og:description" content="本文仅做学习总结，如有侵权立删 持久化1. 引言  查看上面那段伪代码，两个count触发算子会产生两个job, 那么,这两个job会往回去找errors，lines这两个rdd，最后到磁盘上拿数据。也就是每个job都会去读一遍磁盘，这里可以做优化， 将errors这个rdd保存到内存中， 然后第一个count会去磁盘度数， 但第二个count直接可以从内存中读数据了。  控制算子有三种，cac">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="e:/GitHub_learn/blog/source/imgs/RDD持久化.jpg">
+<meta property="og:image" content="http://yoursite.com/imgs/RDD持久化.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/Spark持久化1.jpg">
-<meta property="og:updated_time" content="2023-03-24T15:07:21.493Z">
+<meta property="og:updated_time" content="2023-03-24T15:25:27.161Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="10. Spark持久化">
 <meta name="twitter:description" content="本文仅做学习总结，如有侵权立删 持久化1. 引言  查看上面那段伪代码，两个count触发算子会产生两个job, 那么,这两个job会往回去找errors，lines这两个rdd，最后到磁盘上拿数据。也就是每个job都会去读一遍磁盘，这里可以做优化， 将errors这个rdd保存到内存中， 然后第一个count会去磁盘度数， 但第二个count直接可以从内存中读数据了。  控制算子有三种，cac">
-<meta name="twitter:image" content="e:/GitHub_learn/blog/source/imgs/RDD持久化.jpg">
+<meta name="twitter:image" content="http://yoursite.com/imgs/RDD持久化.jpg">
 
 
 
@@ -337,12 +337,12 @@
       
         <hr>
 <p>本文仅做学习总结，如有侵权立删</p>
-<h1 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h1><h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1. 引言"></a>1. 引言</h2><p><img src="E:\GitHub_learn\blog\source\imgs\RDD持久化.jpg" alt></p>
+<h1 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h1><h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1. 引言"></a>1. 引言</h2><p><img src="..\imgs\RDD持久化.jpg" alt></p>
 <blockquote>
 <p>查看上面那段伪代码，两个count触发算子会产生两个job, 那么,这两个job会往回去找errors，lines这两个rdd，最后到磁盘上拿数据。也就是每个job都会去读一遍磁盘，这里可以做优化， 将errors这个rdd保存到内存中， 然后第一个count会去磁盘度数， 但第二个count直接可以从内存中读数据了。</p>
 </blockquote>
 <p><strong>控制算子有三种，cache,persist,checkpoint，以上算子都可以将RDD持久化，持久化的单位是partition。</strong></p>
-<p><strong>cache和persist都是懒执行的。</strong></p>
+<p><strong>cache、persist和checkpoint都是懒执行的。</strong></p>
 <p><strong>必须有一个action类算子触发执行。checkpoint算子不仅能将RDD持久化到磁盘，还能切断RDD之间的依赖关系</strong></p>
 <p>RDD 可以使用 persist() 方法或 cache() 方法进行持久化。数据将会在第一次 action 操作时进行计算，并缓存在节点的内存中。Spark 的缓存具有容错机制，如果一个缓存的 RDD 的某个分区丢失了，Spark 将按照原来的计算过程，自动重新计算并进行缓存。</p>
 <p>在 shuffle 操作中（例如 reduceByKey），即便是用户没有调用 persist 方法，Spark 也会自动缓存部分中间数据。这么做的目的是，在 shuffle 的过程中某个节点运行失败时，不需要重新计算所有的输入数据。如果用户想多次使用某个 RDD，强烈推荐在该 RDD 上调用 persist 方法。</p>
@@ -385,14 +385,14 @@
 </ul>
 <h1 id="3-cache"><a href="#3-cache" class="headerlink" title="3. cache"></a>3. cache</h1><h2 id="RDD的cache和persist的区别"><a href="#RDD的cache和persist的区别" class="headerlink" title="RDD的cache和persist的区别"></a>RDD的cache和persist的区别</h2><p>cache()调用的persist()，是使用默认存储级别的快捷设置方法（MEMORY_ONLY）</p>
 <p>通过源码可以看出cache()是persist()的简化方式，调用persist的无参版本，也就是调用persist(StorageLevel.MEMORY_ONLY)，cache只有一个默认的缓存级别MEMORY_ONLY，即将数据持久化到内存中，而persist可以通过传递一个 StorageLevel 对象来设置其它的缓存级别。</p>
-<h2 id="4-unpersist-释放缓存："><a href="#4-unpersist-释放缓存：" class="headerlink" title="4. unpersist 释放缓存："></a>4. unpersist 释放缓存：</h2><p>Spark 自动监控各个节点上的缓存使用率，并以最近最少使用的方式（LRU）将旧数据块移除内存。如果想手动移除一个 RDD，而不是等待该 RDD 被 Spark 自动移除，可以使用 RDD.unpersist() 方法</p>
+<h1 id="4-unpersist-释放缓存："><a href="#4-unpersist-释放缓存：" class="headerlink" title="4. unpersist 释放缓存："></a>4. unpersist 释放缓存：</h1><p>Spark 自动监控各个节点上的缓存使用率，并以最近最少使用的方式（LRU）将旧数据块移除内存。如果想手动移除一个 RDD，而不是等待该 RDD 被 Spark 自动移除，可以使用 RDD.unpersist() 方法</p>
 <p>注意：如果缓存的RDD之间有依赖关系，比如</p>
 <p>val rdd_a = df.persist</p>
 <p>val rdd_<em>b = rdd_a.filter.persist</em></p>
 <p><em>val rdd_c = rdd_b.map.persist</em></p>
 <p>在用unpersist清理缓存时，当首先清理rdd_a时，会重建rdd_b和rdd_c的缓存，如果数据量巨大，这个过程可能花费很长时间，即使rdd<em>b</em>和rdd_c后面也即将被清理，但是重建过程也会进行，可能会出现一个现象，所有job都以完成，但是任务长时间处于RUNNING状态，这可能就是因为最后再清理缓存时又会把依赖于它的RDD再重算一遍。这时可以只用使用<em>spark</em>.<em>sharedState</em>.<em>cacheManager</em>.uncacheQuery(df, cascade = true, blocking = false)来全部释放，参数cascade 表示是否清理所有引用此RDD的其他RDD，以下是unpersist的源码，可以一目了然</p>
 <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">unpersist</span></span>(blocking: <span class="type">Boolean</span>): <span class="keyword">this</span>.<span class="keyword">type</span> = &#123;</span><br><span class="line">  sparkSession.sharedState.cacheManager.uncacheQuery(<span class="keyword">this</span>, cascade = <span class="literal">false</span>, blocking)</span><br><span class="line">  <span class="keyword">this</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="5-checkpoint"><a href="#5-checkpoint" class="headerlink" title="5. checkpoint"></a>5. checkpoint</h2><ul>
+<h1 id="5-checkpoint"><a href="#5-checkpoint" class="headerlink" title="5. checkpoint"></a>5. checkpoint</h1><ul>
 <li><p>checkpoint将RDD持久化到磁盘，还可以切断RDD之间的依赖关系</p>
 </li>
 <li><p>checkpoint 的执行原理</p>
@@ -435,8 +435,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/9.-数据源/" rel="next" title="9. 数据源">
-                <i class="fa fa-chevron-left"></i> 9. 数据源
+              <a href="/Spark-SQL/" rel="next" title="11. Spark SQL">
+                <i class="fa fa-chevron-left"></i> 11. Spark SQL
               </a>
             
           </div>
@@ -520,7 +520,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-count">29</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -575,7 +575,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#持久化"><span class="nav-number">1.</span> <span class="nav-text">持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-引言"><span class="nav-number">1.1.</span> <span class="nav-text">1. 引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存储级别"><span class="nav-number">1.2.</span> <span class="nav-text">存储级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何选择存储级别"><span class="nav-number">1.3.</span> <span class="nav-text">如何选择存储级别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-persist"><span class="nav-number">2.</span> <span class="nav-text">2. persist</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-cache"><span class="nav-number">3.</span> <span class="nav-text">3. cache</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RDD的cache和persist的区别"><span class="nav-number">3.1.</span> <span class="nav-text">RDD的cache和persist的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-unpersist-释放缓存："><span class="nav-number">3.2.</span> <span class="nav-text">4. unpersist 释放缓存：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-checkpoint"><span class="nav-number">3.3.</span> <span class="nav-text">5. checkpoint</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#（1）cache-和-checkpoint-之间有一个重大的区别，"><span class="nav-number">3.3.0.1.</span> <span class="nav-text">（1）cache 和 checkpoint 之间有一个重大的区别，</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#（2）persist与checkpoint的区别"><span class="nav-number">3.3.0.2.</span> <span class="nav-text">（2）persist与checkpoint的区别</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#持久化"><span class="nav-number">1.</span> <span class="nav-text">持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-引言"><span class="nav-number">1.1.</span> <span class="nav-text">1. 引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存储级别"><span class="nav-number">1.2.</span> <span class="nav-text">存储级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何选择存储级别"><span class="nav-number">1.3.</span> <span class="nav-text">如何选择存储级别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-persist"><span class="nav-number">2.</span> <span class="nav-text">2. persist</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-cache"><span class="nav-number">3.</span> <span class="nav-text">3. cache</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RDD的cache和persist的区别"><span class="nav-number">3.1.</span> <span class="nav-text">RDD的cache和persist的区别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-unpersist-释放缓存："><span class="nav-number">4.</span> <span class="nav-text">4. unpersist 释放缓存：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-checkpoint"><span class="nav-number">5.</span> <span class="nav-text">5. checkpoint</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#（1）cache-和-checkpoint-之间有一个重大的区别，"><span class="nav-number">5.0.0.1.</span> <span class="nav-text">（1）cache 和 checkpoint 之间有一个重大的区别，</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#（2）persist与checkpoint的区别"><span class="nav-number">5.0.0.2.</span> <span class="nav-text">（2）persist与checkpoint的区别</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.1.</span> <span class="nav-text">总结</span></a></li></div>
             
 
           </div>
