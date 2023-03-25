@@ -618,6 +618,166 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/标准化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/标准化/" itemprop="url">标准化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-26T00:00:00+08:00">
+                2023-02-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本篇博客仅作为学习,如有侵权必删。</p>
+<h2 id="一、BN批标准化"><a href="#一、BN批标准化" class="headerlink" title="一、BN批标准化"></a>一、BN批标准化</h2><h3 id="1、BN的基本动机"><a href="#1、BN的基本动机" class="headerlink" title="1、BN的基本动机"></a>1、BN的基本动机</h3><ol>
+<li><strong>（初始数据分布一致）</strong>神经网络训练过程的本质是学习数据分布，如果训练数据与测试数据的分布      不同将大大降低网络的泛化能力，因此我们需要在训练开始前对所有输入数据进行归一化处理。</li>
+<li><strong>（中间数据分布一致）</strong>然而随着网络训练的进行，每个隐层的参数变化使得后一层的输入发生变      化，从而每一批训练数据的分布也随之改变，致使网络在每次迭代中都需要拟合 不同的数据分布，增大训练的复杂度以及过拟合的风险。</li>
+</ol>
+<p>原因在于神经网络学习过程<strong>本质上是为了学习数据的分布</strong>，一旦训练数据与测试数据的分布不同，那么网络的泛化能力也大大降低；另一方面，一旦在mini-batch梯度下降训练的时候，每批训练数据的分布不相同，那么网络就要在每次迭代的时候去学习以适应不同的分布，这样将会大大降低网络的训练速度，这也正是为什么我们需要对所有训练数据做一个Normalization预处理的原因。</p>
+<h3 id="2、-BN的原理"><a href="#2、-BN的原理" class="headerlink" title="2、 BN的原理"></a>2、 BN的原理</h3><p>BN首先是把所有的样本的统计分布标准化，降低了batch内不同样本的差异性，然后又允许batch内的各个样本有各自的统计分布。</p>
+<p>BN是针对每一批数据，在网络的每一层输入之前增加归一化处理（均值为0，标准差为1），将所有批数据强制在统一的数据分布下，即对该层 的任意一个神经元（假设为第k维）x^(k) 采用如下公式:</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/过拟合欠拟合/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -683,8 +843,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/过拟合/" itemprop="url" rel="index">
-                    <span itemprop="name">过拟合</span>
+                  <a href="/categories/机器学习/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
                   </a>
                 </span>
 
@@ -728,209 +888,6 @@
 <p>欠拟合：模型在训练和和预测时表现都不好的情况。</p>
 </blockquote>
 <p><img src="..\imgs\过拟合欠拟合.jpg" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/正则化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lee_yl">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lee_yl's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/正则化/" itemprop="url">正则化</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-26T00:00:00+08:00">
-                2023-02-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/正则化/" itemprop="url" rel="index">
-                    <span itemprop="name">正则化</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本篇博客仅作为学习,如有侵权必删。</p>
-<h1 id="正则化-惩罚项"><a href="#正则化-惩罚项" class="headerlink" title="正则化/惩罚项"></a>正则化/惩罚项</h1><h2 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h2><blockquote>
-<p> <strong>（1）范数：</strong><img src="..\imgs\范数.jpg" alt></p>
-<p><strong>（2）方差和偏差：</strong></p>
-<p>Error = Bias + Variance</p>
-<ul>
-<li>Error反映的是整个模型的准确度，</li>
-<li>Bias反映的是模型在样本上的输出与真实值之间的误差，即模型本身的精准度，</li>
-<li>Variance反映的是模型每一次输出结果与模型输出期望之间的误差（描述的是样本上训练的模型在测试集上的表现。），即模型的稳定性。</li>
-<li>欠拟合是高bias，过拟合是高variance。</li>
-</ul>
-</blockquote>
-<blockquote>
-<p><strong>（3）正则化的目的</strong>：减少模型参数大小或者参数数量，缓解过拟合。</p>
-<p>正则化的作用是给模型加一个先验，lasso(l1)认为模型是拉普拉斯分布，ridge(l2)认为是高斯分布，正则项对应参数的协方差，协方差越小，这个模型的variance越小，泛化 能力越强，也就抵抗了过拟合。</p>
-<p><strong>（4）正则化通用形式：</strong></p>
-<p>​        Loss_with_regularization = loss(w,x) + λf(w)</p>
-<ul>
-<li>正则化恒为非负</li>
-<li>f(w)不能为负数，若其为负数，Loss(w,x)+λf(x)本来尽可能想让其变小，那f(x)为负数，f(x)绝对值会越学越大。</li>
-</ul>
-<p><strong>(5) 正则化方法：</strong>L1正则、L2正则、Dropout正则</p>
-</blockquote>
-<h2 id="二、-从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】"><a href="#二、-从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】" class="headerlink" title="二、 从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】"></a>二、 从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】</h2><p><strong>过拟合就是模型在学习训练样本时将噪声异常值也学习得非常好，使得模型参数过多，模型较复杂，给参数加上一个先验约束，可降低过拟合。</strong></p>
-<p> <img src="..\imgs\正则化1.jpg" alt></p>
-<h2 id="三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；"><a href="#三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；" class="headerlink" title="三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；"></a>三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；</h2><p><strong>区别</strong>：L1假设参数服从拉普拉斯分布，L2则符合高斯分布；</p>
-<p>L1范数更容易产生稀疏的权重，L2范数更容易产生分散的权重。</p>
-<p><strong>原因</strong>：（L1稀疏的原因，L2不稀疏的原因）【几何、公式两个角度】</p>
-<p><strong>场景</strong>：具有高维的数据特征时采用L1正则效果好一点。因为L1具有稀疏性。</p>
-<h2 id="四、解释L1范数更容易产生稀疏的权重，L2不的原因："><a href="#四、解释L1范数更容易产生稀疏的权重，L2不的原因：" class="headerlink" title="四、解释L1范数更容易产生稀疏的权重，L2不的原因："></a>四、解释L1范数更容易产生稀疏的权重，L2不的原因：</h2><h3 id="（1）几何角度"><a href="#（1）几何角度" class="headerlink" title="（1）几何角度"></a>（1）几何角度</h3><p>L2正则项约束后的解空间是圆形，L1正则项约束后的解空间是多方形，L1易在角点发生交点，从而产生稀疏解。</p>
-<blockquote>
-<p>绿色等高线代表未施加正则化的代价函数，菱形和圆形分别代表L1和L2正则化约束，L1-ball 与L2-ball的不同就在于L1在和每个坐标轴相交的地方都有“角”出现，而目标函数的”等高线”除非位置摆得非常好，大部分时候都会在角的地方相交。注意到在角的位置就会产生稀疏性。相比之下，L2-ball 就没有这样的性质，因为没有角，所以第一次相交的地方出现在具有稀疏性的位置的概率就变得非常小</p>
-</blockquote>
-<p><img src="..\imgs\L1正则解释.jpg" alt></p>
-<h3 id="（2）公式角度：（拉格朗日求导）"><a href="#（2）公式角度：（拉格朗日求导）" class="headerlink" title="（2）公式角度：（拉格朗日求导）"></a>（2）公式角度：（拉格朗日求导）</h3><blockquote>
-<p>深度学习花书7.1节（202页左右）。带L1正则化的最优参数w=sign(w<em>) max{|w</em>|- a/H , 0}，其中w代表未正则化的目标函数的最优参数，H代表海森矩阵，a是正则化系数，只要a足够大，w就会在更大区间范围内使w变为0，而带L2正则化的最优参数w=H/(H+a)▪w,只要w不为0，w也不为0.</p>
-</blockquote>
-<p><strong>1、稀疏性的约束：</strong></p>
-<p><img src="..\imgs\正则公式1.jpg" alt></p>
-<p>​    L1范数和L0范数可以实现稀疏，L1因具有比L0更好的优化求解特性而被广泛应用。</p>
-<p><strong>2、不好求解，松弛为L1，L2：</strong></p>
-<p><img src="..\imgs\正则公式2.jpg" alt></p>
-<p><strong>3、拉格朗日</strong></p>
-<p><img src="..\imgs\正则公式3.jpg" alt></p>
-<h3 id="（3）贝叶斯先验"><a href="#（3）贝叶斯先验" class="headerlink" title="（3）贝叶斯先验"></a>（3）贝叶斯先验</h3><blockquote>
-<p>L1正则化相当于对模型参数w引入了拉普拉斯先验，L2正则化相当于引入了高斯先验，而拉普拉斯先验使参数为0的可能性更大。</p>
-</blockquote>
-<p><strong>L1正则化可通过假设权重w的先验分布为拉普拉斯分布，由最大后验概率估计导出。</strong></p>
-<p><strong>L2正则化可通过假设权重w的先验分布为高斯分布，由最大后验概率估计导出。</strong></p>
-<p><strong>详细解释：</strong> <a href="https://blog.csdn.net/m0_38045485/article/details/82147817" target="_blank" rel="noopener">https://blog.csdn.net/m0_38045485/article/details/82147817</a></p>
-<p><img src="..\imgs\正则公式4.jpg" alt></p>
 
           
         
@@ -1160,7 +1117,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/标准化/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/正则化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Lee_yl">
@@ -1179,7 +1136,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/标准化/" itemprop="url">标准化</a></h1>
+                <a class="post-title-link" href="/正则化/" itemprop="url">正则化</a></h1>
         
 
         <div class="post-meta">
@@ -1225,8 +1182,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/标准化/" itemprop="url" rel="index">
-                    <span itemprop="name">标准化</span>
+                  <a href="/categories/机器学习/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
                   </a>
                 </span>
 
@@ -1265,13 +1222,56 @@
         
           
             <p>本篇博客仅作为学习,如有侵权必删。</p>
-<h2 id="一、BN批标准化"><a href="#一、BN批标准化" class="headerlink" title="一、BN批标准化"></a>一、BN批标准化</h2><h3 id="1、BN的基本动机"><a href="#1、BN的基本动机" class="headerlink" title="1、BN的基本动机"></a>1、BN的基本动机</h3><ol>
-<li><strong>（初始数据分布一致）</strong>神经网络训练过程的本质是学习数据分布，如果训练数据与测试数据的分布      不同将大大降低网络的泛化能力，因此我们需要在训练开始前对所有输入数据进行归一化处理。</li>
-<li><strong>（中间数据分布一致）</strong>然而随着网络训练的进行，每个隐层的参数变化使得后一层的输入发生变      化，从而每一批训练数据的分布也随之改变，致使网络在每次迭代中都需要拟合 不同的数据分布，增大训练的复杂度以及过拟合的风险。</li>
-</ol>
-<p>原因在于神经网络学习过程<strong>本质上是为了学习数据的分布</strong>，一旦训练数据与测试数据的分布不同，那么网络的泛化能力也大大降低；另一方面，一旦在mini-batch梯度下降训练的时候，每批训练数据的分布不相同，那么网络就要在每次迭代的时候去学习以适应不同的分布，这样将会大大降低网络的训练速度，这也正是为什么我们需要对所有训练数据做一个Normalization预处理的原因。</p>
-<h3 id="2、-BN的原理"><a href="#2、-BN的原理" class="headerlink" title="2、 BN的原理"></a>2、 BN的原理</h3><p>BN首先是把所有的样本的统计分布标准化，降低了batch内不同样本的差异性，然后又允许batch内的各个样本有各自的统计分布。</p>
-<p>BN是针对每一批数据，在网络的每一层输入之前增加归一化处理（均值为0，标准差为1），将所有批数据强制在统一的数据分布下，即对该层 的任意一个神经元（假设为第k维）x^(k) 采用如下公式:</p>
+<h1 id="正则化-惩罚项"><a href="#正则化-惩罚项" class="headerlink" title="正则化/惩罚项"></a>正则化/惩罚项</h1><h2 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h2><blockquote>
+<p> <strong>（1）范数：</strong><img src="..\imgs\范数.jpg" alt></p>
+<p><strong>（2）方差和偏差：</strong></p>
+<p>Error = Bias + Variance</p>
+<ul>
+<li>Error反映的是整个模型的准确度，</li>
+<li>Bias反映的是模型在样本上的输出与真实值之间的误差，即模型本身的精准度，</li>
+<li>Variance反映的是模型每一次输出结果与模型输出期望之间的误差（描述的是样本上训练的模型在测试集上的表现。），即模型的稳定性。</li>
+<li>欠拟合是高bias，过拟合是高variance。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p><strong>（3）正则化的目的</strong>：减少模型参数大小或者参数数量，缓解过拟合。</p>
+<p>正则化的作用是给模型加一个先验，lasso(l1)认为模型是拉普拉斯分布，ridge(l2)认为是高斯分布，正则项对应参数的协方差，协方差越小，这个模型的variance越小，泛化 能力越强，也就抵抗了过拟合。</p>
+<p><strong>（4）正则化通用形式：</strong></p>
+<p>​        Loss_with_regularization = loss(w,x) + λf(w)</p>
+<ul>
+<li>正则化恒为非负</li>
+<li>f(w)不能为负数，若其为负数，Loss(w,x)+λf(x)本来尽可能想让其变小，那f(x)为负数，f(x)绝对值会越学越大。</li>
+</ul>
+<p><strong>(5) 正则化方法：</strong>L1正则、L2正则、Dropout正则</p>
+</blockquote>
+<h2 id="二、-从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】"><a href="#二、-从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】" class="headerlink" title="二、 从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】"></a>二、 从数学角度解释正则化为什么能提升模型的泛化能力；【奥卡姆剃刀：简单就好】</h2><p><strong>过拟合就是模型在学习训练样本时将噪声异常值也学习得非常好，使得模型参数过多，模型较复杂，给参数加上一个先验约束，可降低过拟合。</strong></p>
+<p> <img src="..\imgs\正则化1.jpg" alt></p>
+<h2 id="三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；"><a href="#三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；" class="headerlink" title="三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；"></a>三、L1和L2范数各有什么特点以及相应的原因？L1和L2的区别与应用场景；</h2><p><strong>区别</strong>：L1假设参数服从拉普拉斯分布，L2则符合高斯分布；</p>
+<p>L1范数更容易产生稀疏的权重，L2范数更容易产生分散的权重。</p>
+<p><strong>原因</strong>：（L1稀疏的原因，L2不稀疏的原因）【几何、公式两个角度】</p>
+<p><strong>场景</strong>：具有高维的数据特征时采用L1正则效果好一点。因为L1具有稀疏性。</p>
+<h2 id="四、解释L1范数更容易产生稀疏的权重，L2不的原因："><a href="#四、解释L1范数更容易产生稀疏的权重，L2不的原因：" class="headerlink" title="四、解释L1范数更容易产生稀疏的权重，L2不的原因："></a>四、解释L1范数更容易产生稀疏的权重，L2不的原因：</h2><h3 id="（1）几何角度"><a href="#（1）几何角度" class="headerlink" title="（1）几何角度"></a>（1）几何角度</h3><p>L2正则项约束后的解空间是圆形，L1正则项约束后的解空间是多方形，L1易在角点发生交点，从而产生稀疏解。</p>
+<blockquote>
+<p>绿色等高线代表未施加正则化的代价函数，菱形和圆形分别代表L1和L2正则化约束，L1-ball 与L2-ball的不同就在于L1在和每个坐标轴相交的地方都有“角”出现，而目标函数的”等高线”除非位置摆得非常好，大部分时候都会在角的地方相交。注意到在角的位置就会产生稀疏性。相比之下，L2-ball 就没有这样的性质，因为没有角，所以第一次相交的地方出现在具有稀疏性的位置的概率就变得非常小</p>
+</blockquote>
+<p><img src="..\imgs\L1正则解释.jpg" alt></p>
+<h3 id="（2）公式角度：（拉格朗日求导）"><a href="#（2）公式角度：（拉格朗日求导）" class="headerlink" title="（2）公式角度：（拉格朗日求导）"></a>（2）公式角度：（拉格朗日求导）</h3><blockquote>
+<p>深度学习花书7.1节（202页左右）。带L1正则化的最优参数w=sign(w<em>) max{|w</em>|- a/H , 0}，其中w代表未正则化的目标函数的最优参数，H代表海森矩阵，a是正则化系数，只要a足够大，w就会在更大区间范围内使w变为0，而带L2正则化的最优参数w=H/(H+a)▪w,只要w不为0，w也不为0.</p>
+</blockquote>
+<p><strong>1、稀疏性的约束：</strong></p>
+<p><img src="..\imgs\正则公式1.jpg" alt></p>
+<p>​    L1范数和L0范数可以实现稀疏，L1因具有比L0更好的优化求解特性而被广泛应用。</p>
+<p><strong>2、不好求解，松弛为L1，L2：</strong></p>
+<p><img src="..\imgs\正则公式2.jpg" alt></p>
+<p><strong>3、拉格朗日</strong></p>
+<p><img src="..\imgs\正则公式3.jpg" alt></p>
+<h3 id="（3）贝叶斯先验"><a href="#（3）贝叶斯先验" class="headerlink" title="（3）贝叶斯先验"></a>（3）贝叶斯先验</h3><blockquote>
+<p>L1正则化相当于对模型参数w引入了拉普拉斯先验，L2正则化相当于引入了高斯先验，而拉普拉斯先验使参数为0的可能性更大。</p>
+</blockquote>
+<p><strong>L1正则化可通过假设权重w的先验分布为拉普拉斯分布，由最大后验概率估计导出。</strong></p>
+<p><strong>L2正则化可通过假设权重w的先验分布为高斯分布，由最大后验概率估计导出。</strong></p>
+<p><strong>详细解释：</strong> <a href="https://blog.csdn.net/m0_38045485/article/details/82147817" target="_blank" rel="noopener">https://blog.csdn.net/m0_38045485/article/details/82147817</a></p>
+<p><img src="..\imgs\正则公式4.jpg" alt></p>
 
           
         
@@ -1566,6 +1566,219 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/梯度下降/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/梯度下降/" itemprop="url">梯度下降</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-21T00:00:00+08:00">
+                2023-02-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本篇博客仅作为学习,如有侵权必删。</p>
+<p>[TOC]</p>
+<h1 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h1><h2 id="1-重点"><a href="#1-重点" class="headerlink" title="1. 重点"></a>1. 重点</h2><blockquote>
+<p>(1) 常用的优化方法：牛顿法、GD、拟牛顿法、共轭梯度法，之间的区别</p>
+<p>(2) GD三种变形：BGD、SGD、MBGD</p>
+<p>(3) 多种改进方法：Momentum、NAG、Adagrad、Adadelta、RMSProp、Adam</p>
+</blockquote>
+<h2 id="2-概念"><a href="#2-概念" class="headerlink" title="2. 概念"></a>2. 概念</h2><h3 id="（1）常用的优化方法：直接法、迭代法（梯度下降、牛顿法、拟牛顿法、共轭梯度法）"><a href="#（1）常用的优化方法：直接法、迭代法（梯度下降、牛顿法、拟牛顿法、共轭梯度法）" class="headerlink" title="（1）常用的优化方法：直接法、迭代法（梯度下降、牛顿法、拟牛顿法、共轭梯度法）"></a>（1）常用的优化方法：直接法、迭代法（梯度下降、牛顿法、拟牛顿法、共轭梯度法）</h3><h3 id="（2）直接法（求解析解）："><a href="#（2）直接法（求解析解）：" class="headerlink" title="（2）直接法（求解析解）："></a>（2）直接法（求解析解）：</h3><p>求梯度，令梯度为0</p>
+<h3 id="（3）牛顿法："><a href="#（3）牛顿法：" class="headerlink" title="（3）牛顿法："></a>（3）牛顿法：</h3><p><img src="..\imgs\牛顿法.jpg" alt></p>
+<p><img src="..\imgs\牛顿法2.jpg" alt></p>
+<h3 id="（4）-GD-梯度下降"><a href="#（4）-GD-梯度下降" class="headerlink" title="（4） GD 梯度下降:"></a>（4） GD 梯度下降:</h3><p>让变量沿着目标函数负梯度的方向移动，直到移动到极小值点。</p>
+<p>从拉格朗日中值定理 / 泰勒展开一阶公式都可以推出损失函数下降最大的方向是梯度方向。</p>
+<p><img src="..\imgs\梯度下降方法解释.jpg" alt></p>
+<p><img src="..\imgs\梯度下降方法1.jpg" alt></p>
+<h2 id="3-梯度下降法和牛顿法的区别"><a href="#3-梯度下降法和牛顿法的区别" class="headerlink" title="3. 梯度下降法和牛顿法的区别"></a>3. 梯度下降法和牛顿法的区别</h2><p><strong>牛顿法和梯度下降法对比：</strong></p>
+<ul>
+<li><strong>从公式上看</strong>，牛顿法是二阶收敛，梯度下降是一阶收敛（局部最优），所以牛顿法就更快。</li>
+</ul>
+<p>【如果更通俗地说的话，比如你想找一条最短的路径走到一个盆地的最底部，梯度下降法每次只从你当前所处位置选一个坡度最大的方向走一步，牛顿法在选择方向时，不仅会考虑坡度是否够大，还会考虑你走了一步之后，坡度是否会变得更大。所以，可以说牛顿法比梯度下降法看得更远一点，能更快地走到最底部。】</p>
+<ul>
+<li><strong>从几何上看</strong>，牛顿法就是用一个二次曲面去拟合你当前所处位置的局部曲面，而梯度下降法是用一个平面去拟合当前的局部曲面，通常情况下，二次曲面的拟合会比平面更好，所以牛顿法选择的下降路径会更符合真实的最优下降路径。</li>
+</ul>
+<h2 id="4-三种变形"><a href="#4-三种变形" class="headerlink" title="4. 三种变形"></a>4. 三种变形</h2><p>GD的三种变形：BGD、SGD、MBGD</p>
+<p>这三种形式的区别就是取决于我们用多少数据来计算目标函数的梯度。</p>
+<h3 id="（1）Batch-gradient-descend【批量梯度下降】"><a href="#（1）Batch-gradient-descend【批量梯度下降】" class="headerlink" title="（1）Batch gradient descend【批量梯度下降】"></a>（1）Batch gradient descend【批量梯度下降】</h3><ul>
+<li><p>定义：【采用整个训练数据集的数据计算损失函数对参数的梯度】<br><img src="..\imgs\BGD.jpg" alt></p>
+</li>
+<li><p>优点：全局最优解；易于并行实现；</p>
+</li>
+<li>缺点：大样本数据计算速度非常慢，不能投入新数据实时更新模型。</li>
+<li>收敛：对于凸函数可以收敛到全局最优，对于非凸函数可以收敛到局部最优。</li>
+</ul>
+<h3 id="（2）-Stochastic-gradient-descent【随机梯度下降】【适合在线更新】"><a href="#（2）-Stochastic-gradient-descent【随机梯度下降】【适合在线更新】" class="headerlink" title="（2） Stochastic gradient descent【随机梯度下降】【适合在线更新】"></a>（2） Stochastic gradient descent【随机梯度下降】【适合在线更新】</h3><ul>
+<li>定义：SGD  每次更新时对一个样本进行梯度更新。<br> <img src="..\imgs\SGD.jpg" alt></li>
+<li>优点：对于很大的数据集来说，可能会有相似的样本，这样 BGD在计算梯度时会出现冗余， 而 SGD 一次只进行一次更新，就没有冗余，而且比较快，并且可以新增样本。</li>
+<li>缺点：但是 SGD 因为更新比较频繁，会造成 cost  function 有严重的震荡。准确度下降，不易于并行实现。<br> <img src="..\imgs\SGD缺点.jpg" alt></li>
+<li>收敛性：不一定每次更新朝着最优值方向，因为存在噪音点，局部最优。</li>
+</ul>
+<h3 id="（3）mini-batch-GD【小批量梯度下降】：降低随机梯度的方差"><a href="#（3）mini-batch-GD【小批量梯度下降】：降低随机梯度的方差" class="headerlink" title="（3）mini-batch GD【小批量梯度下降】：降低随机梯度的方差"></a>（3）mini-batch GD【小批量梯度下降】：降低随机梯度的方差</h3><p>【在更新每一参数时都使用一部分样本来进行更新】</p>
+<p><img src="..\imgs\MBGD&#39;.jpg" alt>‘</p>
+<ul>
+<li>缺点：需要指定batch大小，收敛性不好。</li>
+<li>一般batch取2的幂次能充分利用矩阵运算操作（32,64,128……）</li>
+<li><img src="..\imgs\MBGD.jpg" alt></li>
+</ul>
+<p><strong>三种方法的使用情况：</strong></p>
+<p>如果样本量比较小，采用批量梯度下降算法。如果样本太大，或者在线算法，使用随机梯度下降算法。在实际的一般情况下，采用小批量梯度下降算法。</p>
+<p><strong>GD具有的几个问题：</strong></p>
+<p>1、学习率选择【太小，收敛速度慢，太大，在最优值附近震荡】</p>
+<p>2、学习率不固定【稀疏数据，学习率可增大】</p>
+<p>3、（尤其SGD）对于非凸函数，易陷于局部最优值/鞍点。</p>
+<h2 id="5、优化方法"><a href="#5、优化方法" class="headerlink" title="5、优化方法"></a>5、优化方法</h2><h3 id="（1）动量Momentum【一般为SGD-momentum】"><a href="#（1）动量Momentum【一般为SGD-momentum】" class="headerlink" title="（1）动量Momentum【一般为SGD+momentum】"></a>（1）动量Momentum【一般为SGD+momentum】</h3><blockquote>
+<p><strong>原理：</strong>因为SGD易陷于局部最优点或鞍点，一种帮助SGD在相关方向进行加速并抑制振荡的方法</p>
+</blockquote>
+<p><img src="..\imgs\Momentum_SGD.jpg" alt></p>
+<p><img src="..\imgs\Momentum_SGD_1.jpg" alt></p>
+<p>momentum表示要在多大程度上保留原来的更新方向，这个值在0-1之间<strong>，在训练开始时，由于梯度可能会很大，所以初始值一般选为0.5；当梯度不那么大时</strong>，一般改为0.9。<br>α是学习率，即当前batch的梯度多大程度上影响最终更新方向，跟普通的SGD含义相同。</p>
+<ul>
+<li>优点：因此获得了更快的收敛性和减少了震荡。</li>
+<li>缺点：这种情况相当于小球从山上滚下来时是在盲目地沿着坡滚，如果它能具备一些先知，例如快要上坡时，就知道需要减速了的话，适应性会更好。</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/向量乘积/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1741,7 +1954,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/梯度下降/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/熵/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Lee_yl">
@@ -1760,7 +1973,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/梯度下降/" itemprop="url">梯度下降</a></h1>
+                <a class="post-title-link" href="/熵/" itemprop="url">熵</a></h1>
         
 
         <div class="post-meta">
@@ -1772,8 +1985,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-21T00:00:00+08:00">
-                2023-02-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-20T00:00:00+08:00">
+                2023-02-20
               </time>
             
 
@@ -1806,8 +2019,19 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/梯度下降/" itemprop="url" rel="index">
-                    <span itemprop="name">梯度下降</span>
+                  <a href="/categories/机器学习/先导知识/" itemprop="url" rel="index">
+                    <span itemprop="name">先导知识</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/先导知识/熵/" itemprop="url" rel="index">
+                    <span itemprop="name">熵</span>
                   </a>
                 </span>
 
@@ -1846,66 +2070,31 @@
         
           
             <p>本篇博客仅作为学习,如有侵权必删。</p>
-<p>[TOC]</p>
-<h1 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h1><h2 id="1-重点"><a href="#1-重点" class="headerlink" title="1. 重点"></a>1. 重点</h2><blockquote>
-<p>(1) 常用的优化方法：牛顿法、GD、拟牛顿法、共轭梯度法，之间的区别</p>
-<p>(2) GD三种变形：BGD、SGD、MBGD</p>
-<p>(3) 多种改进方法：Momentum、NAG、Adagrad、Adadelta、RMSProp、Adam</p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzU0NjgzMDIxMQ==&amp;mid=2247599777&amp;idx=2&amp;sn=982e734b8de12d67ae64476c66f704bc&amp;chksm=fb54a44dcc232d5ba3fbf8f40c75801b0728beffb1b63f053b0c76209bbf54e47655dd421b25&amp;scene=27" target="_blank" rel="noopener">详解机器学习中的熵、条件熵、相对熵、交叉熵</a></p>
+<h1 id="1-信息量："><a href="#1-信息量：" class="headerlink" title="1. 信息量："></a>1. 信息量：</h1><p>一个事件发生的概率越小，信息量越大，所以信息量应该为概率的<strong>减函数</strong>，对于相互独立的两个事有<em>p</em>(<em>xy</em>)=<em>p</em>(<em>x</em>)<em>p</em>(<em>y</em>)，对于这两个事件信息量应满足<em>h</em>(<em>xy</em>)=<em>h</em>(<em>x</em>)+<em>h</em>(<em>y</em>)，那么信息量应为对数函数：</p>
+<p>​    h(x) = -ln p(x)</p>
+<p>​    对于一个随机变量可以以不同的概率发生，那么通过<strong>信息量期望</strong>的方式衡量，即<strong>信息熵</strong>。 </p>
+<h1 id="2-熵"><a href="#2-熵" class="headerlink" title="2. 熵"></a>2. 熵</h1><blockquote>
+<p> 熵：信息不确定性度量（信息量与不确定性相关）。事件发生的概率越小则携带的信息越大。</p>
 </blockquote>
-<h2 id="2-概念"><a href="#2-概念" class="headerlink" title="2. 概念"></a>2. 概念</h2><h3 id="（1）常用的优化方法：直接法、迭代法（梯度下降、牛顿法、拟牛顿法、共轭梯度法）"><a href="#（1）常用的优化方法：直接法、迭代法（梯度下降、牛顿法、拟牛顿法、共轭梯度法）" class="headerlink" title="（1）常用的优化方法：直接法、迭代法（梯度下降、牛顿法、拟牛顿法、共轭梯度法）"></a>（1）常用的优化方法：直接法、迭代法（梯度下降、牛顿法、拟牛顿法、共轭梯度法）</h3><h3 id="（2）直接法（求解析解）："><a href="#（2）直接法（求解析解）：" class="headerlink" title="（2）直接法（求解析解）："></a>（2）直接法（求解析解）：</h3><p>求梯度，令梯度为0</p>
-<h3 id="（3）牛顿法："><a href="#（3）牛顿法：" class="headerlink" title="（3）牛顿法："></a>（3）牛顿法：</h3><p><img src="..\imgs\牛顿法.jpg" alt></p>
-<p><img src="..\imgs\牛顿法2.jpg" alt></p>
-<h3 id="（4）-GD-梯度下降"><a href="#（4）-GD-梯度下降" class="headerlink" title="（4） GD 梯度下降:"></a>（4） GD 梯度下降:</h3><p>让变量沿着目标函数负梯度的方向移动，直到移动到极小值点。</p>
-<p>从拉格朗日中值定理 / 泰勒展开一阶公式都可以推出损失函数下降最大的方向是梯度方向。</p>
-<p><img src="..\imgs\梯度下降方法解释.jpg" alt></p>
-<p><img src="..\imgs\梯度下降方法1.jpg" alt></p>
-<h2 id="3-梯度下降法和牛顿法的区别"><a href="#3-梯度下降法和牛顿法的区别" class="headerlink" title="3. 梯度下降法和牛顿法的区别"></a>3. 梯度下降法和牛顿法的区别</h2><p><strong>牛顿法和梯度下降法对比：</strong></p>
-<ul>
-<li><strong>从公式上看</strong>，牛顿法是二阶收敛，梯度下降是一阶收敛（局部最优），所以牛顿法就更快。</li>
-</ul>
-<p>【如果更通俗地说的话，比如你想找一条最短的路径走到一个盆地的最底部，梯度下降法每次只从你当前所处位置选一个坡度最大的方向走一步，牛顿法在选择方向时，不仅会考虑坡度是否够大，还会考虑你走了一步之后，坡度是否会变得更大。所以，可以说牛顿法比梯度下降法看得更远一点，能更快地走到最底部。】</p>
-<ul>
-<li><strong>从几何上看</strong>，牛顿法就是用一个二次曲面去拟合你当前所处位置的局部曲面，而梯度下降法是用一个平面去拟合当前的局部曲面，通常情况下，二次曲面的拟合会比平面更好，所以牛顿法选择的下降路径会更符合真实的最优下降路径。</li>
-</ul>
-<h2 id="4-三种变形"><a href="#4-三种变形" class="headerlink" title="4. 三种变形"></a>4. 三种变形</h2><p>GD的三种变形：BGD、SGD、MBGD</p>
-<p>这三种形式的区别就是取决于我们用多少数据来计算目标函数的梯度。</p>
-<h3 id="（1）Batch-gradient-descend【批量梯度下降】"><a href="#（1）Batch-gradient-descend【批量梯度下降】" class="headerlink" title="（1）Batch gradient descend【批量梯度下降】"></a>（1）Batch gradient descend【批量梯度下降】</h3><ul>
-<li><p>定义：【采用整个训练数据集的数据计算损失函数对参数的梯度】<br><img src="..\imgs\BGD.jpg" alt></p>
-</li>
-<li><p>优点：全局最优解；易于并行实现；</p>
-</li>
-<li>缺点：大样本数据计算速度非常慢，不能投入新数据实时更新模型。</li>
-<li>收敛：对于凸函数可以收敛到全局最优，对于非凸函数可以收敛到局部最优。</li>
-</ul>
-<h3 id="（2）-Stochastic-gradient-descent【随机梯度下降】【适合在线更新】"><a href="#（2）-Stochastic-gradient-descent【随机梯度下降】【适合在线更新】" class="headerlink" title="（2） Stochastic gradient descent【随机梯度下降】【适合在线更新】"></a>（2） Stochastic gradient descent【随机梯度下降】【适合在线更新】</h3><ul>
-<li>定义：SGD  每次更新时对一个样本进行梯度更新。<br> <img src="..\imgs\SGD.jpg" alt></li>
-<li>优点：对于很大的数据集来说，可能会有相似的样本，这样 BGD在计算梯度时会出现冗余， 而 SGD 一次只进行一次更新，就没有冗余，而且比较快，并且可以新增样本。</li>
-<li>缺点：但是 SGD 因为更新比较频繁，会造成 cost  function 有严重的震荡。准确度下降，不易于并行实现。<br> <img src="..\imgs\SGD缺点.jpg" alt></li>
-<li>收敛性：不一定每次更新朝着最优值方向，因为存在噪音点，局部最优。</li>
-</ul>
-<h3 id="（3）mini-batch-GD【小批量梯度下降】：降低随机梯度的方差"><a href="#（3）mini-batch-GD【小批量梯度下降】：降低随机梯度的方差" class="headerlink" title="（3）mini-batch GD【小批量梯度下降】：降低随机梯度的方差"></a>（3）mini-batch GD【小批量梯度下降】：降低随机梯度的方差</h3><p>【在更新每一参数时都使用一部分样本来进行更新】</p>
-<p><img src="..\imgs\MBGD&#39;.jpg" alt>‘</p>
-<ul>
-<li>缺点：需要指定batch大小，收敛性不好。</li>
-<li>一般batch取2的幂次能充分利用矩阵运算操作（32,64,128……）</li>
-<li><img src="..\imgs\MBGD.jpg" alt></li>
-</ul>
-<p><strong>三种方法的使用情况：</strong></p>
-<p>如果样本量比较小，采用批量梯度下降算法。如果样本太大，或者在线算法，使用随机梯度下降算法。在实际的一般情况下，采用小批量梯度下降算法。</p>
-<p><strong>GD具有的几个问题：</strong></p>
-<p>1、学习率选择【太小，收敛速度慢，太大，在最优值附近震荡】</p>
-<p>2、学习率不固定【稀疏数据，学习率可增大】</p>
-<p>3、（尤其SGD）对于非凸函数，易陷于局部最优值/鞍点。</p>
-<h2 id="5、优化方法"><a href="#5、优化方法" class="headerlink" title="5、优化方法"></a>5、优化方法</h2><h3 id="（1）动量Momentum【一般为SGD-momentum】"><a href="#（1）动量Momentum【一般为SGD-momentum】" class="headerlink" title="（1）动量Momentum【一般为SGD+momentum】"></a>（1）动量Momentum【一般为SGD+momentum】</h3><blockquote>
-<p><strong>原理：</strong>因为SGD易陷于局部最优点或鞍点，一种帮助SGD在相关方向进行加速并抑制振荡的方法</p>
+<p>​    一个离散随机变量X的可能取值为X=x1,x2,…,xn，而对应的概率为pi=p(X=xi),则随机变量的熵定义为： </p>
+<p><img src="..\imgs\熵.jpg" alt></p>
+<p><img src="..\imgs\熵.jpg" style="zoom:100%"></p>
+<p>​    每个<em>xi</em>表示一种特征。 <em>H</em>(<em>X</em>)在每个<em>p</em>(<em>xi</em>) = 1/<em>N</em>是最大，<em>N</em>为信息的个数。在概率为1/<em>N</em>时信息是最不确定的。</p>
+<p>​    规定当p(xi)=0时，p(xi)log⁡(p(xi)=0</p>
+<p>【小思考：为何公式是这样子的？其实只需熵和概率P成反比，1/P , 但是有个量纲缺点：地震发生的概率很小（P = 1/百万)，则信息量为一百万。抛硬币概率1/2，则信息量为2。两者量纲差太大，取log之后，使得低范围的值稍微放大，高范围的值稍微放小。】</p>
+<h1 id="3-联合熵H-p-q"><a href="#3-联合熵H-p-q" class="headerlink" title="3. 联合熵H(p,q)"></a>3. 联合熵H(p,q)</h1><p>两个随机变量的p与q的联合分布形成的熵称为联合熵，记为<em>H</em>(p, q)。 </p>
+<p><img src="..\imgs\交叉熵.jpg" style="zoom:100%"></p>
+<h1 id="4-条件熵H-q-p"><a href="#4-条件熵H-q-p" class="headerlink" title="4. 条件熵H(q|p)"></a>4. 条件熵H(q|p)</h1><p><em>X</em>给定的条件下，<em>Y</em>的信息熵，即<em>H</em> (<em>Y</em> |X )。公式为：</p>
+<p><img src="..\imgs\条件熵.jpg" style="zoom:100%"></p>
+<p><strong>推导过程：</strong></p>
+<p><img src="..\imgs\条件熵推导过程.jpg" style="zoom:100%"></p>
+<h1 id="5-KL散度（相对熵）："><a href="#5-KL散度（相对熵）：" class="headerlink" title="5. KL散度（相对熵）："></a>5. KL散度（相对熵）：</h1><blockquote>
+<p> 交叉熵：两个概率分布之间的一个比较，如果两个分布越匹配，交叉熵就越低；如果两个概率分布完全比配，那么交叉熵就为 0。</p>
 </blockquote>
-<p><img src="..\imgs\Momentum_SGD.jpg" alt></p>
-<p><img src="..\imgs\Momentum_SGD_1.jpg" alt></p>
-<p>momentum表示要在多大程度上保留原来的更新方向，这个值在0-1之间<strong>，在训练开始时，由于梯度可能会很大，所以初始值一般选为0.5；当梯度不那么大时</strong>，一般改为0.9。<br>α是学习率，即当前batch的梯度多大程度上影响最终更新方向，跟普通的SGD含义相同。</p>
-<ul>
-<li>优点：因此获得了更快的收敛性和减少了震荡。</li>
-<li>缺点：这种情况相当于小球从山上滚下来时是在盲目地沿着坡滚，如果它能具备一些先知，例如快要上坡时，就知道需要减速了的话，适应性会更好。</li>
-</ul>
+<p>如果是两个随机变量P,Q，且其概率分布分别为p(x),q(x),则p相对q的相对熵为：</p>
+<p><img src="..\imgs\KL散度.jpg" style="zoom:100%"></p>
+<h1 id="6-几种熵之间的关系："><a href="#6-几种熵之间的关系：" class="headerlink" title="6. 几种熵之间的关系："></a>6. 几种熵之间的关系：</h1><p><img src="..\imgs\熵之间的关系.jpg" style="zoom:100%"></p>
 
           
         
@@ -2019,8 +2208,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/逻辑回归/" itemprop="url" rel="index">
-                    <span itemprop="name">逻辑回归</span>
+                  <a href="/categories/机器学习/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
                   </a>
                 </span>
 
@@ -2313,195 +2502,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/熵/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lee_yl">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lee_yl's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/熵/" itemprop="url">熵</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-20T00:00:00+08:00">
-                2023-02-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/先导知识/" itemprop="url" rel="index">
-                    <span itemprop="name">先导知识</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/先导知识/熵/" itemprop="url" rel="index">
-                    <span itemprop="name">熵</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本篇博客仅作为学习,如有侵权必删。</p>
-<p><a href="https://mp.weixin.qq.com/s?__biz=MzU0NjgzMDIxMQ==&amp;mid=2247599777&amp;idx=2&amp;sn=982e734b8de12d67ae64476c66f704bc&amp;chksm=fb54a44dcc232d5ba3fbf8f40c75801b0728beffb1b63f053b0c76209bbf54e47655dd421b25&amp;scene=27" target="_blank" rel="noopener">详解机器学习中的熵、条件熵、相对熵、交叉熵</a></p>
-<h1 id="1-信息量："><a href="#1-信息量：" class="headerlink" title="1. 信息量："></a>1. 信息量：</h1><p>一个事件发生的概率越小，信息量越大，所以信息量应该为概率的<strong>减函数</strong>，对于相互独立的两个事有<em>p</em>(<em>xy</em>)=<em>p</em>(<em>x</em>)<em>p</em>(<em>y</em>)，对于这两个事件信息量应满足<em>h</em>(<em>xy</em>)=<em>h</em>(<em>x</em>)+<em>h</em>(<em>y</em>)，那么信息量应为对数函数：</p>
-<p>​    h(x) = -ln p(x)</p>
-<p>​    对于一个随机变量可以以不同的概率发生，那么通过<strong>信息量期望</strong>的方式衡量，即<strong>信息熵</strong>。 </p>
-<h1 id="2-熵"><a href="#2-熵" class="headerlink" title="2. 熵"></a>2. 熵</h1><blockquote>
-<p> 熵：信息不确定性度量（信息量与不确定性相关）。事件发生的概率越小则携带的信息越大。</p>
-</blockquote>
-<p>​    一个离散随机变量X的可能取值为X=x1,x2,…,xn，而对应的概率为pi=p(X=xi),则随机变量的熵定义为： </p>
-<p><img src="..\imgs\熵.jpg" alt></p>
-<p><img src="..\imgs\熵.jpg" style="zoom:100%"></p>
-<p>​    每个<em>xi</em>表示一种特征。 <em>H</em>(<em>X</em>)在每个<em>p</em>(<em>xi</em>) = 1/<em>N</em>是最大，<em>N</em>为信息的个数。在概率为1/<em>N</em>时信息是最不确定的。</p>
-<p>​    规定当p(xi)=0时，p(xi)log⁡(p(xi)=0</p>
-<p>【小思考：为何公式是这样子的？其实只需熵和概率P成反比，1/P , 但是有个量纲缺点：地震发生的概率很小（P = 1/百万)，则信息量为一百万。抛硬币概率1/2，则信息量为2。两者量纲差太大，取log之后，使得低范围的值稍微放大，高范围的值稍微放小。】</p>
-<h1 id="3-联合熵H-p-q"><a href="#3-联合熵H-p-q" class="headerlink" title="3. 联合熵H(p,q)"></a>3. 联合熵H(p,q)</h1><p>两个随机变量的p与q的联合分布形成的熵称为联合熵，记为<em>H</em>(p, q)。 </p>
-<p><img src="..\imgs\交叉熵.jpg" style="zoom:100%"></p>
-<h1 id="4-条件熵H-q-p"><a href="#4-条件熵H-q-p" class="headerlink" title="4. 条件熵H(q|p)"></a>4. 条件熵H(q|p)</h1><p><em>X</em>给定的条件下，<em>Y</em>的信息熵，即<em>H</em> (<em>Y</em> |X )。公式为：</p>
-<p><img src="..\imgs\条件熵.jpg" style="zoom:100%"></p>
-<p><strong>推导过程：</strong></p>
-<p><img src="..\imgs\条件熵推导过程.jpg" style="zoom:100%"></p>
-<h1 id="5-KL散度（相对熵）："><a href="#5-KL散度（相对熵）：" class="headerlink" title="5. KL散度（相对熵）："></a>5. KL散度（相对熵）：</h1><blockquote>
-<p> 交叉熵：两个概率分布之间的一个比较，如果两个分布越匹配，交叉熵就越低；如果两个概率分布完全比配，那么交叉熵就为 0。</p>
-</blockquote>
-<p>如果是两个随机变量P,Q，且其概率分布分别为p(x),q(x),则p相对q的相对熵为：</p>
-<p><img src="..\imgs\KL散度.jpg" style="zoom:100%"></p>
-<h1 id="6-几种熵之间的关系："><a href="#6-几种熵之间的关系：" class="headerlink" title="6. 几种熵之间的关系："></a>6. 几种熵之间的关系：</h1><p><img src="..\imgs\熵之间的关系.jpg" style="zoom:100%"></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2563,7 +2563,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
