@@ -79,12 +79,12 @@
 
 
 
-<meta name="description" content="本文仅做学习总结，如有侵权立删 一、理解RDD  RDD可以被抽象地理解为一个大的数组，但是这个数组是分布在集群上的。   二、RDD的生命周期创建—变换—动作（结束） 三、RDD依赖1、窄依赖（RDD）—–原地变换，不需要shuffle【即各个RDD之间不需要统计】  2、宽依赖（RDD）—–需要shuffle，与其他RDD交换资料，时间消耗长。  3、任务优化，如  四、RDD的基本操作RDD">
+<meta name="description" content="本文仅做学习总结，如有侵权立删 [TOC] 一、理解RDD  RDD可以被抽象地理解为一个大的数组，但是这个数组是分布在集群上的。   二、RDD的生命周期创建—变换—动作（结束） 三、RDD依赖1、窄依赖（RDD）—–原地变换，不需要shuffle【即各个RDD之间不需要统计】  2、宽依赖（RDD）—–需要shuffle，与其他RDD交换资料，时间消耗长。  3、任务优化，如  四、RDD的基">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RDD">
 <meta property="og:url" content="http://yoursite.com/理解RDD/index.html">
 <meta property="og:site_name" content="Lee_yl&#39;s blog">
-<meta property="og:description" content="本文仅做学习总结，如有侵权立删 一、理解RDD  RDD可以被抽象地理解为一个大的数组，但是这个数组是分布在集群上的。   二、RDD的生命周期创建—变换—动作（结束） 三、RDD依赖1、窄依赖（RDD）—–原地变换，不需要shuffle【即各个RDD之间不需要统计】  2、宽依赖（RDD）—–需要shuffle，与其他RDD交换资料，时间消耗长。  3、任务优化，如  四、RDD的基本操作RDD">
+<meta property="og:description" content="本文仅做学习总结，如有侵权立删 [TOC] 一、理解RDD  RDD可以被抽象地理解为一个大的数组，但是这个数组是分布在集群上的。   二、RDD的生命周期创建—变换—动作（结束） 三、RDD依赖1、窄依赖（RDD）—–原地变换，不需要shuffle【即各个RDD之间不需要统计】  2、宽依赖（RDD）—–需要shuffle，与其他RDD交换资料，时间消耗长。  3、任务优化，如  四、RDD的基">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/imgs/RDD的理解.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/RDD1.jpg">
@@ -105,10 +105,10 @@
 <meta property="og:image" content="http://yoursite.com/imgs/rdd_8.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/rdd_10.jpg">
 <meta property="og:image" content="http://yoursite.com/imgs/rdd_11.jpg">
-<meta property="og:updated_time" content="2023-03-18T08:18:51.565Z">
+<meta property="og:updated_time" content="2023-03-26T07:57:50.086Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RDD">
-<meta name="twitter:description" content="本文仅做学习总结，如有侵权立删 一、理解RDD  RDD可以被抽象地理解为一个大的数组，但是这个数组是分布在集群上的。   二、RDD的生命周期创建—变换—动作（结束） 三、RDD依赖1、窄依赖（RDD）—–原地变换，不需要shuffle【即各个RDD之间不需要统计】  2、宽依赖（RDD）—–需要shuffle，与其他RDD交换资料，时间消耗长。  3、任务优化，如  四、RDD的基本操作RDD">
+<meta name="twitter:description" content="本文仅做学习总结，如有侵权立删 [TOC] 一、理解RDD  RDD可以被抽象地理解为一个大的数组，但是这个数组是分布在集群上的。   二、RDD的生命周期创建—变换—动作（结束） 三、RDD依赖1、窄依赖（RDD）—–原地变换，不需要shuffle【即各个RDD之间不需要统计】  2、宽依赖（RDD）—–需要shuffle，与其他RDD交换资料，时间消耗长。  3、任务优化，如  四、RDD的基">
 <meta name="twitter:image" content="http://yoursite.com/imgs/RDD的理解.jpg">
 
 
@@ -353,6 +353,7 @@
 
       
         <p>本文仅做学习总结，如有侵权立删</p>
+<p>[TOC]</p>
 <h1 id="一、理解RDD"><a href="#一、理解RDD" class="headerlink" title="一、理解RDD"></a>一、理解RDD</h1><blockquote>
 <p> RDD可以被抽象地理解为一个大的数组，但是这个数组是分布在集群上的。</p>
 <p><img src="..\imgs\RDD的理解.jpg" alt></p>
@@ -366,28 +367,49 @@
 <p><img src="..\imgs\RDD3.jpg" alt></p>
 <h1 id="四、RDD的基本操作"><a href="#四、RDD的基本操作" class="headerlink" title="四、RDD的基本操作"></a>四、RDD的基本操作</h1><p>RDD可以有两种计算操作算子：Transformation（变换）与Action（行动）。</p>
 <p><img src="..\imgs\RDD4.jpg" alt></p>
-<h2 id="1、基本的RDD"><a href="#1、基本的RDD" class="headerlink" title="1、基本的RDD"></a>1、基本的RDD</h2><p>（1）建立RDD</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wordsList =  [<span class="string">'cat'</span>,<span class="string">'ele'</span>,<span class="string">'rat'</span>,<span class="string">'rat'</span>,<span class="string">'cat'</span>]</span><br><span class="line">wordsRDD =  sc.parallelize(wordsList , <span class="number">4</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="1、基本的RDD"><a href="#1、基本的RDD" class="headerlink" title="1、基本的RDD"></a>1、基本的RDD</h2><h3 id="（1）建立RDD"><a href="#（1）建立RDD" class="headerlink" title="（1）建立RDD"></a>（1）建立RDD</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wordsList =  [<span class="string">'cat'</span>,<span class="string">'ele'</span>,<span class="string">'rat'</span>,<span class="string">'rat'</span>,<span class="string">'cat'</span>]</span><br><span class="line">wordsRDD =  sc.parallelize(wordsList , <span class="number">4</span>)</span><br></pre></td></tr></table></figure>
 <p>   #建立RDD   <code>wordsList =   [&#39;cat&#39;,&#39;ele&#39;,&#39;rat&#39;,&#39;rat&#39;,&#39;cat&#39;]</code>   <code>wordsRDD =   sc.parallelize(wordsList , 4)</code>   </p>
 <p>   #计算法每个单词的长度   <code>wordsRDD.map(len).collect()</code>   </p>
-<ul>
-<li>转换操作</li>
-</ul>
-<p><img src="..\imgs\RDD5.jpg" alt></p>
-<ul>
-<li>动作操作</li>
-</ul>
-<p><img src="..\imgs\RDD6.jpg" alt></p>
-<h2 id="键值对PairRDD："><a href="#键值对PairRDD：" class="headerlink" title="键值对PairRDD："></a>键值对PairRDD：</h2><p>是一种以（key,value)方式存储的RDD。</p>
+<h3 id="（2）转换操作"><a href="#（2）转换操作" class="headerlink" title="（2）转换操作"></a>（2）转换操作</h3><p><img src="..\imgs\RDD5.jpg" alt></p>
+<h3 id="（3）动作操作"><a href="#（3）动作操作" class="headerlink" title="（3）动作操作"></a>（3）动作操作</h3><p><img src="..\imgs\RDD6.jpg" alt></p>
+<h3 id="（4）通过pipe方法调用系统命令操作RDD"><a href="#（4）通过pipe方法调用系统命令操作RDD" class="headerlink" title="（4）通过pipe方法调用系统命令操作RDD"></a>（4）通过pipe方法调用系统命令操作RDD</h3><p>每个输入分区的所有元素被当做另一个外部进程的标准输入，输入元素由换行符分隔。</p>
+<p>最终结果由该外部进程的标准输出生成，标准输出的每一行产生输出分区的一个元素。</p>
+<p>例子：将每个分区传递给wc命令。每个元素将作为一个输入行，因此执行行计数，将得到每个分区的总行数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">words.pipe(<span class="string">"wc -l"</span>).collect()</span><br><span class="line"><span class="comment"># 结果显示:每个分区有5行。</span></span><br></pre></td></tr></table></figure>
+<h3 id="（5）mapPartitions：每次处理一个分区"><a href="#（5）mapPartitions：每次处理一个分区" class="headerlink" title="（5）mapPartitions：每次处理一个分区"></a>（5）mapPartitions：每次处理一个分区</h3><p>Spark 在实际执行代码时是基于每个分区运行的，所有map函数只是mapPartitions基于行操作的一个别名，</p>
+<p>mapPartitions函数每次处理一个数据分区（可以通过迭代器来遍历该数据分区），不是具体的一行。</p>
+<p>例子：为数据中的每个分区创建值“1”， 以下表达式中计算总和将得出我们拥有的分区数量：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">words.mapPartitions(<span class="keyword">lambda</span> part:[<span class="number">1</span>]).sum() <span class="comment">#2</span></span><br></pre></td></tr></table></figure>
+<p>应用场景：将属于某类的值收集到一个分区中，然后对整个分组进行操作。</p>
+<h3 id="（6）mapPartitionsWithIndex：接收两个参数，一个位分区的索引和另一个为-遍历分区内所有项的迭代器。"><a href="#（6）mapPartitionsWithIndex：接收两个参数，一个位分区的索引和另一个为-遍历分区内所有项的迭代器。" class="headerlink" title="（6）mapPartitionsWithIndex：接收两个参数，一个位分区的索引和另一个为 遍历分区内所有项的迭代器。"></a>（6）mapPartitionsWithIndex：接收两个参数，一个位分区的索引和另一个为 遍历分区内所有项的迭代器。</h3><p>mapPartitionsWithIndex应用场景：测试map函数是否正确运行。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">indexedFunc</span><span class="params">(partitionIndex, withinPartIterator)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> [<span class="string">"partition:&#123;&#125; =&gt; &#123;&#125;"</span>.format(partitionIndex, x) <span class="keyword">for</span> x <span class="keyword">in</span> withinPartIterator]</span><br><span class="line">words.mapPartitionsWithIndex(indexedFunc).collect()</span><br></pre></td></tr></table></figure>
+<h3 id="（7）foreachPartition：与mapPartitions函数类似，但不需要返回值"><a href="#（7）foreachPartition：与mapPartitions函数类似，但不需要返回值" class="headerlink" title="（7）foreachPartition：与mapPartitions函数类似，但不需要返回值"></a>（7）foreachPartition：与mapPartitions函数类似，但不需要返回值</h3><p>mapPartitions函数需要返回值才能正常执行，但foreachPartition函数不需要。</p>
+<p>foreachPartition函数仅用于迭代所有的数据分区，与mapPartitions的不同在于它没有返回值，适合写入数据库操作（不需要返回计算结果）。</p>
+<h3 id="（8）glom-将每个分区都转换为数组。"><a href="#（8）glom-将每个分区都转换为数组。" class="headerlink" title="（8）glom: 将每个分区都转换为数组。"></a>（8）glom: 将每个分区都转换为数组。</h3><p>当需要将数据收集到驱动器并想为每个分区创建一个数组时，就很适合用glom函数实现。但会导致严重的稳定性问题，当有很大的分区或大量分区时，该函数会导致驱动器崩溃。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">spark.sparkContext.parallelize([<span class="string">"hello"</span> , <span class="string">"words"</span>], <span class="number">2</span>).glom().collect()</span><br><span class="line"><span class="comment"># 结果是[["hello",  "worlds"]]</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-键值对PairRDD：算子中包含ByKey的都是针对PairRDD"><a href="#2-键值对PairRDD：算子中包含ByKey的都是针对PairRDD" class="headerlink" title="2. 键值对PairRDD：算子中包含ByKey的都是针对PairRDD"></a>2. 键值对PairRDD：算子中包含ByKey的都是针对PairRDD</h2><h3 id="（1）创建PairRDD"><a href="#（1）创建PairRDD" class="headerlink" title="（1）创建PairRDD"></a>（1）创建PairRDD</h3><p>是一种以（key,value)方式存储的RDD。</p>
 <p>   <code>pairRDD =   wordsRDD.map(lambda x : (x , 1))</code>   </p>
 <ul>
-<li><p>转换操作</p>
-<p><img src="..\imgs\RDD7.jpg" alt></p>
+<li>keyBy：根据当前value创建key的函数。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将单词中的第一个字母作为key, 然后Spark将该单词记录保存为RDD的value</span></span><br><span class="line">keyword = words.keyBy(<span class="keyword">lambda</span> word: word.lower()[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+<h3 id="2-转换操作"><a href="#2-转换操作" class="headerlink" title="(2) 转换操作"></a>(2) 转换操作</h3><p><img src="..\imgs\RDD7.jpg" alt></p>
+<ul>
+<li><p>mapValue：只修改value，不修改key</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Keyword.mapValues(<span class="keyword">lambda</span> word:word.upper()).collect()</span><br><span class="line"><span class="comment"># 结果：</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">[('s', 'SPARK'),</span></span><br><span class="line"><span class="string">('t'),'THE']</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
 </li>
-<li><p>动作操作</p>
-<p><img src="..\imgs\RDD8.jpg" alt></p>
+<li><p>flatMapValues：在row（行）上进行flatMap操作来扩展行数</p>
+</li>
+<li><p>keys() / values()：提取keys或value</p>
+</li>
+<li><p>sampleByKey：通过一个key来采样RDD</p>
 </li>
 </ul>
+<h3 id="3-动作操作"><a href="#3-动作操作" class="headerlink" title="(3) 动作操作"></a>(3) 动作操作</h3><p><img src="..\imgs\RDD8.jpg" alt></p>
+<ul>
+<li>lookup：查找某个key对应的value, 因为同一个key可能有多个value，例子：查找’s’时，将获得与该key相关的两个value, 即’Spark’和’Simple’</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keyword.lookup(<span class="string">"s"</span>)</span><br></pre></td></tr></table></figure>
 <p>一些小问题：</p>
 <p>1、spark中的RDD是什么</p>
 <p>概念：<strong>分布式数据集，**</strong>spark<strong>**中基本的数据抽象，代表一个不可变、可分区、元素可并行计算的集合。</strong></p>
@@ -597,11 +619,19 @@
 </tr>
 <tr>
 <td style="text-align:left"><code>rdd.aggregate(zeroValue,seqOp,combOp)</code></td>
-<td style="text-align:left"></td>
+<td style="text-align:left">在驱动器上执行最终聚合，如果执行器的结果太大，则会导致驱动器出现内存错误并最终让程序崩溃。<br>第一个函数执行分区内聚合。<br>第二个函数执行分区间聚合。</td>
+</tr>
+<tr>
+<td style="text-align:left">depth  = 3<br>rdd.treeAggregate(0, maxFunc, addFunc, depth)</td>
+<td style="text-align:left">基于不同的实现方法可以得到与aggregate相同的结果，<strong>创建从执行器到执行器传输结果的树</strong>，最后再执行最终聚合。多层级的形式确保驱动器在聚合过程中不会耗尽内存，这些基于树的实现通常会提高某些操作的稳定性。</td>
 </tr>
 <tr>
 <td style="text-align:left"><code>rdd.aggregateByKey(zeroValue,seqOp,combOp)</code></td>
-<td style="text-align:left"></td>
+<td style="text-align:left">此函数与aggregate基本相同，但是基于key聚合而非基于分区聚合。起始值和函数的属性配置也都相同</td>
+</tr>
+<tr>
+<td style="text-align:left">rdd.combineByKey</td>
+<td style="text-align:left">不仅可以指定聚合函数，还可以指定一个<strong>合并函数</strong>。该合并函数针对某个key进行操作，并根据某个函数对value合并，然后合并各个合并器的输出结果并得出最终结果。</td>
 </tr>
 <tr>
 <td style="text-align:left"><code>rdd.fold(zeroValue,func)</code></td>
@@ -609,13 +639,14 @@
 </tr>
 <tr>
 <td style="text-align:left"><code>rdd.foldByKey(zeroValue,func)</code></td>
+<td style="text-align:left">使用满足结合律函数和中性的“零值”合并每个key的value，支持多次累积到结果，并且不能更改结果（0为加法，1为乘法）</td>
 </tr>
 </tbody>
 </table>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pairRDD=sc.parallelize([(<span class="string">'a'</span>,<span class="number">7</span>),(<span class="string">'a'</span>,<span class="number">2</span>),(<span class="string">'b'</span>,<span class="number">2</span>)]) <span class="comment"># key-value对RDD</span></span><br><span class="line">rdd1=sc.parallelize([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>])</span><br><span class="line">rdd2=sc.parallelize(range(<span class="number">100</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.groupBy(<span class="keyword">lambda</span> x: x % <span class="number">2</span>).mapValues(list).collect()</span><br><span class="line">[(<span class="number">0</span>,[<span class="number">2</span>,<span class="number">4</span>]),(<span class="number">1</span>,[<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>])]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>pairRDD.groupByKey().mapValues(list).collect()</span><br><span class="line">[(<span class="string">'a'</span>,[<span class="number">7</span>,<span class="number">2</span>]),(<span class="string">'b'</span>,[<span class="number">2</span>])]</span><br></pre></td></tr></table></figure>
 <blockquote>
-<h3 id="更好的解决方案：reduceByKey-非groupBykey"><a href="#更好的解决方案：reduceByKey-非groupBykey" class="headerlink" title="更好的解决方案：reduceByKey,非groupBykey"></a>更好的解决方案：reduceByKey,非groupBykey</h3><p>reduceByKey能够直接将资料根据key值聚合，减少多余的交换（shuffle）动作。</p>
-<p>避免使用groupbykey，如果数据量过大，会造成内存溢出。</p>
+<h3 id="更好的解决方案：reduceByKey-非groupBykey"><a href="#更好的解决方案：reduceByKey-非groupBykey" class="headerlink" title="更好的解决方案：reduceByKey,非groupBykey"></a>更好的解决方案：reduceByKey,非groupBykey</h3><p>reduceByKey能够直接将资料根据key值聚合，减少多余的交换（shuffle）动作。reduce发生在每个分组，并且不需要将所有内容放在内存中</p>
+<p>避免使用groupbykey，如果数据量过大，会造成内存溢出。每个执行器在执行函数之前必须在内存中保存一个key对应的所有value。</p>
 </blockquote>
 <ol>
 <li><strong>spark中groupByKey 、aggregateByKey、reduceByKey 有什么区别？使用上需要注意什么？</strong></li>
@@ -761,9 +792,17 @@
 <td style="text-align:left"><code>rdd.rightOuterJoin(other)</code></td>
 <td style="text-align:left">右连接</td>
 </tr>
+<tr>
+<td style="text-align:left">rdd.cogroup(rdd1)</td>
+<td style="text-align:left">连接</td>
+</tr>
+<tr>
+<td style="text-align:left">rdd.zip(rdd1)</td>
+<td style="text-align:left">组合两个zip, 将两个RDD的元素对应的匹配在一起，要求两个RDD的元素个数相同，且两个RDD的分区数也相同，结果会生成一个PairRDD</td>
+</tr>
 </tbody>
 </table>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1=sc.parallelize([<span class="number">1</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd2=sc.parallelize([<span class="number">1</span>,<span class="number">3</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.union(rdd1).collect()</span><br><span class="line">[<span class="number">1</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.intersection(rdd2).collect()</span><br><span class="line">[<span class="number">1</span>,<span class="number">3</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.subtract(rdd2).collect()</span><br><span class="line">[<span class="number">5</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd2.cartesian(rdd2).collect()</span><br><span class="line">[(<span class="number">1</span>,<span class="number">1</span>),(<span class="number">1</span>,<span class="number">3</span>),(<span class="number">3</span>,<span class="number">1</span>),(<span class="number">3</span>,<span class="number">3</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1=sc.parallelize([(<span class="string">'a'</span>,<span class="number">7</span>),(<span class="string">'a'</span>,<span class="number">2</span>),(<span class="string">'b'</span>,<span class="number">2</span>)])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd2=sc.parallelize([(<span class="string">'b'</span>,<span class="string">'B'</span>),(<span class="string">'c'</span>,<span class="string">'C'</span>)])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.subtractByKey(rdd2).collect()</span><br><span class="line">[(<span class="string">'a'</span>,<span class="number">7</span>),(<span class="string">'a'</span>,<span class="number">2</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.join(rdd2).collect()</span><br><span class="line">[(<span class="string">'b'</span>,(<span class="number">2</span>,<span class="string">'B'</span>))]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1=sc.parallelize([<span class="number">1</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd2=sc.parallelize([<span class="number">1</span>,<span class="number">3</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.union(rdd1).collect()</span><br><span class="line">[<span class="number">1</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.intersection(rdd2).collect()</span><br><span class="line">[<span class="number">1</span>,<span class="number">3</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.subtract(rdd2).collect()</span><br><span class="line">[<span class="number">5</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd2.cartesian(rdd2).collect()</span><br><span class="line">[(<span class="number">1</span>,<span class="number">1</span>),(<span class="number">1</span>,<span class="number">3</span>),(<span class="number">3</span>,<span class="number">1</span>),(<span class="number">3</span>,<span class="number">3</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1=sc.parallelize([(<span class="string">'a'</span>,<span class="number">7</span>),(<span class="string">'a'</span>,<span class="number">2</span>),(<span class="string">'b'</span>,<span class="number">2</span>)])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd2=sc.parallelize([(<span class="string">'b'</span>,<span class="string">'B'</span>),(<span class="string">'c'</span>,<span class="string">'C'</span>)])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.subtractByKey(rdd2).collect()</span><br><span class="line">[(<span class="string">'a'</span>,<span class="number">7</span>),(<span class="string">'a'</span>,<span class="number">2</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.join(rdd2).collect()</span><br><span class="line">[(<span class="string">'b'</span>,(<span class="number">2</span>,<span class="string">'B'</span>))]</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>numPange = sc.parallelize(range(<span class="number">10</span>), <span class="number">2</span>)</span><br><span class="line">words.zip(numRange).collect()</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">结果：</span></span><br><span class="line"><span class="string">[('Spark', 0), </span></span><br><span class="line"><span class="string">('The', 1)</span></span><br><span class="line"><span class="string">]</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
 <table>
 <thead>
 <tr>
@@ -825,15 +864,19 @@
 </tr>
 <tr>
 <td style="text-align:left"><code>rdd.repartition(n)</code></td>
-<td style="text-align:left">新建一个含n个分区的RDD</td>
+<td style="text-align:left">新建一个含n个分区的RDD，对数据进行重新分区，跨节点的分区会执行shuffle操作。对于map和filter操作，增加分区可以提高并行度。</td>
 </tr>
 <tr>
 <td style="text-align:left"><code>rdd.coalesce(n)</code></td>
-<td style="text-align:left">将RDD中的分区减至n个</td>
+<td style="text-align:left">将RDD中的分区减至n个, coalesce有效折叠(collapse)同一工作节点上的分区，以便在重新分区时避免数据洗牌(shuffle)。存储words变量的RDD当前有两个分区，可以使用coalsece将其折叠为一个分区。</td>
 </tr>
 <tr>
 <td style="text-align:left"><code>rdd.partitionBy(key,func)</code></td>
 <td style="text-align:left">自定义分区</td>
+</tr>
+<tr>
+<td style="text-align:left">rdd.repartitionAndSortWithinPartitions</td>
+<td style="text-align:left">将对数据重新分区，并指定每个输出分区的顺序。</td>
 </tr>
 </tbody>
 </table>
@@ -862,8 +905,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Spark简介/" rel="next" title="1.Spark简介">
-                <i class="fa fa-chevron-left"></i> 1.Spark简介
+              <a href="/TensorFlow1基础/" rel="next" title="TensorFlow1基础">
+                <i class="fa fa-chevron-left"></i> TensorFlow1基础
               </a>
             
           </div>
@@ -951,7 +994,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -962,7 +1005,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -1006,7 +1049,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、理解RDD"><span class="nav-number">1.</span> <span class="nav-text">一、理解RDD</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、RDD的生命周期"><span class="nav-number">2.</span> <span class="nav-text">二、RDD的生命周期</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、RDD依赖"><span class="nav-number">3.</span> <span class="nav-text">三、RDD依赖</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、RDD的基本操作"><span class="nav-number">4.</span> <span class="nav-text">四、RDD的基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、基本的RDD"><span class="nav-number">4.1.</span> <span class="nav-text">1、基本的RDD</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#键值对PairRDD："><span class="nav-number">4.2.</span> <span class="nav-text">键值对PairRDD：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、代码学习"><span class="nav-number">5.</span> <span class="nav-text">五、代码学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-建立RDD"><span class="nav-number">5.0.1.</span> <span class="nav-text">1. 建立RDD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-RDD与Dataframe的转换"><span class="nav-number">5.0.2.</span> <span class="nav-text">2. RDD与Dataframe的转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-rdd函数"><span class="nav-number">5.0.3.</span> <span class="nav-text">3. rdd函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更好的解决方案：reduceByKey-非groupBykey"><span class="nav-number">5.0.4.</span> <span class="nav-text">更好的解决方案：reduceByKey,非groupBykey</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、理解RDD"><span class="nav-number">1.</span> <span class="nav-text">一、理解RDD</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、RDD的生命周期"><span class="nav-number">2.</span> <span class="nav-text">二、RDD的生命周期</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、RDD依赖"><span class="nav-number">3.</span> <span class="nav-text">三、RDD依赖</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、RDD的基本操作"><span class="nav-number">4.</span> <span class="nav-text">四、RDD的基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、基本的RDD"><span class="nav-number">4.1.</span> <span class="nav-text">1、基本的RDD</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）建立RDD"><span class="nav-number">4.1.1.</span> <span class="nav-text">（1）建立RDD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（2）转换操作"><span class="nav-number">4.1.2.</span> <span class="nav-text">（2）转换操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（3）动作操作"><span class="nav-number">4.1.3.</span> <span class="nav-text">（3）动作操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（4）通过pipe方法调用系统命令操作RDD"><span class="nav-number">4.1.4.</span> <span class="nav-text">（4）通过pipe方法调用系统命令操作RDD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（5）mapPartitions：每次处理一个分区"><span class="nav-number">4.1.5.</span> <span class="nav-text">（5）mapPartitions：每次处理一个分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（6）mapPartitionsWithIndex：接收两个参数，一个位分区的索引和另一个为-遍历分区内所有项的迭代器。"><span class="nav-number">4.1.6.</span> <span class="nav-text">（6）mapPartitionsWithIndex：接收两个参数，一个位分区的索引和另一个为 遍历分区内所有项的迭代器。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（7）foreachPartition：与mapPartitions函数类似，但不需要返回值"><span class="nav-number">4.1.7.</span> <span class="nav-text">（7）foreachPartition：与mapPartitions函数类似，但不需要返回值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（8）glom-将每个分区都转换为数组。"><span class="nav-number">4.1.8.</span> <span class="nav-text">（8）glom: 将每个分区都转换为数组。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-键值对PairRDD：算子中包含ByKey的都是针对PairRDD"><span class="nav-number">4.2.</span> <span class="nav-text">2. 键值对PairRDD：算子中包含ByKey的都是针对PairRDD</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）创建PairRDD"><span class="nav-number">4.2.1.</span> <span class="nav-text">（1）创建PairRDD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-转换操作"><span class="nav-number">4.2.2.</span> <span class="nav-text">(2) 转换操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-动作操作"><span class="nav-number">4.2.3.</span> <span class="nav-text">(3) 动作操作</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、代码学习"><span class="nav-number">5.</span> <span class="nav-text">五、代码学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-建立RDD"><span class="nav-number">5.0.1.</span> <span class="nav-text">1. 建立RDD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-RDD与Dataframe的转换"><span class="nav-number">5.0.2.</span> <span class="nav-text">2. RDD与Dataframe的转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-rdd函数"><span class="nav-number">5.0.3.</span> <span class="nav-text">3. rdd函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更好的解决方案：reduceByKey-非groupBykey"><span class="nav-number">5.0.4.</span> <span class="nav-text">更好的解决方案：reduceByKey,非groupBykey</span></a></li></ol></li></ol></div>
             
 
           </div>
