@@ -229,7 +229,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/TensorFlow1基础/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/理解RDD/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Lee_yl">
@@ -248,7 +248,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/TensorFlow1基础/" itemprop="url">TensorFlow1基础</a></h1>
+                <a class="post-title-link" href="/理解RDD/" itemprop="url">RDD</a></h1>
         
 
         <div class="post-meta">
@@ -283,8 +283,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/语言框架/" itemprop="url" rel="index">
-                    <span itemprop="name">语言框架</span>
+                  <a href="/categories/大数据/" itemprop="url" rel="index">
+                    <span itemprop="name">大数据</span>
                   </a>
                 </span>
 
@@ -294,8 +294,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/语言框架/TensorFlow/" itemprop="url" rel="index">
-                    <span itemprop="name">TensorFlow</span>
+                  <a href="/categories/大数据/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
                   </a>
                 </span>
 
@@ -334,33 +334,535 @@
         
           
             <p>本文仅做学习总结，如有侵权立删</p>
-<h1 id="一、设计理念"><a href="#一、设计理念" class="headerlink" title="一、设计理念"></a>一、设计理念</h1><h2 id="1-图的定义和运行完全分开，采用符号式编程"><a href="#1-图的定义和运行完全分开，采用符号式编程" class="headerlink" title="1. 图的定义和运行完全分开，采用符号式编程"></a>1. 图的定义和运行完全分开，采用符号式编程</h2><ul>
-<li>先定义各种变量</li>
-<li>建立一个数据流图</li>
-<li>在数据流图中规定各个变量之间的计算关系</li>
-<li>对数据流图进行编译</li>
-<li>直至真正的输入数据进入图中，才形成数据流输出值。</li>
-</ul>
-<h2 id="2-运算都放在图中，图的运行只发生在session中。"><a href="#2-运算都放在图中，图的运行只发生在session中。" class="headerlink" title="2. 运算都放在图中，图的运行只发生在session中。"></a>2. 运算都放在图中，图的运行只发生在session中。</h2><ul>
-<li>开启session后，可以用数据去填充节点，进行运算</li>
-<li>关闭会话后，就不能进行计算了</li>
-</ul>
-<h1 id="二、运行流程"><a href="#二、运行流程" class="headerlink" title="二、运行流程"></a>二、运行流程</h1><ul>
-<li><p>运行流程主要有2步：<strong>构造模型和训练</strong></p>
-</li>
-<li><p>模型图：但没发生实际运算。【Tensor，Variable，placeholder】</p>
-</li>
-</ul>
-<p><img src="https://images2018.cnblogs.com/blog/1338991/201802/1338991-20180228003225105-705160590.png" alt="img"></p>
+<p>[TOC]</p>
+<h1 id="一、理解RDD"><a href="#一、理解RDD" class="headerlink" title="一、理解RDD"></a>一、理解RDD</h1><blockquote>
+<p> RDD可以被抽象地理解为一个大的数组，但是这个数组是分布在集群上的。</p>
+<p><img src="..\imgs\RDD的理解.jpg" alt></p>
+</blockquote>
+<h1 id="二、RDD的生命周期"><a href="#二、RDD的生命周期" class="headerlink" title="二、RDD的生命周期"></a>二、RDD的生命周期</h1><p>创建—变换—动作（结束）</p>
+<h1 id="三、RDD依赖"><a href="#三、RDD依赖" class="headerlink" title="三、RDD依赖"></a>三、RDD依赖</h1><p>1、窄依赖（RDD）—–原地变换，不需要shuffle【即各个RDD之间不需要统计】</p>
+<p><img src="..\imgs\RDD1.jpg" alt></p>
+<p>2、宽依赖（RDD）—–需要shuffle，与其他RDD交换资料，时间消耗长。</p>
+<p><img src="..\imgs\RDD2.jpg" alt></p>
+<p>3、任务优化，如</p>
+<p><img src="..\imgs\RDD3.jpg" alt></p>
+<h1 id="四、RDD的基本操作"><a href="#四、RDD的基本操作" class="headerlink" title="四、RDD的基本操作"></a>四、RDD的基本操作</h1><p>RDD可以有两种计算操作算子：Transformation（变换）与Action（行动）。</p>
+<p><img src="..\imgs\RDD4.jpg" alt></p>
+<h2 id="1、基本的RDD"><a href="#1、基本的RDD" class="headerlink" title="1、基本的RDD"></a>1、基本的RDD</h2><h3 id="（1）建立RDD"><a href="#（1）建立RDD" class="headerlink" title="（1）建立RDD"></a>（1）建立RDD</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wordsList =  [<span class="string">'cat'</span>,<span class="string">'ele'</span>,<span class="string">'rat'</span>,<span class="string">'rat'</span>,<span class="string">'cat'</span>]</span><br><span class="line">wordsRDD =  sc.parallelize(wordsList , <span class="number">4</span>)</span><br></pre></td></tr></table></figure>
+<p>   #建立RDD   <code>wordsList =   [&#39;cat&#39;,&#39;ele&#39;,&#39;rat&#39;,&#39;rat&#39;,&#39;cat&#39;]</code>   <code>wordsRDD =   sc.parallelize(wordsList , 4)</code>   </p>
+<p>   #计算法每个单词的长度   <code>wordsRDD.map(len).collect()</code>   </p>
+<h3 id="（2）转换操作"><a href="#（2）转换操作" class="headerlink" title="（2）转换操作"></a>（2）转换操作</h3><p><img src="..\imgs\RDD5.jpg" alt></p>
+<h3 id="（3）动作操作"><a href="#（3）动作操作" class="headerlink" title="（3）动作操作"></a>（3）动作操作</h3><p><img src="..\imgs\RDD6.jpg" alt></p>
+<h3 id="（4）通过pipe方法调用系统命令操作RDD"><a href="#（4）通过pipe方法调用系统命令操作RDD" class="headerlink" title="（4）通过pipe方法调用系统命令操作RDD"></a>（4）通过pipe方法调用系统命令操作RDD</h3><p>每个输入分区的所有元素被当做另一个外部进程的标准输入，输入元素由换行符分隔。</p>
+<p>最终结果由该外部进程的标准输出生成，标准输出的每一行产生输出分区的一个元素。</p>
+<p>例子：将每个分区传递给wc命令。每个元素将作为一个输入行，因此执行行计数，将得到每个分区的总行数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">words.pipe(<span class="string">"wc -l"</span>).collect()</span><br><span class="line"><span class="comment"># 结果显示:每个分区有5行。</span></span><br></pre></td></tr></table></figure>
+<h3 id="（5）mapPartitions：每次处理一个分区"><a href="#（5）mapPartitions：每次处理一个分区" class="headerlink" title="（5）mapPartitions：每次处理一个分区"></a>（5）mapPartitions：每次处理一个分区</h3><p>Spark 在实际执行代码时是基于每个分区运行的，所有map函数只是mapPartitions基于行操作的一个别名，</p>
+<p>mapPartitions函数每次处理一个数据分区（可以通过迭代器来遍历该数据分区），不是具体的一行。</p>
+<p>例子：为数据中的每个分区创建值“1”， 以下表达式中计算总和将得出我们拥有的分区数量：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">words.mapPartitions(<span class="keyword">lambda</span> part:[<span class="number">1</span>]).sum() <span class="comment">#2</span></span><br></pre></td></tr></table></figure>
+<p>应用场景：将属于某类的值收集到一个分区中，然后对整个分组进行操作。</p>
+<h3 id="（6）mapPartitionsWithIndex：接收两个参数，一个位分区的索引和另一个为-遍历分区内所有项的迭代器。"><a href="#（6）mapPartitionsWithIndex：接收两个参数，一个位分区的索引和另一个为-遍历分区内所有项的迭代器。" class="headerlink" title="（6）mapPartitionsWithIndex：接收两个参数，一个位分区的索引和另一个为 遍历分区内所有项的迭代器。"></a>（6）mapPartitionsWithIndex：接收两个参数，一个位分区的索引和另一个为 遍历分区内所有项的迭代器。</h3><p>mapPartitionsWithIndex应用场景：测试map函数是否正确运行。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">indexedFunc</span><span class="params">(partitionIndex, withinPartIterator)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> [<span class="string">"partition:&#123;&#125; =&gt; &#123;&#125;"</span>.format(partitionIndex, x) <span class="keyword">for</span> x <span class="keyword">in</span> withinPartIterator]</span><br><span class="line">words.mapPartitionsWithIndex(indexedFunc).collect()</span><br></pre></td></tr></table></figure>
+<h3 id="（7）foreachPartition：与mapPartitions函数类似，但不需要返回值"><a href="#（7）foreachPartition：与mapPartitions函数类似，但不需要返回值" class="headerlink" title="（7）foreachPartition：与mapPartitions函数类似，但不需要返回值"></a>（7）foreachPartition：与mapPartitions函数类似，但不需要返回值</h3><p>mapPartitions函数需要返回值才能正常执行，但foreachPartition函数不需要。</p>
+<p>foreachPartition函数仅用于迭代所有的数据分区，与mapPartitions的不同在于它没有返回值，适合写入数据库操作（不需要返回计算结果）。</p>
+<h3 id="（8）glom-将每个分区都转换为数组。"><a href="#（8）glom-将每个分区都转换为数组。" class="headerlink" title="（8）glom: 将每个分区都转换为数组。"></a>（8）glom: 将每个分区都转换为数组。</h3><p>当需要将数据收集到驱动器并想为每个分区创建一个数组时，就很适合用glom函数实现。但会导致严重的稳定性问题，当有很大的分区或大量分区时，该函数会导致驱动器崩溃。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">spark.sparkContext.parallelize([<span class="string">"hello"</span> , <span class="string">"words"</span>], <span class="number">2</span>).glom().collect()</span><br><span class="line"><span class="comment"># 结果是[["hello",  "worlds"]]</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-键值对PairRDD：算子中包含ByKey的都是针对PairRDD"><a href="#2-键值对PairRDD：算子中包含ByKey的都是针对PairRDD" class="headerlink" title="2. 键值对PairRDD：算子中包含ByKey的都是针对PairRDD"></a>2. 键值对PairRDD：算子中包含ByKey的都是针对PairRDD</h2><h3 id="（1）创建PairRDD"><a href="#（1）创建PairRDD" class="headerlink" title="（1）创建PairRDD"></a>（1）创建PairRDD</h3><p>是一种以（key,value)方式存储的RDD。</p>
+<p>   <code>pairRDD =   wordsRDD.map(lambda x : (x , 1))</code>   </p>
 <ul>
-<li>训练：有实际数据输入，梯度计算等操作。【session】</li>
+<li>keyBy：根据当前value创建key的函数。</li>
 </ul>
-<h1 id="三、编程模型"><a href="#三、编程模型" class="headerlink" title="三、编程模型"></a>三、编程模型</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导包</span></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建常量vec1和vec2</span></span><br><span class="line">vec1 = tf.constant([[<span class="number">1</span>,<span class="number">2</span>]])</span><br><span class="line">vec2 = tf.constant([[<span class="number">3</span>],[<span class="number">4</span>]])</span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">vec1为1×2的向量</span></span><br><span class="line"><span class="string">&lt;tf.Tensor 'Const:0' shape=(1, 2) dtype=int32&gt;</span></span><br><span class="line"><span class="string">vec2为2×1的向量</span></span><br><span class="line"><span class="string">&lt;tf.Tensor 'Const_1:0' shape=(2, 1) dtype=int32&gt;</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建矩阵相乘的操作</span></span><br><span class="line">product = tf.matmul(vec1, vec2)</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">&lt;tf.Tensor 'MatMul:0' shape=(1, 1) dtype=int32&gt;</span></span><br><span class="line"><span class="string">调换矩阵乘法的顺序，直接可以看出结果的形状不一样</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line">productv2 = tf.matmul(vec2, vec1)</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">&lt;tf.Tensor 'MatMul_1:0' shape=(2, 2) dtype=int32&gt;</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
-<p>In [10]:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建会话Session并输出计算的结果</span></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    product_res = sess.run(product)</span><br><span class="line">    productv2_res = sess.run(productv2)</span><br><span class="line">    print(product_res)</span><br><span class="line">    print(productv2_res)</span><br><span class="line">    </span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">[[11]]</span></span><br><span class="line"><span class="string">[[3 6]</span></span><br><span class="line"><span class="string"> [4 8]]</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string"> 从结果可以看出`product`的shape为1×1</span></span><br><span class="line"><span class="string">`productv2`的shape为2×2</span></span><br><span class="line"><span class="string">符合矩阵乘法的法则</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
-
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将单词中的第一个字母作为key, 然后Spark将该单词记录保存为RDD的value</span></span><br><span class="line">keyword = words.keyBy(<span class="keyword">lambda</span> word: word.lower()[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+<h3 id="2-转换操作"><a href="#2-转换操作" class="headerlink" title="(2) 转换操作"></a>(2) 转换操作</h3><p><img src="..\imgs\RDD7.jpg" alt></p>
+<ul>
+<li><p>mapValue：只修改value，不修改key</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Keyword.mapValues(<span class="keyword">lambda</span> word:word.upper()).collect()</span><br><span class="line"><span class="comment"># 结果：</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">[('s', 'SPARK'),</span></span><br><span class="line"><span class="string">('t'),'THE']</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>flatMapValues：在row（行）上进行flatMap操作来扩展行数</p>
+</li>
+<li><p>keys() / values()：提取keys或value</p>
+</li>
+<li><p>sampleByKey：通过一个key来采样RDD</p>
+</li>
+</ul>
+<h3 id="3-动作操作"><a href="#3-动作操作" class="headerlink" title="(3) 动作操作"></a>(3) 动作操作</h3><p><img src="..\imgs\RDD8.jpg" alt></p>
+<ul>
+<li>lookup：查找某个key对应的value, 因为同一个key可能有多个value，例子：查找’s’时，将获得与该key相关的两个value, 即’Spark’和’Simple’</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keyword.lookup(<span class="string">"s"</span>)</span><br></pre></td></tr></table></figure>
+<p>一些小问题：</p>
+<p>1、spark中的RDD是什么</p>
+<p>概念：<strong>分布式数据集，**</strong>spark<strong>**中基本的数据抽象，代表一个不可变、可分区、元素可并行计算的集合。</strong></p>
+<p>2、RDD的五大特性：</p>
+<p>①有一个<strong>分区</strong>列表，即能被切分，可并行。</p>
+<p>②由一个<strong>函数</strong>计算每一个分片</p>
+<p>③<strong>容错机制</strong>，对其他RDD的<strong>依赖</strong>（宽依赖和窄依赖），但并非所有RDD都要依赖。</p>
+<p>RDD每次transformations（转换）都会生成一个新的RDD，两者之间会形成依赖关系。在部分分区数据丢失时，可通过依赖关系重新计算丢失的数据。</p>
+<p>④key-value型的RDD是根据<strong>哈希</strong>来分区的，控制Key分到哪个reduce。</p>
+<p>⑤每一分片<strong>计算优先位置</strong>，比如HDFS的block的所在位置应该是优先计算的位置。</p>
+<p>3、概述一下spark中的常用算子区别（map、mapPartitions、foreach、foreachPartition）</p>
+<table>
+<thead>
+<tr>
+<th>map</th>
+<th>遍历RDD，将函数f应用于每一个元素，返回新的RDD</th>
+<th>transformation算子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mapPartitions</td>
+<td>用于遍历操作RDD中的每一个分区，返回生成一个新的RDD</td>
+<td>transformation</td>
+</tr>
+<tr>
+<td>collect</td>
+<td>将RDD元素送回Master并返回List类型</td>
+<td>Action</td>
+</tr>
+<tr>
+<td>foreach</td>
+<td>用于遍历RDD,将函数f应用于每一个元素，无返回值</td>
+<td>action算子</td>
+</tr>
+<tr>
+<td>foreachPartition</td>
+<td>用于遍历操作RDD中的每一个分区。无返回值</td>
+<td>action算子</td>
+</tr>
+<tr>
+<td>总结</td>
+<td>一般使用mapPartitions或者foreachPartition算子比map和foreach更加高效，推荐使用。</td>
+</tr>
+</tbody>
+</table>
+<p>4、谈谈spark中的宽窄依赖</p>
+<ul>
+<li>RDD和它依赖的父RDD的关系有两种不同的类型，即窄依赖和宽依赖。</li>
+<li>宽依赖：指的是多个子RDD的Partition会依赖同一个父RDD的Partition分区【需要shuffle，与其他RDD交换资料】 例如 groupByKey、 reduceByKey、 sortByKey等操作会产生宽依赖，会产生shuffle      </li>
+<li>窄依赖：指的是每一个父RDD的Partition最多被子RDD的一个Partition分区使用。【原地变换，不需要shuffle】      例如map、filter、union等操作会产生窄依赖 </li>
+</ul>
+<p>5、spark中如何划分stage</p>
+<p>Stage划分的依据就是宽依赖，何时产生宽依赖，例如reduceByKey,groupByKey的算子，会导致宽依赖的产生。</p>
+<table>
+<thead>
+<tr>
+<th>先介绍什么是RDD中的宽窄依赖，</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>然后在根据DAG有向无环图进行划分，从当前job的最后一个算子往前推，遇到宽依赖，那么当前在这个批次中的所有算子操作都划分成一个stage,</td>
+</tr>
+<tr>
+<td>然后继续按照这种方式在继续往前推，如在遇到宽依赖，又划分成一个stage,一直到最前面的一个算子。</td>
+</tr>
+<tr>
+<td>最后整个job会被划分成多个stage,而stage之间又存在依赖关系，后面的stage依赖于前面的stage。</td>
+</tr>
+</tbody>
+</table>
+<h1 id="五、代码学习"><a href="#五、代码学习" class="headerlink" title="五、代码学习"></a>五、代码学习</h1><h3 id="1-建立RDD"><a href="#1-建立RDD" class="headerlink" title="1. 建立RDD"></a>1. 建立RDD</h3><p><strong>创建RDD的两种方法：</strong></p>
+<p>1 读取一个数据集(SparkContext.textFile()) : lines = sc.textFile(“README.md”)<br>2 读取一个集合(SparkContext.parallelize()) : lines = sc.paralelize(List(“pandas”,”i like pandas”))</p>
+<p><img src="E:\GitHub_learn\blog\source\imgs\rdd_1.jpg" alt></p>
+<p>#take操作将前若干个数据汇集到Driver，相比collect安全</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建RDD</span></span><br><span class="line"><span class="comment"># 从并行集合创建</span></span><br><span class="line">pairRDD=sc.parallelize([(<span class="string">'a'</span>,<span class="number">7</span>),(<span class="string">'a'</span>,<span class="number">2</span>),(<span class="string">'b'</span>,<span class="number">2</span>)]) <span class="comment"># key-value对RDD</span></span><br><span class="line">rdd1=sc.parallelize([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>])</span><br><span class="line">rdd2=sc.parallelize(range(<span class="number">100</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">#collect操作将数据汇集到Driver,数据过大时有超内存风险</span></span><br><span class="line">all_data = rdd.collect()</span><br><span class="line">all_data</span><br><span class="line"></span><br><span class="line"><span class="comment">#take操作将前若干个数据汇集到Driver，相比collect安全</span></span><br><span class="line">rdd = sc.parallelize(range(<span class="number">10</span>),<span class="number">5</span>) </span><br><span class="line">part_data = rdd.take(<span class="number">4</span>)</span><br><span class="line">part_data</span><br><span class="line"></span><br><span class="line"><span class="comment">#takeSample可以随机取若干个到Driver,第一个参数设置是否放回抽样</span></span><br><span class="line">rdd = sc.parallelize(range(<span class="number">10</span>),<span class="number">5</span>) </span><br><span class="line">sample_data = rdd.takeSample(<span class="literal">False</span>,<span class="number">10</span>,<span class="number">0</span>)</span><br><span class="line">sample_data</span><br><span class="line"></span><br><span class="line"><span class="comment">#first取第一个数据</span></span><br><span class="line">rdd = sc.parallelize(range(<span class="number">10</span>),<span class="number">5</span>) </span><br><span class="line">first_data = rdd.first()</span><br><span class="line">print(first_data)</span><br><span class="line"></span><br><span class="line"><span class="comment">#count查看RDD元素数量</span></span><br><span class="line">rdd = sc.parallelize(range(<span class="number">10</span>),<span class="number">5</span>)</span><br><span class="line">data_count = rdd.count()</span><br><span class="line">print(data_count)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>从text中读取，read.text</strong></li>
+</ul>
+<p><img src="..\imgs\rdd_2.jpg" alt></p>
+<ul>
+<li><strong>从csv中读取:read.csv</strong></li>
+</ul>
+<p><img src="..\imgs\rdd_3.jpg" alt></p>
+<ul>
+<li><strong>从json中读取：read.json</strong></li>
+</ul>
+<p><img src="..\imgs\rdd_4.jpg" alt></p>
+<h3 id="2-RDD与Dataframe的转换"><a href="#2-RDD与Dataframe的转换" class="headerlink" title="2. RDD与Dataframe的转换"></a>2. RDD与Dataframe的转换</h3><p><strong>（1）dataframe转换成rdd：</strong></p>
+<p><strong>法一：datardd = dataDataframe.rdd</strong></p>
+<p><strong>法二：datardd = sc.parallelize(_)</strong></p>
+<p><strong>（2）rdd转换成dataframe：</strong></p>
+<p><strong>dataDataFrame = spark.createDataFrame(datardd)</strong></p>
+<p><img src="..\imgs\rdd_5.jpg" alt></p>
+<p><img src="..\imgs\rdd_6.jpg" alt></p>
+<p><img src="..\imgs\rdd_7.jpg" alt></p>
+<h3 id="3-rdd函数"><a href="#3-rdd函数" class="headerlink" title="3. rdd函数"></a>3. rdd函数</h3><table>
+<thead>
+<tr>
+<th style="text-align:left">mapReduce</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>rdd.map(func)</code></td>
+<td style="text-align:left">将<a href="http://www.aisouwen.com/tags_38.html" target="_blank" rel="noopener">函数</a>应用于RDD中的每个元素并返回</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.mapValues(func)</code></td>
+<td style="text-align:left">不改变key，只对value执行map</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.flatMap(func)</code></td>
+<td style="text-align:left">先map后扁平化返回</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.flatMapValues(func)</code></td>
+<td style="text-align:left">不改变key，只对value执行flatMap</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.reduce(func)</code></td>
+<td style="text-align:left">合并RDD的元素返回</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.reduceByKey(func)</code></td>
+<td style="text-align:left">合并每个key的value</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.foreach(func)</code></td>
+<td style="text-align:left">用迭代的方法将函数应用于每个元素</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.keyBy(func)</code></td>
+<td style="text-align:left">执行函数于每个元素创建key-value对RDD</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">pairRDD=sc.parallelize([(<span class="string">'a'</span>,<span class="number">7</span>),(<span class="string">'a'</span>,<span class="number">2</span>),(<span class="string">'b'</span>,<span class="number">2</span>)]) <span class="comment"># key-value对RDD</span></span><br><span class="line">rdd1=sc.parallelize([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>])</span><br><span class="line">rdd2=sc.parallelize(range(<span class="number">100</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.map(<span class="keyword">lambda</span> x:x+<span class="number">1</span>).collect()</span><br><span class="line">[<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.reduce(<span class="keyword">lambda</span> x,y : x+y)</span><br><span class="line"><span class="number">15</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.keyBy(<span class="keyword">lambda</span> x:x%<span class="number">2</span>).collect()</span><br><span class="line">[(<span class="number">1</span>,<span class="number">1</span>),(<span class="number">0</span>,<span class="number">2</span>),(<span class="number">1</span>,<span class="number">3</span>),(<span class="number">0</span>,<span class="number">4</span>),(<span class="number">1</span>,<span class="number">5</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>pairRDD.mapValues(<span class="keyword">lambda</span> x:x+<span class="number">1</span>).collect()</span><br><span class="line">[(<span class="string">'a'</span>,<span class="number">8</span>),(<span class="string">'a'</span>,<span class="number">3</span>),(<span class="string">'b'</span>,<span class="number">3</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>pairRDD.reduceByKey(<span class="keyword">lambda</span> x,y : x+y).collect()</span><br><span class="line">[(<span class="string">'a'</span>,<span class="number">9</span>),(<span class="string">'b'</span>,<span class="number">2</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>names=sc.parallelize([<span class="string">'Elon Musk'</span>,<span class="string">'Bill Gates'</span>,<span class="string">'Jim Green'</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>names.map(<span class="keyword">lambda</span> x:x.split(<span class="string">' '</span>)).collect()</span><br><span class="line">[(<span class="string">'Elon'</span>,<span class="string">'Musk'</span>),(<span class="string">'Bill'</span>,<span class="string">'Gates'</span>),(<span class="string">'Jim'</span>,<span class="string">'Green'</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>names.flatMap(<span class="keyword">lambda</span> x:x.split(<span class="string">' '</span>)).collect()</span><br><span class="line">[<span class="string">'Elon'</span>,<span class="string">'Musk'</span>,<span class="string">'Bill'</span>,<span class="string">'Gates'</span>,<span class="string">'Jim'</span>,<span class="string">'Green'</span>]</span><br></pre></td></tr></table></figure>
+<p><strong>（1）map操作</strong></p>
+<p><img src="..\imgs\rdd_8.jpg" alt></p>
+<p><strong>（2）collect操作</strong></p>
+<p><img src="..\imgs\rdd_10.jpg" alt></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">提取</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>rdd.collect()</code></td>
+<td style="text-align:left">将RDD以列表形式返回</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.collectAsMap()</code></td>
+<td style="text-align:left">将RDD以字典形式返回</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.take(n)</code></td>
+<td style="text-align:left">提取前n个元素</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.takeSample(replace,n,seed)</code></td>
+<td style="text-align:left">随机提取n个元素</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.first()</code></td>
+<td style="text-align:left">提取第1名</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.top(n)</code></td>
+<td style="text-align:left">提取前n名</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.keys()</code></td>
+<td style="text-align:left">返回RDD的keys</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.values()</code></td>
+<td style="text-align:left">返回RDD的values</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.isEmpty()</code></td>
+<td style="text-align:left">检查RDD是否为空</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pairRDD=sc.parallelize([(<span class="string">'a'</span>,<span class="number">7</span>),(<span class="string">'a'</span>,<span class="number">2</span>),(<span class="string">'b'</span>,<span class="number">2</span>)]) <span class="comment"># key-value对RDD</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>pairRDD.collectAsMap()</span><br><span class="line">&#123;<span class="string">'a'</span>: <span class="number">2</span>,<span class="string">'b'</span>: <span class="number">2</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>pairRDD.keys().collect()</span><br><span class="line">[<span class="string">'a'</span>,<span class="string">'a'</span>,<span class="string">'b'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>pairRDD.values().collect()</span><br><span class="line">[<span class="number">7</span>,<span class="number">2</span>,<span class="number">2</span>]</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">分组和聚合</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>rdd.groupBy(func)</code></td>
+<td style="text-align:left">将RDD元素通过函数变换分组为key-iterable集</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.groupByKey()</code></td>
+<td style="text-align:left">将key-value元素集分组为key-iterable集</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.aggregate(zeroValue,seqOp,combOp)</code></td>
+<td style="text-align:left">在驱动器上执行最终聚合，如果执行器的结果太大，则会导致驱动器出现内存错误并最终让程序崩溃。<br>第一个函数执行分区内聚合。<br>第二个函数执行分区间聚合。</td>
+</tr>
+<tr>
+<td style="text-align:left">depth  = 3<br>rdd.treeAggregate(0, maxFunc, addFunc, depth)</td>
+<td style="text-align:left">基于不同的实现方法可以得到与aggregate相同的结果，<strong>创建从执行器到执行器传输结果的树</strong>，最后再执行最终聚合。多层级的形式确保驱动器在聚合过程中不会耗尽内存，这些基于树的实现通常会提高某些操作的稳定性。</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.aggregateByKey(zeroValue,seqOp,combOp)</code></td>
+<td style="text-align:left">此函数与aggregate基本相同，但是基于key聚合而非基于分区聚合。起始值和函数的属性配置也都相同</td>
+</tr>
+<tr>
+<td style="text-align:left">rdd.combineByKey</td>
+<td style="text-align:left">不仅可以指定聚合函数，还可以指定一个<strong>合并函数</strong>。该合并函数针对某个key进行操作，并根据某个函数对value合并，然后合并各个合并器的输出结果并得出最终结果。</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.fold(zeroValue,func)</code></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.foldByKey(zeroValue,func)</code></td>
+<td style="text-align:left">使用满足结合律函数和中性的“零值”合并每个key的value，支持多次累积到结果，并且不能更改结果（0为加法，1为乘法）</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pairRDD=sc.parallelize([(<span class="string">'a'</span>,<span class="number">7</span>),(<span class="string">'a'</span>,<span class="number">2</span>),(<span class="string">'b'</span>,<span class="number">2</span>)]) <span class="comment"># key-value对RDD</span></span><br><span class="line">rdd1=sc.parallelize([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>])</span><br><span class="line">rdd2=sc.parallelize(range(<span class="number">100</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.groupBy(<span class="keyword">lambda</span> x: x % <span class="number">2</span>).mapValues(list).collect()</span><br><span class="line">[(<span class="number">0</span>,[<span class="number">2</span>,<span class="number">4</span>]),(<span class="number">1</span>,[<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>])]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>pairRDD.groupByKey().mapValues(list).collect()</span><br><span class="line">[(<span class="string">'a'</span>,[<span class="number">7</span>,<span class="number">2</span>]),(<span class="string">'b'</span>,[<span class="number">2</span>])]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h3 id="更好的解决方案：reduceByKey-非groupBykey"><a href="#更好的解决方案：reduceByKey-非groupBykey" class="headerlink" title="更好的解决方案：reduceByKey,非groupBykey"></a>更好的解决方案：reduceByKey,非groupBykey</h3><p>reduceByKey能够直接将资料根据key值聚合，减少多余的交换（shuffle）动作。reduce发生在每个分组，并且不需要将所有内容放在内存中</p>
+<p>避免使用groupbykey，如果数据量过大，会造成内存溢出。每个执行器在执行函数之前必须在内存中保存一个key对应的所有value。</p>
+</blockquote>
+<ol>
+<li><strong>spark中groupByKey 、aggregateByKey、reduceByKey 有什么区别？使用上需要注意什么？</strong></li>
+</ol>
+<p>（1）groupByKey()是对RDD中的所有数据做shuffle,根据不同的Key映射到不同的partition中再进行aggregate。</p>
+<p>（3） distinct()也是对RDD中的所有数据做shuffle进行aggregate后再去重。</p>
+<p>（2）aggregateByKey()是先对每个partition中的数据根据不同的Key进行aggregate，然后将结果进行shuffle，完成各个partition之间的aggregate。因此，和groupByKey()相比，运算量小了很多。</p>
+<p>（4）reduceByKey()也是先在单台机器中计算，再将结果进行shuffle，减小运算量 </p>
+<p><img src="..\imgs\rdd_11.jpg" alt></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">选择数据</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>rdd.sample(replace,frac,seed)</code></td>
+<td style="text-align:left">抽样</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.filter(func)</code></td>
+<td style="text-align:left">筛选满足函数的元素(变换)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.distinct()</code></td>
+<td style="text-align:left">去重</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">rdd1=sc.parallelize([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>])</span><br><span class="line">rdd2=sc.parallelize(range(<span class="number">100</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd2.sample(<span class="literal">False</span>,<span class="number">0.8</span>,seed=<span class="number">42</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.filter(<span class="keyword">lambda</span> x:x%<span class="number">2</span>==<span class="number">0</span>).collect()</span><br><span class="line">[<span class="number">2</span>,<span class="number">4</span>]</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">排序</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>rdd.sortBy(func,ascending=True)</code></td>
+<td style="text-align:left">按RDD元素变换后的值排序</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.sortByKey(ascending=True)</code></td>
+<td style="text-align:left">按key排序</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">统计</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>rdd.count()</code></td>
+<td style="text-align:left">返回RDD中的元素数</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.countByKey()</code></td>
+<td style="text-align:left">按key计算RDD元素数量</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.countByValue()</code></td>
+<td style="text-align:left">按RDD元素计算数量</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.sum()</code></td>
+<td style="text-align:left">求和</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.mean()</code></td>
+<td style="text-align:left">平均值</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.max()</code></td>
+<td style="text-align:left">最大值</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.min()</code></td>
+<td style="text-align:left">最小值</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.stdev()</code></td>
+<td style="text-align:left">标准差</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.variance()</code></td>
+<td style="text-align:left">方差</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.histograme()</code></td>
+<td style="text-align:left">分箱（Bin）生成直方图</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.stats()</code></td>
+<td style="text-align:left">综合统计（计数、平均值、标准差、最大值和最小值）</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">pairRDD=sc.parallelize([(<span class="string">'a'</span>,<span class="number">7</span>),(<span class="string">'a'</span>,<span class="number">2</span>),(<span class="string">'b'</span>,<span class="number">2</span>)]) <span class="comment"># key-value对RDD</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>pairRDD.count()</span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>pairRDD.countByKey()</span><br><span class="line">defaultdict(&lt;type <span class="string">'int'</span>&gt;,&#123;<span class="string">'a'</span>:<span class="number">2</span>,<span class="string">'b'</span>:<span class="number">1</span>&#125;)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>pairRDD.countByValue()</span><br><span class="line">defaultdict(&lt;type <span class="string">'int'</span>&gt;,&#123;(<span class="string">'b'</span>,<span class="number">2</span>):<span class="number">1</span>,(<span class="string">'a'</span>,<span class="number">2</span>):<span class="number">1</span>,(<span class="string">'a'</span>,<span class="number">7</span>):<span class="number">1</span>&#125;)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd2.histogram(<span class="number">3</span>)</span><br><span class="line">([<span class="number">0</span>,<span class="number">33</span>,<span class="number">66</span>,<span class="number">99</span>],[<span class="number">33</span>,<span class="number">33</span>,<span class="number">34</span>])</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">连接运算</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>rdd.union(other)</code></td>
+<td style="text-align:left">并集(不去重)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.intersection(other)</code></td>
+<td style="text-align:left">交集(去重)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.subtract(other)</code></td>
+<td style="text-align:left">差集(不去重)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.cartesian(other)</code></td>
+<td style="text-align:left">笛卡尔积</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.subtractByKey(other)</code></td>
+<td style="text-align:left">按key差集</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.join(other)</code></td>
+<td style="text-align:left">内连接</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.leftOuterJoin(other)</code></td>
+<td style="text-align:left">左连接</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.rightOuterJoin(other)</code></td>
+<td style="text-align:left">右连接</td>
+</tr>
+<tr>
+<td style="text-align:left">rdd.cogroup(rdd1)</td>
+<td style="text-align:left">连接</td>
+</tr>
+<tr>
+<td style="text-align:left">rdd.zip(rdd1)</td>
+<td style="text-align:left">组合两个zip, 将两个RDD的元素对应的匹配在一起，要求两个RDD的元素个数相同，且两个RDD的分区数也相同，结果会生成一个PairRDD</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1=sc.parallelize([<span class="number">1</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd2=sc.parallelize([<span class="number">1</span>,<span class="number">3</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.union(rdd1).collect()</span><br><span class="line">[<span class="number">1</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.intersection(rdd2).collect()</span><br><span class="line">[<span class="number">1</span>,<span class="number">3</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.subtract(rdd2).collect()</span><br><span class="line">[<span class="number">5</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd2.cartesian(rdd2).collect()</span><br><span class="line">[(<span class="number">1</span>,<span class="number">1</span>),(<span class="number">1</span>,<span class="number">3</span>),(<span class="number">3</span>,<span class="number">1</span>),(<span class="number">3</span>,<span class="number">3</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1=sc.parallelize([(<span class="string">'a'</span>,<span class="number">7</span>),(<span class="string">'a'</span>,<span class="number">2</span>),(<span class="string">'b'</span>,<span class="number">2</span>)])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd2=sc.parallelize([(<span class="string">'b'</span>,<span class="string">'B'</span>),(<span class="string">'c'</span>,<span class="string">'C'</span>)])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.subtractByKey(rdd2).collect()</span><br><span class="line">[(<span class="string">'a'</span>,<span class="number">7</span>),(<span class="string">'a'</span>,<span class="number">2</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rdd1.join(rdd2).collect()</span><br><span class="line">[(<span class="string">'b'</span>,(<span class="number">2</span>,<span class="string">'B'</span>))]</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>numPange = sc.parallelize(range(<span class="number">10</span>), <span class="number">2</span>)</span><br><span class="line">words.zip(numRange).collect()</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">结果：</span></span><br><span class="line"><span class="string">[('Spark', 0), </span></span><br><span class="line"><span class="string">('The', 1)</span></span><br><span class="line"><span class="string">]</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">持久化</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>rdd.persist()</code></td>
+<td style="text-align:left">标记为持久化</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.cache()</code></td>
+<td style="text-align:left">等价于<code>rdd.persist(MEMORY_ONLY)</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.unpersist()</code></td>
+<td style="text-align:left">释放缓存</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li><strong>cache后面能不能接其他算子,它是不是action操作？</strong></li>
+</ol>
+<p>Cache后可以接其他算子，但是接了算子之后，起不到缓存的作用，因为会重复出发cache。</p>
+<p>Cache不是action操作。</p>
+<ol>
+<li><strong>cache和pesist有什么区别？</strong> </li>
+</ol>
+<p>（1）cache和persist都是用于将一个RDD进行缓存的，这样在之后使用的过程中就不需要重新计算了，可以大大节省程序运行时间； </p>
+<p>（2）cache只有一个默认的缓存级别MEMORY_ONLY ，cache调用了persist，而persist可以根据情况设置其它的缓存级别； </p>
+<p>（3）executor执行的时候，默认60%做cache，40%做task操作，persist最根本的函数，最底层的函数 </p>
+<ol>
+<li><strong>Spark为什么要持久化，一般什么场景下要进行persist操作？</strong></li>
+</ol>
+<p>为什么要进行持久化？</p>
+<p>spark所有复杂一点的算法都会有persist身影,spark默认数据放在内存，spark很多内容都是放在内存的，非常适合高速迭代，1000个步骤</p>
+<p>只有第一个输入数据，中间不产生临时数据，但分布式系统风险很高，所以容易出错，就要容错，rdd出错或者分片可以根据血统算出来，如果没有对父rdd进行persist 或者cache的化，就需要重头做。</p>
+<p>以下场景会使用persist</p>
+<p>1）某个步骤计算非常耗时，需要进行persist持久化</p>
+<p>2）计算链条非常长，重新恢复要算很多步骤，很好使，persist</p>
+<p>3）checkpoint所在的rdd要持久化persist，</p>
+<p>lazy级别，框架发现有checnkpoint，checkpoint时单独触发一个job，需要重算一遍，checkpoint前</p>
+<p>要持久化，写个rdd.cache或者rdd.persist，将结果保存起来，再写checkpoint操作，这样执行起来会非常快，不需要重新计算rdd链条了。checkpoint之前一定会进行persist。</p>
+<p>4）shuffle之后为什么要persist，shuffle要进性网络传输，风险很大，数据丢失重来，恢复代价很大</p>
+<p>5）shuffle之前进行persist，框架默认将数据持久化到磁盘，这个是框架自动做的。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">分区</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>rdd.getNumPartitions()</code></td>
+<td style="text-align:left">获取RDD分区数</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.repartition(n)</code></td>
+<td style="text-align:left">新建一个含n个分区的RDD，对数据进行重新分区，跨节点的分区会执行shuffle操作。对于map和filter操作，增加分区可以提高并行度。</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.coalesce(n)</code></td>
+<td style="text-align:left">将RDD中的分区减至n个, coalesce有效折叠(collapse)同一工作节点上的分区，以便在重新分区时避免数据洗牌(shuffle)。存储words变量的RDD当前有两个分区，可以使用coalsece将其折叠为一个分区。</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdd.partitionBy(key,func)</code></td>
+<td style="text-align:left">自定义分区</td>
+</tr>
+<tr>
+<td style="text-align:left">rdd.repartitionAndSortWithinPartitions</td>
+<td style="text-align:left">将对数据重新分区，并指定每个输出分区的顺序。</td>
+</tr>
+</tbody>
+</table>
+<p><strong>文件系统读写</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 读取</span></span><br><span class="line">rdd=sc.textFile(<span class="string">'hdfs://file_path'</span>)  <span class="comment"># 从hdfs集群读取</span></span><br><span class="line">rdd=sc.textFile(<span class="string">'file_path'</span>) </span><br><span class="line">rdd=sc.textFile(<span class="string">'file:///local_file_path'</span>) <span class="comment"># 从本地文件读取</span></span><br><span class="line"><span class="comment"># 保存</span></span><br><span class="line">rdd.saveAsTextFile(<span class="string">'hdfs://file_path'</span>)</span><br><span class="line">rdd.saveAsTextFile(<span class="string">'file_path'</span>) <span class="comment"># hdfs路径</span></span><br><span class="line">rdd.saveAsTextFile(<span class="string">'file:///local_file_path'</span>)</span><br></pre></td></tr></table></figure>
           
         
       
@@ -797,6 +1299,164 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/过拟合欠拟合/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/过拟合欠拟合/" itemprop="url">过拟合</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-26T00:00:00+08:00">
+                2023-02-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本篇博客仅作为学习,如有侵权必删。</p>
+<h1 id="过拟合"><a href="#过拟合" class="headerlink" title="过拟合"></a>过拟合</h1><h1 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h1><blockquote>
+<p>过拟合：模型对于训练数拟合呈过当的情况，反映到评估指标上，就是模型在训练集上表现很好，测试集和新数据上表现较差。</p>
+<p>欠拟合：模型在训练和和预测时表现都不好的情况。</p>
+</blockquote>
+<p><img src="..\imgs\过拟合欠拟合.jpg" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/正则化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1133,164 +1793,6 @@
 </ul>
 </li>
 </ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/过拟合欠拟合/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lee_yl">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lee_yl's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/过拟合欠拟合/" itemprop="url">过拟合</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-26T00:00:00+08:00">
-                2023-02-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/基础/" itemprop="url" rel="index">
-                    <span itemprop="name">基础</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本篇博客仅作为学习,如有侵权必删。</p>
-<h1 id="过拟合"><a href="#过拟合" class="headerlink" title="过拟合"></a>过拟合</h1><h1 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h1><blockquote>
-<p>过拟合：模型对于训练数拟合呈过当的情况，反映到评估指标上，就是模型在训练集上表现很好，测试集和新数据上表现较差。</p>
-<p>欠拟合：模型在训练和和预测时表现都不好的情况。</p>
-</blockquote>
-<p><img src="..\imgs\过拟合欠拟合.jpg" alt></p>
 
           
         
@@ -1745,181 +2247,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/向量乘积/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lee_yl">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lee_yl's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/向量乘积/" itemprop="url">向量乘积</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-21T00:00:00+08:00">
-                2023-02-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/先导知识/" itemprop="url" rel="index">
-                    <span itemprop="name">先导知识</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/先导知识/向量乘积/" itemprop="url" rel="index">
-                    <span itemprop="name">向量乘积</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本篇博客仅作为学习,如有侵权必删。</p>
-<h1 id="向量乘积"><a href="#向量乘积" class="headerlink" title="向量乘积"></a>向量乘积</h1><h2 id="1-内积"><a href="#1-内积" class="headerlink" title="1. 内积"></a>1. 内积</h2><blockquote>
-<p> 含义：两个向量的相似度/向量的夹角， 标量。</p>
-</blockquote>
-<p>向量a和向量b的余弦的相似度: 对内积进行了归一化</p>
-<p>​    cosθ = 内积 / (|a| * |b| )</p>
-<h2 id="2-哈达玛积"><a href="#2-哈达玛积" class="headerlink" title="2. 哈达玛积"></a>2. 哈达玛积</h2><blockquote>
-<p>元素两两相乘。</p>
-</blockquote>
-<p>[a1, b1, c1] * [a2, b2, c2] = [a1a2, b1b2, c1c2]</p>
-<p><strong>元素集的交互：</strong> [w1<em> a1a2, w2 </em> b1b2, w3 *c1c2]</p>
-<p><strong>向量级别的交互：</strong>w [a1a2, b1b2, c1c2]</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/梯度下降/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2133,7 +2460,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/熵/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/向量乘积/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Lee_yl">
@@ -2152,7 +2479,182 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/熵/" itemprop="url">熵</a></h1>
+                <a class="post-title-link" href="/向量乘积/" itemprop="url">向量乘积</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-21T00:00:00+08:00">
+                2023-02-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/先导知识/" itemprop="url" rel="index">
+                    <span itemprop="name">先导知识</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/先导知识/向量乘积/" itemprop="url" rel="index">
+                    <span itemprop="name">向量乘积</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本篇博客仅作为学习,如有侵权必删。</p>
+<h1 id="向量乘积"><a href="#向量乘积" class="headerlink" title="向量乘积"></a>向量乘积</h1><h2 id="1-内积"><a href="#1-内积" class="headerlink" title="1. 内积"></a>1. 内积</h2><blockquote>
+<p> 含义：两个向量的相似度/向量的夹角， 标量。</p>
+</blockquote>
+<p>向量a和向量b的余弦的相似度: 对内积进行了归一化</p>
+<p>​    cosθ = 内积 / (|a| * |b| )</p>
+<h2 id="2-哈达玛积"><a href="#2-哈达玛积" class="headerlink" title="2. 哈达玛积"></a>2. 哈达玛积</h2><blockquote>
+<p>元素两两相乘。</p>
+</blockquote>
+<p>[a1, b1, c1] * [a2, b2, c2] = [a1a2, b1b2, c1c2]</p>
+<p><strong>元素集的交互：</strong> [w1<em> a1a2, w2 </em> b1b2, w3 *c1c2]</p>
+<p><strong>向量级别的交互：</strong>w [a1a2, b1b2, c1c2]</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/逻辑回归/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee_yl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lee_yl's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/逻辑回归/" itemprop="url">逻辑回归</a></h1>
         
 
         <div class="post-meta">
@@ -2198,19 +2700,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/先导知识/" itemprop="url" rel="index">
-                    <span itemprop="name">先导知识</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/先导知识/熵/" itemprop="url" rel="index">
-                    <span itemprop="name">熵</span>
+                  <a href="/categories/机器学习/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
                   </a>
                 </span>
 
@@ -2249,31 +2740,225 @@
         
           
             <p>本篇博客仅作为学习,如有侵权必删。</p>
-<p><a href="https://mp.weixin.qq.com/s?__biz=MzU0NjgzMDIxMQ==&amp;mid=2247599777&amp;idx=2&amp;sn=982e734b8de12d67ae64476c66f704bc&amp;chksm=fb54a44dcc232d5ba3fbf8f40c75801b0728beffb1b63f053b0c76209bbf54e47655dd421b25&amp;scene=27" target="_blank" rel="noopener">详解机器学习中的熵、条件熵、相对熵、交叉熵</a></p>
-<h1 id="1-信息量："><a href="#1-信息量：" class="headerlink" title="1. 信息量："></a>1. 信息量：</h1><p>一个事件发生的概率越小，信息量越大，所以信息量应该为概率的<strong>减函数</strong>，对于相互独立的两个事有<em>p</em>(<em>xy</em>)=<em>p</em>(<em>x</em>)<em>p</em>(<em>y</em>)，对于这两个事件信息量应满足<em>h</em>(<em>xy</em>)=<em>h</em>(<em>x</em>)+<em>h</em>(<em>y</em>)，那么信息量应为对数函数：</p>
-<p>​    h(x) = -ln p(x)</p>
-<p>​    对于一个随机变量可以以不同的概率发生，那么通过<strong>信息量期望</strong>的方式衡量，即<strong>信息熵</strong>。 </p>
-<h1 id="2-熵"><a href="#2-熵" class="headerlink" title="2. 熵"></a>2. 熵</h1><blockquote>
-<p> 熵：信息不确定性度量（信息量与不确定性相关）。事件发生的概率越小则携带的信息越大。</p>
+<p>[TOC]</p>
+<h1 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h1><h2 id="1-LR重点"><a href="#1-LR重点" class="headerlink" title="1. LR重点"></a>1. LR重点</h2><p><strong>LR的重点：</strong></p>
+<ul>
+<li><strong>目的</strong>：LR解决二分类问题。</li>
+<li><strong>输出结果</strong>：(0,1)之间的数值。</li>
+<li><strong>模型</strong>：线性模型 + sigmoid函数<ul>
+<li>y_pred = sigmoid(W0+W1 <em> x1 + … + Wn </em> xn) = sigmoid(∑W^TX)</li>
+</ul>
+</li>
+<li><strong>LR为何用sigmoid函数？</strong> sigmoid的性质 </li>
+<li><strong>损失函数</strong>：loss = -(∑y) log y_pred_i + (1-yi) log(1 - y_pred_i))</li>
+<li><strong>损失函数的推导：</strong></li>
+<li><strong>求解方法</strong>：梯度下降</li>
+<li></li>
+</ul>
+<h2 id="2-概念"><a href="#2-概念" class="headerlink" title="2. 概念"></a>2. 概念</h2><blockquote>
+<p><strong>二分类：</strong>假设有一批训练样本集合X={x1,x2,…,xn},其中xi有a个属性，对这些样本分类属于0还是1？</p>
+<p><strong>伯努利分布：</strong>离散型概率分布，成功则随机变量取值为1，失败则为0，设置成功的概率为p,则失败的概率为1-p，N次实验后，成功期望是Np，方差为 Np(1-p)</p>
+<ul>
+<li><p>​    期望/均值：实验中每次可能结果的概率乘其结果的总和。E(X)=∑xP(X), x表示随机变量的取值，P(X)表示随机变量X=x的概率。</p>
+</li>
+<li><p>​    方差：概率分布的数据期望，反映了随机变量取值的变异程度。D(x ) = E{[X-E(X)]^2}=E(X^2) - [ E(X)]^2</p>
+</li>
+</ul>
+<p><strong>似然函数（联合概率密度函数）：</strong></p>
+<ul>
+<li><p>先验概率：根据以往经验和分析得到的概率。主观上的经验估计p(x)</p>
+</li>
+<li><p>似然函数：在给定参数θ情况下得到结果 X 的概率分布p(x|θ) 。</p>
+<p>（给定输出x时，使得函数得到X概率最大的关于参数θ的似然函数L(θ|x)（在数值上）等于给定参数θ后变量X的概率， 即L(θ|x) = P(X=x|θ)）</p>
+</li>
+<li><p>后验概率：在给定结果信息X的情况下得到参数 θ 的概率： p(θ|x) 。</p>
+</li>
+</ul>
+<p><strong>梯度下降：</strong>一种求解模型的方法，后面细看。</p>
+<p><strong>LR：</strong>假设数据服从伯努利分布，通过极大化似然函数的方法，运用梯度下降来求解参数，达到将数据二分类的目的。</p>
 </blockquote>
-<p>​    一个离散随机变量X的可能取值为X=x1,x2,…,xn，而对应的概率为pi=p(X=xi),则随机变量的熵定义为： </p>
-<p><img src="..\imgs\熵.jpg" alt></p>
-<p><img src="..\imgs\熵.jpg" style="zoom:100%"></p>
-<p>​    每个<em>xi</em>表示一种特征。 <em>H</em>(<em>X</em>)在每个<em>p</em>(<em>xi</em>) = 1/<em>N</em>是最大，<em>N</em>为信息的个数。在概率为1/<em>N</em>时信息是最不确定的。</p>
-<p>​    规定当p(xi)=0时，p(xi)log⁡(p(xi)=0</p>
-<p>【小思考：为何公式是这样子的？其实只需熵和概率P成反比，1/P , 但是有个量纲缺点：地震发生的概率很小（P = 1/百万)，则信息量为一百万。抛硬币概率1/2，则信息量为2。两者量纲差太大，取log之后，使得低范围的值稍微放大，高范围的值稍微放小。】</p>
-<h1 id="3-联合熵H-p-q"><a href="#3-联合熵H-p-q" class="headerlink" title="3. 联合熵H(p,q)"></a>3. 联合熵H(p,q)</h1><p>两个随机变量的p与q的联合分布形成的熵称为联合熵，记为<em>H</em>(p, q)。 </p>
-<p><img src="..\imgs\交叉熵.jpg" style="zoom:100%"></p>
-<h1 id="4-条件熵H-q-p"><a href="#4-条件熵H-q-p" class="headerlink" title="4. 条件熵H(q|p)"></a>4. 条件熵H(q|p)</h1><p><em>X</em>给定的条件下，<em>Y</em>的信息熵，即<em>H</em> (<em>Y</em> |X )。公式为：</p>
-<p><img src="..\imgs\条件熵.jpg" style="zoom:100%"></p>
-<p><strong>推导过程：</strong></p>
-<p><img src="..\imgs\条件熵推导过程.jpg" style="zoom:100%"></p>
-<h1 id="5-KL散度（相对熵）："><a href="#5-KL散度（相对熵）：" class="headerlink" title="5. KL散度（相对熵）："></a>5. KL散度（相对熵）：</h1><blockquote>
-<p> 交叉熵：两个概率分布之间的一个比较，如果两个分布越匹配，交叉熵就越低；如果两个概率分布完全比配，那么交叉熵就为 0。</p>
+<h2 id="3-LR模型和损失函数"><a href="#3-LR模型和损失函数" class="headerlink" title="3. LR模型和损失函数"></a>3. LR模型和损失函数</h2><h3 id="模型和损失函数得到的过程："><a href="#模型和损失函数得到的过程：" class="headerlink" title="模型和损失函数得到的过程："></a>模型和损失函数得到的过程：</h3><p>第①步：引入参数θ=（θ1，θ2……），对于样本加权θ^TX</p>
+<p>第②步：引入logit函数：g(z)=1/(1+e^-z)，令z=θ^TX，故<strong>LR的模型</strong>：</p>
+<p>​        <img src="..\imgs\LR模型.jpg"></p>
+<p>​        <strong>假设样本服从的是伯努利分布（0-1分布）:</strong></p>
+<p>​        以上h的含义是：表示样本x属于类别1的概率，即P（y=1|x;θ）。则样本x属于类别0的概率为1-hθ(x)。</p>
+<p>​        联合两个概率即为似然函数。</p>
+<p>第③步：似然函数（联合概率密度函数）：</p>
+<p><img src="..\imgs\LR最大似然函数.jpg" alt></p>
+<p>​        所有样本的似然函数：（令概率最大化）</p>
+<p>​                    <img src="..\imgs\LR似然函数1.jpg" alt></p>
+<p>第④步：<strong>损失函数</strong>（对数似然函数取反min）：<strong>交叉熵</strong>损失函数</p>
+<p><img src="..\imgs\LR损失函数.jpg" alt></p>
+<p>​        </p>
+<h2 id="4-损失函数的来源推导"><a href="#4-损失函数的来源推导" class="headerlink" title="4. 损失函数的来源推导"></a>4. 损失函数的来源推导</h2><h3 id="法一：假设服从伯努利分布，伯努利分布的极大似然估计"><a href="#法一：假设服从伯努利分布，伯努利分布的极大似然估计" class="headerlink" title="法一：假设服从伯努利分布，伯努利分布的极大似然估计"></a><strong>法一：假设服从伯努利分布，伯努利分布的极大似然估计</strong></h3><ul>
+<li>假设样本服从伯努利(0-1)分布,有：</li>
+</ul>
+<p>​                    <img src="..\imgs\LR损失函数推导.jpg" alt></p>
+<h3 id="法二：熵角度确定损失函数"><a href="#法二：熵角度确定损失函数" class="headerlink" title="法二：熵角度确定损失函数"></a><strong>法二：熵角度确定损失函数</strong></h3><blockquote>
+<p><strong>KL散度（相对熵）：KL散度可以用来<code>衡量两个分布之间的差异程度</code>。若两者差异越小，KL散度越小，反之亦反。当两分布一致时，其KL散度为0。</strong></p>
+<p>​    相关概念请看：熵的章节</p>
+<p>​    如果是两个随机变量P,Q，且其概率分布分别为p(x),q(x),则p相对q的相对熵为：</p>
+<p>​        <img src="..\imgs\KL散度.jpg" alt></p>
 </blockquote>
-<p>如果是两个随机变量P,Q，且其概率分布分别为p(x),q(x),则p相对q的相对熵为：</p>
-<p><img src="..\imgs\KL散度.jpg" style="zoom:100%"></p>
-<h1 id="6-几种熵之间的关系："><a href="#6-几种熵之间的关系：" class="headerlink" title="6. 几种熵之间的关系："></a>6. 几种熵之间的关系：</h1><p><img src="..\imgs\熵之间的关系.jpg" style="zoom:100%"></p>
+<p>模型预估值分布和实际值分布的KL散度：（KL散度越小，表明两个分布越相似，即预估值越接近实际值）。</p>
+<blockquote>
+<ul>
+<li><p>p <em> log(p/q) = p</em> logp - p* logq</p>
+<p>其中， p<em> logp是一个定值（实际值分布p = y_i，是固定的，0或1），- p</em> logq是交叉熵，只要交叉熵较大，则KL散度就越小，预测值和实际值越相似。</p>
+</li>
+<li><p>交叉熵：令-p <em> log q = -y_i </em> log y_pred_i . (可扩展为多个： -（y1 <em> log y_pred_1 + y2 </em> log y_pred_2 + y3 * log y_pred_3.。。。)</p>
+</li>
+</ul>
+</blockquote>
+<h3 id="法三、贝叶斯学派确定损失函数"><a href="#法三、贝叶斯学派确定损失函数" class="headerlink" title="法三、贝叶斯学派确定损失函数"></a><strong>法三、贝叶斯学派确定损失函数</strong></h3><p>贝叶斯公式：</p>
+<p><img src="..\imgs\贝叶斯推导损失函数.jpg" alt></p>
+<p>贝叶斯学派有先验函数，频率学派仅考虑似然函数。</p>
+<p>贝叶斯用上一次的后验当成下一次的先验与似然函数相乘，计算下一次的后验，不断迭代。</p>
+<h2 id="5-LR为何用sigmoid函数？"><a href="#5-LR为何用sigmoid函数？" class="headerlink" title="5. LR为何用sigmoid函数？"></a>5. LR为何用sigmoid函数？</h2><h3 id="（1）数学上"><a href="#（1）数学上" class="headerlink" title="（1）数学上"></a>（1）数学上</h3><pre><code>1. 因为LR服从伯努利分布，伯努利分布转化为广义线性模型指数分布族形式里可推导出sigmoid函数
+</code></pre><h3 id="（2）概率上："><a href="#（2）概率上：" class="headerlink" title="（2）概率上："></a>（2）概率上：</h3><p>sigmoid自身性质，值域在（0,1）之间，满足概率的要求</p>
+<h3 id="（3）单调性："><a href="#（3）单调性：" class="headerlink" title="（3）单调性："></a>（3）单调性：</h3><p>若sigmoid不具备单调性，LR不可用其作为映射函数。</p>
+<ul>
+<li><p>下图的g1 &lt; g2的x指的是线性中的g=wx的值。若LR的映射函数不具备单调性，则同一个y值会对应两个g值。</p>
+<p>因为x是给定的特征，则w没办法学习，因为LR是个记忆函数，在g1之前当学习w发现增大w1能让y接近高点（即在g1和g2之间）时，突然发现当w1更大时（大于g2），y越来越小，没办法沿着某些方向学习w值。</p>
+</li>
+</ul>
+<p><img src="..\imgs\sigmoid单调性.jpg" alt></p>
+<ul>
+<li>sigmoid具备单调性，则在使用redis存储参数w的key和value时，若推荐最终结果只涉及排序，则无需进行sigmoid计算，且若是离散特征，只需将x特征值为1对应的参数w相加得到最终值进行排序即可。又可以提高效率了。</li>
+</ul>
+<h3 id="sigmoid性质："><a href="#sigmoid性质：" class="headerlink" title="sigmoid性质："></a>sigmoid性质：</h3><blockquote>
+<ol>
+<li>定义域：（-∞，+∞）</li>
+<li>将任意input压缩到(0,1)之间，即值域为（0,1），符合概率定义</li>
+<li>设f(x) = sigmoid(x), f(x)导数为f(x)*(1-f(x)),  对梯度下降有好处，前向传递时计算结果可以保留，BP时可以直接用来计算，加快速度</li>
+<li>1/2处导数最大， 两边梯度趋于饱和，容易发生梯度消失（作为激活函数的弊端）<ol>
+<li><img src="https://pic2.zhimg.com/v2-729148803fc62ea5ee2327f28b6db301_b.jpg" alt="img"></li>
+</ol>
+</li>
+<li>不以原点为中心，BP时梯度下降更新慢，更新时以zigzag（折线）方式更新。（作为激活函数的弊端）</li>
+<li>单调性，LR的映射函数如果没有单调性不行。</li>
+</ol>
+</blockquote>
+<h2 id="6-【为什么参数的梯度方向一致容易造成zigzag现象】"><a href="#6-【为什么参数的梯度方向一致容易造成zigzag现象】" class="headerlink" title="6.【为什么参数的梯度方向一致容易造成zigzag现象】"></a>6.【为什么参数的梯度方向一致容易造成zigzag现象】</h2><p>当所有梯度同为正或者负时，参数在梯度更新时容易出现zigzag现象。</p>
+<p>zigzag现象如图4所示，不妨假设一共两个参数， w0 和 w1 ，紫色点为参数的最优解，蓝色箭头表示梯度最优方向，红色箭头表示实际梯度更新方向。</p>
+<p>由于参数的梯度方向一致，要么同正，要么同负，因此更新方向只能为第三象限角度或第一象限角度，而梯度的最优方向为第四象限角度，也就是参数 w0 要向着变小的方向， w1 要向着变大的方向，在这种情况下，每更新一次梯度，不管是同时变小(第三象限角度)还是同时变大(第四象限角度)，总是一个参数更接近最优状态，另一个参数远离最优状态，因此为了使参数尽快收敛到最优状态，出现交替向最优状态更新的现象，也就是zigzag现象。</p>
+<p><img src="https://pic3.zhimg.com/80/v2-bedaefcfbff2453f003365c10fc86356_720w.webp" alt="img"></p>
+<h2 id="7-梯度下降求解损失函数"><a href="#7-梯度下降求解损失函数" class="headerlink" title="7. 梯度下降求解损失函数"></a>7. 梯度下降求解损失函数</h2><p>梯度下降概念：根据loss求导，往</p>
+<p><img src="..\imgs\梯度下降.jpg" alt></p>
+<p><img src="..\imgs\LR的梯度下降求导.jpg" alt></p>
+<p>注意：这里梯度更新时用加号是因为max loss。 非min loss的值。</p>
+<h2 id="8-LR的优缺点"><a href="#8-LR的优缺点" class="headerlink" title="8. LR的优缺点"></a>8. LR的优缺点</h2><h3 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h3><ul>
+<li>1、<strong>形式简单，模型的可解释性非常好</strong>。从特征的权重可以看到不同的特征对最后结果的影响，某个特征的权重值比较高，那么这个特征最后对结果的影响会比较大。</li>
+<li>2、<strong>模型效果不错。</strong>在工程上是可以接受的（作为baseline)，如果特征工程做的好，效果不会太差，并且特征工程可以大家并行开发，大大加快开发的速度。</li>
+<li>3、<strong>训练速度较快。</strong>分类的时候，计算量仅仅只和特征的数目相关。并且逻辑回归的分布式优化sgd发展比较成熟，训练的速度可以通过堆机器进一步提高，这样我们可以在短时间内迭代好几个版本的模型。</li>
+<li>4、<strong>资源占用小,尤其是内存</strong>。因为只需要存储各个维度的特征值。</li>
+<li>5、<strong>方便输出结果调整。</strong>逻辑回归可以很方便的得到最后的分类结果，因为输出的是每个样本的概率分数，我们可以很容易的对这些概率分数进行cutoff，也就是划分阈值(大于某个阈值的是一类，小于某个阈值的是一类)。</li>
+<li>6、<strong>对稀疏数据比较友好。</strong>一个特征通过 one-hot : [0,0,1,……,0]  ，LR是个记忆模型，将该特征扔进LR之后，会将x3=1（w3）记得很好，别的都为0了，但这样也容易过拟合。（gbm，深度模型这些都不太喜欢稀疏数据）</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点:"></a>缺点:</h3><ul>
+<li>准<strong>确率并不是很高</strong>。因为形式非常的简单(非常类似线性模型)，很难去拟合数据的真实分布。</li>
+<li><strong>很难处理数据不平衡的问题。</strong>举个例子：如果我们对于一个正负样本非常不平衡的问题比如正负样本比      10000:1.我们把所有样本都预测为正也能使损失函数的值比较小。但是作为一个分类器，它对正负样本的区分能力不会很好。</li>
+<li><strong>处理非线性数据较麻烦。</strong>逻辑回归在不引入其他方法的情况下，只能处理线性可分的数据，或者进一步说，处理二分类的问题      。</li>
+<li><strong>逻辑回归本身无法筛选特征。</strong>有时候，我们会用gbdt来筛选特征，然后再上逻辑回归。</li>
+<li><strong>对模型中自变量多重共线性较为敏感</strong>，例如两个高度相关自变量同时放入模型，可能导致较弱的一个自变量回归符号不符合预期，符号被扭转。需要利用因子分析或者变量聚类分析等手段来选择代表性的自变量，以减少候选变量之间的相关性；</li>
+<li><strong>必须对缺失值处理</strong></li>
+</ul>
+<h2 id="9-扩展问题"><a href="#9-扩展问题" class="headerlink" title="9. 扩展问题"></a>9. 扩展问题</h2><blockquote>
+<ol>
+<li><strong>线性回归与LR的本质区别</strong>：</li>
+</ol>
+<p>【线形回归与 逻辑回归的本质区别是前者用于回归后者用于分类，二者都是线形模型。】</p>
+<ol start="2">
+<li><p><strong>什么情况下用LR</strong>【大规模样本下的线性二分类】</p>
+</li>
+<li><p><strong>LR的损失函数的公式和函数</strong></p>
+</li>
+<li><p>逻辑回归的损失函数为什么要使用极大似然函数作为损失函数？ </p>
+<p>【如果激活函数为sigmoid函数，使用均方误差作为损失函数的话为非凸函数，而使用对数损失函数为凸函数】</p>
+<p>【损失函数一般有四种，平方损失函数、对数损失函数、铰链损失函数和绝对值损失函数。极大似然取对数之后相当于对数损失，在LR模型下，对数损失函数的训练求解参数速度是比较快的，不选平方损失函数是因为梯度更新的速度和sigmoid函数本身的梯度是相关的，这样训练会比较慢】</p>
+</li>
+<li><p>LR的推导过程</p>
+</li>
+<li><p>LR如何解决共线性，为什么深度学习不强调</p>
+<p>【法1：岭回归（L2正则化）、</p>
+<p>法2：主成分分析，</p>
+<p>法3：共线性诊断常用的统计量：将所有回归中要用到的变量依次作为因变量、其他变量作为自变量进行回归分析，可以得到各个变量的膨胀系数VIF以及容忍度tolerance，如果容忍度越接近0，则共线性问题越严重，而VIF是越大共线性越严重，通常VIF小于5可以认为共线性不严重，宽泛一点的标准小于10即可。      】</p>
+<p>【因为深度学习不需要处理数据特征，自身可以学习】</p>
+<p>共线性问题有如下几种检验方法：</p>
+<ul>
+<li><strong>相关性分析</strong>。检验变量之间的相关系数；</li>
+<li><strong>方差膨胀因子VIF</strong>。当VIF大于5或10时，代表模型存在严重的共线性问题；</li>
+<li><strong>条件数检验</strong>。当条件数大于100、1000时，代表模型存在严重的共线性问题</li>
+</ul>
+</li>
+<li><p>为什么不能将线性或逻辑回归模型的系数绝对值解释为特征重要性？</p>
+<p>【因为很多现有线性回归量为每个系数返回P值，对于线性模型，许多实践者认为，系数绝对值越大，其对应特征越重要。事实很少如此，因为：</p>
+<p>(a)改变变量尺度就会改变系数绝对值；</p>
+<p>(b)如果特征是线性相关的，则系数可以从一个特征转移到另一个特征。此外，数据集特征越多，特征间越可能线性相关，用系数解释特征重要性就越不可靠。】</p>
+</li>
+<li><p>逻辑回归在训练的过程当中，如果有很多的特征高度相关或者说有一个特征重复了100遍，会造成怎样的影响？</p>
+<p>结论：如果在损失函数最终收敛的情况下，其实就算<strong>有很多特征高度相关也不会影响分类器的效果</strong>。原因：<strong>因为损失函数为凸函数，最终它会收敛到全局最小值，不再变化。</strong>因为LR是线性模型，其特征重复仅在每个特征分配权重缩小为百分之一，最后得到总结果和一个特征是一样的。】</p>
+</li>
+<li><p>为什么我们还是会在训练的过程当中将高度相关的特征去掉？</p>
+<p>【形式简单，模型可解释性好。训练速度快。资源占用内存小】</p>
+</li>
+<li><p>LR如何防止过拟合：</p>
+<p>【增加正则化项，L1、L2】</p>
+</li>
+<li><p>LR分布式训练怎么做</p>
+<p>【LR的并行化最主要的就是对目标函数梯度计算的并行化。梯度计算就是向量的点乘和相加，可通过按行或按列切分样本数据并行计算梯度，最后合并结果】</p>
+</li>
+<li><p>LR如何解决线性不可分问题？或者问LR为何常常要做特征组合？</p>
+<p>【逻辑回归本质上是一个线性模型，但是，这不意味着只有线性可分的数据能通过LR求解，实际上，我们可以通过2种方式帮助LR实现：（1）利用特殊核函数，对特征进行变换：把低维空间转换到高维空间，而在低维空间不可分的数据，到高维空间中线性可分的几率会高一些。（2）扩展LR算法，提出FM算法。】</p>
+</li>
+<li><p>LR为什么使用Sigmoid，</p>
+<p>【数学上：因为LR服从伯努利分布，伯努利分布转化成广义线性模型指数分布族形式里可推导出sigmoid函数；概率上：sigmoid自身性质，值域在（0,1）之间，满足概率的要求】</p>
+</li>
+<li><p>LR为什么要对连续数值特征进行离散化？</p>
+<p>【计算速度快，简单化模型，降低过拟合，可以做特征组合，对异常数据有强鲁棒性】</p>
+<p>①离散特征的增加和减少都很容易，易于模型的快速迭代；</p>
+<p>②稀疏向量内积乘法运算速度快，计算结果方便存储，容易扩展；</p>
+<p>③离散化后的特征对异常数据有很强的鲁棒性：比如一个特征是年龄&gt;30是1，否则0。如果特征没有离散化，一个异常数据“年龄300岁”会给模型造成很大的干扰；</p>
+<p>④逻辑回归属于广义线性模型，表达能力受限；单变量离散化为N个后，每个变量有单独的权重，相当于为模型引入了非线性，能够提升模型表达能力，加大拟合；</p>
+<p>⑤离散化后可以进行特征交叉，由M+N个变量变为M*N个变量，进一步引入非线性，提升表达能力；</p>
+<p>⑥特征离散化后，模型会更稳定，比如如果对用户年龄离散化，20-30作为一个区间，不会因为一个用户年龄长了一岁就变成一个完全不同的人。当然处于区间相邻处的样本会刚好相反，所以怎么划分区间是门学问；</p>
+<p>⑦特征离散化以后，起到了简化了逻辑回归模型的作用，降低了模型过拟合的风险。</p>
+<p>李沐曾经说过：模型是使用离散特征还是连续特征，其实是一个“海量离散特征+简单模型” 同 “少量连续特征+复杂模型”的权衡。既可以离散化用线性模型，也可以用连续特征加深度学习。就看是喜欢折腾特征还是折腾模型了。通常来说，前者容易，而且可以n个人一起并行做，有成功经验；后者目前看很赞，能走多远还须拭目以待。</p>
+</li>
+<li><p>LR与SVM的联系与区别：</p>
+<p>联系：</p>
+<p>1、<strong>LR和SVM都可以处理分类问题</strong>，且一般都用于处理线性二分类问题（在改进的情况下可以处理多分类问题）</p>
+<p>2、<strong>两个方法都可以增加不同的正则化项，</strong>如l1、l2等等。所以在很多实验中，两种算法的结果是很接近的。</p>
+<p>区别：</p>
+<p>1、<strong>LR是参数模型</strong>[逻辑回归是假设y服从Bernoulli分布]，<strong>SVM是非参数模型</strong>，LR对异常值更敏感。</p>
+<p>2、<strong>从目标函数来看，区别在于逻辑回归采用的是logistical loss，SVM采用的是hinge loss</strong>，这两个损失函数的目的都是增加对分类影响较大的数据点的权重，减少与分类关系较小的数据点的权重。</p>
+<p>3、<strong>SVM的处理方法是只考虑support vectors</strong>，也就是和分类最相关的少数点，去学习分类器。<strong>而逻辑回归通过非线性映射</strong>，大大减小了离分类平面较远的点的权重，相对提升了与分类最相关的数据点的权重。</p>
+<p>4、<strong>逻辑回归相对来说模型更简单，好理解，</strong>特别是<strong>大规模</strong>线性分类时比较方便。而<strong>SVM的理解和优化相对来说复杂一些</strong>，SVM转化为对偶问题后,分类只需要计算与少数几个支持向量的距离,这个在进行复杂核函数计算时优势很明显,能够大大简化模型和计算。</p>
+<p>5、logic 能做的 svm能做，但可能在<strong>准确率</strong>上有问题，svm能做的logic有的做不了。</p>
+</li>
+<li><p>如何选择LR与SVM？</p>
+<p>非线性分类器，低维空间可能很多特征都跑到一起了，导致线性不可分。</p>
+<p>①如果Feature的数量很大，跟样本数量差不多，这时候选用LR或者是Linear Kernel的SVM</p>
+<p>②如果Feature的数量比较小，样本数量一般，不算大也不算小，选用SVM+Gaussian Kernel</p>
+<p>③如果Feature的数量比较小，而样本数量很多，需要手工添加一些feature变成第一种情况。</p>
+<p>模型复杂度：SVM支持核函数，可处理线性非线性问题;LR模型简单，训练速度快，适合处理线性问题;决策树容易过拟合，需要进行剪枝</p>
+<p>损失函数：SVM hinge loss; LR L2正则化;</p>
+<p> adaboost 指数损失数据敏感度：SVM添加容忍度对outlier不敏感，只关心支持向量，且需要先做归一化; LR对远点敏感</p>
+<p>数据量：数据量大就用LR，数据量小且特征少就用SVM非线性核</p>
+</li>
+<li><p>什么是参数模型（LR）与非参数模型（SVM）？</p>
+<p>在统计学中，参数模型通常假设总体（随机变量）服从某一个分布，该分布由一些参数确定（比如正太分布由均值和方差确定），在此基础上构建的模型称为参数模型；</p>
+<p>非参数模型对于总体的分布不做任何假设，只是知道总体是一个随机变量，其分布是存在的（分布中也可能存在参数），但是无法知道其分布的形式，更不知道分布的相关参数，只有在给定一些样本的条件下，能够依据非参数统计的方法进行推断。</p>
+</li>
+<li><p>逻辑回归怎么多分类</p>
+<p>【把Sigmoid函数换成softmax函数，即可适用于多分类的场景。】</p>
+</li>
+<li><p>softmax公式，为什么用sigmoid函数进行非线性映射（从二项分布的伯努利方程角度）</p>
+</li>
+<li><p>Logistic回归能处理浮点数吗？</p>
+</li>
+</ol>
+</blockquote>
 
           
         
